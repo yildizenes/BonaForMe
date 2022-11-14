@@ -1,0 +1,321 @@
+﻿@model BonaForMe.DomainCore.DTO.UserDto
+@{
+    ViewData["Title"] = "Kullanıcılar";
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+}
+
+<div class="content-wrapper">
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Kullanıcılar</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">User</a></li>
+                        <li class="breadcrumb-item active">Index</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <!-- /.card -->
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Kullanıcılar</h3>
+                            @*<a id="btn_SaveUser" href="#" class="btn-success" style="margin-right: 10px;padding: 10px; float:right;">
+                                Yeni Kullanıcı
+                                <i class="fas fa-save"></i>
+                            </a>*@
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body" style="overflow-x:auto;">
+                            <table id="tblUserList" class="table table-bordered table-striped table-responsive-lg" style="width: 100% !important;">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Adı</th>
+                                        <th>Soyadı</th>
+                                        <th>Email</th>
+                                        <th>Telefon</th>
+                                        <th>Kan Grubu</th>
+                                        <th>Ekleme Tarihi</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+
+<div class="modal fade" id="modalSaveUser" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalCaption" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span id="modalCaption">Kullanıcı Giriş Bilgilerini Düzenle</span>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Kapat">
+                    <span aria-hidden="true">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </button>
+            </div>
+            <form asp-controller="User" asp-action="UpdateUser" method="post" enctype="multipart/form-data" role="form" id="frmUser">
+                <div class="modal-body">
+
+                    @*<div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="UserName" class="control-label"><span style="color:red">*</span>Adı</label>
+                                <input asp-for="UserName" name="UserName" id="UserName" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="UserLastName" class="control-label"><span style="color:red">*</span>Soyadı</label>
+                                <input asp-for="UserLastName" name="UserLastName" id="UserLastName" class="form-control" required />
+                            </div>
+                        </div>
+                    </div>*@
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="UserMail" class="control-label"><span style="color:red">*</span>Eposta</label>
+                                <input asp-for="UserMail" name="UserMail" id="UserMail" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="UserPassword" class="control-label"><span style="color:red">*</span>Parola</label>
+                                <input asp-for="UserPassword" name="UserPassword" id="UserPassword" class="form-control" required type="password" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" asp-for="Id" name="Id" id="Id" value="" />
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button"
+                            data-content="remove" class="btn btn-default" data-dismiss="modal">
+                        Vazgeç
+                    </button>
+
+                    <button type="submit" class="btn btn-primary" style="background-color: blue;" @*onclick="jsSaveUser()"*@>
+                        Kaydet
+                    </button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- /.modal-delete -->
+<div class="modal fade" data-keyboard="false" data-backdrop="static" id="delete" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="modal-title custom_align" id="HeadingDelete"></h4>
+                <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" data-dismiss="modal" title="Remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row" id="deletewarning">Bu Kullanıcıyı Silmek İstiyor musunuz?</div>
+
+            </div>
+            <div class="modal-footer ">
+                <button type="button" class="btn btn-danger" onclick="DeleteUser()"><i class="fa fa-trash"></i>&nbsp;Evet</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>Vazgeç</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /end modal-delete -->
+</div>
+
+<input type="hidden" id="hdnUserId" value="" />
+
+<div class="spinnerAnimation" style="display:none;"></div>
+
+@section JsSection{
+    <link href="~/css/spinner.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/adminLTE/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/adminLTE/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <script src="~/adminLTE/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/adminLTE/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/adminLTE/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/adminLTE/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script type="text/javascript">
+
+
+        $("#frmUser").submit(function () {
+            $('#modalSaveUser').modal('hide');
+            ShowBlockUi();
+        });
+
+        $('#btn_SaveUser').click(function () {
+            jsOpenSaveUser();
+        });
+
+        function jsOpenSaveUser(id) {
+            if (id != null && id !== "") {
+
+                var data = {
+                    ID: id
+                }
+                var result = ajaxRequest('POST', '@Url.Action("GetUser", "User")', data)
+                debugger;
+                $(".modal-body #Id").val(id);
+                //$(".modal-body #UserName").val(result.userName);
+                //$(".modal-body #UserLastName").val(result.userLastName);
+                $(".modal-body #UserMail").val(result.userMail);
+                $(".modal-body #UserPassword").val(result.userPassword);
+                //$(".modal-body #UserBio").val(result.userBio);
+                //$(".modal-body #UserPhone").val(result.userPhone);
+        }
+        else {
+            $("#hdnUserId").val("");
+            //$("#UserName").val("");
+            //$("#UserLastName").val("");
+            $("#UserMail").val("");
+            $("#UserPassword").val("");
+            //$("#UserBio").val("");
+            //$("#UserPhone").val("");
+        }
+
+        $("#modalSaveUser").modal('show');
+        }
+
+        var language = 'Turkish';
+        var table = $('#tblUserList').on('processing.dt', function (e, settings, processing) {
+            if (processing) {
+
+                $('.spinnerAnimation').css('display', 'block');
+            }
+            else
+                $('.spinnerAnimation').css('display', 'none');
+        }).DataTable({
+            "proccessing": true,
+            "serverSide": true,
+            "filter": true,
+            "orderMulti": false,
+            "order": [[6, "desc"]],
+            "ajax": {
+                "url": "/User/LoadUserData/",
+                "type": 'POST',
+                "dataType": "json"
+            },
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/" + language + ".json",
+                "search": "",
+                "searchPlaceholder": "Ara...",
+                "processing:" :'<i class=fa fa-spinner fa-spin fa-2x fa-fw"></i>'
+            },
+            "columnDefs": [{
+                "targets": [0],
+                "visible": false,
+                "searchable": false
+            }],
+            "columns": [
+                { "data": "id", "name": "Id", "autoWidth": true },
+                { "data": "userName", "name": "UserName", "autoWidth": true },
+                { "data": "userLastName", "name": "UserLastName", "autoWidth": true },
+                { "data": "userMail", "name": "UserMail", "autoWidth": true },
+                { "data": "userPhone", "name": "UserPhone", "autoWidth": true },
+                { "data": "userBloodType", "name": "UserBloodType", "autoWidth": true },
+                {
+                    "data": "dateCreated", "name": "DateCreated",
+                    "render": function (data) {
+                        var date = new Date(data);
+                        var month = date.getMonth() + 1;
+                        return (date.getDate() + "." + (month.toString().length > 1 ? month : "0" + month) + "." + date.getFullYear() + "&nbsp;&nbsp;" + (date.getHours() < 10 ? ("0" + date.getHours()) : date.getHours()) + ":" + (date.getMinutes() < 10 ? ("0" + date.getMinutes()) : date.getMinutes()))
+                    }, "autoWidth": true
+                },
+                {
+                    "data": "", "name": "", "autoWidth": true, "sorting":false, "style" : "text-align:center",
+                    "render": function (data, type, full, meta) {
+                        return "<a href='#' data-toggle='tooltip' title='Düzenle' class='btn btn-warning btn-sm' style='color:white;' onclick=jsOpenSaveUser('" + full.id + "');><i class='fas fa-edit' style='color:white;'></i> Düzenle</a>";
+                    }
+                },
+            ],
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                { extend: 'copy' },
+                { extend: 'csv' },
+                { extend: 'excel', title: 'ExampleFile' },
+                { extend: 'pdf', title: 'ExampleFile' },
+
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ]
+
+        });
+
+       //| <a href='#' data-toggle='tooltip' title='Sil' style='color:white;' class='btn btn-danger btn-sm' onclick=DeleteData('" + full.id + "');> <i class='fas fa-trash' style='color:white;'></i> Sil</a >
+
+        function DeleteData(UserId) {
+            $('#delete').data('argument', UserId);
+
+            $('#delete').modal('show');
+        }
+
+        function DeleteUser() {
+
+        ShowBlockUi();
+
+        var userId = $('#delete').data('argument');
+         var data = {
+             uid: userId
+            }
+
+        var result = ajaxRequest('POST', '@Url.Action("UserDelete", "User")', data)
+            if (result.success) {
+                CloseBlockUi();
+            $('#delete').modal('hide');
+            location.href = '/User/Index';
+
+            } else {
+                CloseBlockUi();
+            $('#delete').modal('hide');
+            location.href = '/User/Index';
+        }
+    }
+    </script>
+
+}

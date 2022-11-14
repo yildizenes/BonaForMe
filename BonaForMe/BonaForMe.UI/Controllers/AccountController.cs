@@ -1,0 +1,231 @@
+﻿using BonaForMe.DomainCommonCore.Helper;
+using BonaForMe.DomainCore.DTO;
+using BonaForMe.ServiceCore.AccountService;
+using BonaForMe.ServiceCore.UserService;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Security.Claims;
+using System.Threading.Tasks;
+
+namespace BonaForMe.UI.Controllers
+{
+    [Authorize]
+    public class AccountController : Controller
+    {
+        private readonly IUserService _userService;
+        private readonly IAccountService _accountService;
+        public AccountController(IUserService userService, IAccountService accountService)
+        {
+            _userService = userService;
+            _accountService = accountService;
+        }
+
+        [AllowAnonymous]
+        public IActionResult Login()
+        {
+            var successInfo = TempData["Success"];
+            if (successInfo != null)
+            {
+                ViewBag.Success = successInfo;
+            }
+            return View();
+        }
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            //return RedirectToAction(nameof(UserAccountController.Login), "Account");
+            return RedirectToAction("Login"); // Değişecek
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(AccountDto accountDto)
+        {
+            var returnTo = "/Account/Login";
+            try
+            {
+                accountDto.UserPassword = PasswordHelper.PasswordEncoder(accountDto.UserPassword);
+                var result = _accountService.Login(accountDto);
+                if (result.Success)
+                {
+                    await CreateClaims(result.Data);
+                    returnTo = "/Home/Dashboard";
+                }
+                else
+                {
+                    TempData["Error"] = "Email adresi yada şifre yanlış";
+                    return RedirectToAction("Login", "Account");
+                }
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Giriş yapma işleminde hata var!";
+                return RedirectToAction("Login", "Account");
+            }
+
+            return Redirect(returnTo);
+        }
+
+        [AllowAnonymous]
+        public IActionResult SignIn()
+        {
+            ViewBag.Error = TempData["Error"];
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult SignIn(UserDto userDto)
+        {
+            var returnTo = "/Account/Login";
+            try
+            {
+                if (!userDto.UserMail.Contains("@") && !userDto.UserMail.Contains(".com"))
+                {
+                    TempData["Error"] = "Lütfen geçerli bir mail adresi giriniz!";
+                    return RedirectToAction("Register", "Account");
+                }
+
+                var mailCheck = _userService.GetUserByEmail(userDto.UserMail);
+                if (mailCheck.Data != null)
+                {
+                    TempData["Error"] = "Girilen mail adresi başka bir kullanıcı ile sistemde kayıtlıdır!";
+                    return RedirectToAction("Register", "Account");
+                }
+                
+                var result = _userService.AddUser(userDto).Data;
+                if (result != null)
+                {
+                    returnTo = "/ProfilePage?pId=" + result.Id;
+                }
+                else
+                {
+                    TempData["Error"] = "Yeni kullanıcı oluşturma işleminde hata var!";
+                    return RedirectToAction("Register", "Account");
+                }
+            }
+            catch (Exception e)
+            {
+                TempData["Error"] = "Yeni kullanıcı oluşturma işleminde hata var!" + " " + e.Message;
+                return RedirectToAction("Register", "Account");
+            }
+
+            return Redirect(returnTo);
+        }
+
+        [AllowAnonymous]
+        [Route("~/ProfilePage")]
+        public IActionResult ProfilePage(Guid userId)
+        {
+            var userData = _userService.GetUserById(userId);
+            return View(userData);
+        }
+
+        [AllowAnonymous]
+        public IActionResult ForgetPassword()
+        {
+            var errorInfo = TempData["Error"];
+            if (errorInfo != null)
+            {
+                ViewBag.Error = errorInfo;
+            }
+            return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult ForgetPassword(string userMail)
+        {
+            try
+            {
+                var userData = _userService.GetUserByEmail(userMail);
+                if (userData == null)
+                {
+                    TempData["Error"] = "Eposta adresi sisteme kayıtlı değildir! Lütfen adresinizi kontrol ediniz.";
+                    return RedirectToAction("ForgetPassword", "Account");
+                }
+
+                string userNewPassword = PasswordHelper.GeneratePassword();
+                userData.Data.UserPassword = PasswordHelper.PasswordEncoder(userNewPassword);
+                _userService.UpdateUser(userData.Data);
+
+                EmailHelper.SendForgetPasswordMail(userMail, userNewPassword);
+
+                TempData["Success"] = "Yeni şifreniz mail adresinize gönderilmiştir.Not: Mail spam(gereksiz) kutusuna düşebilir!";
+                return RedirectToAction("Login", "Account");
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Şifre yenileme işleminde hata var. Lütfen daha sonra tekrar deneyiniz !";
+                return RedirectToAction("ForgetPassword", "Account");
+            }
+        }
+
+
+        private async Task CreateClaims(UserDto userDto)
+        {
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.PrimarySid, userDto.Id.ToString()),
+                new Claim(ClaimTypes.Name, userDto.FullName),
+                new Claim(ClaimTypes.Email, userDto.UserMail),
+                new Claim("IsAdmin", userDto.IsAdmin.ToString(), ClaimValueTypes.Boolean),
+            };
+            await SetClaims(claims);
+        }
+
+        private async Task SetClaims(List<Claim> claims)
+        {
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var authProperties = new AuthenticationProperties
+            {
+                AllowRefresh = true,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30),
+            };
+            await HttpContext.SignInAsync( CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+        }
+
+        #region Image Process
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult CustomCrop(string filename, IFormFile blob)
+        {
+            try
+            {
+                using (var image = SixLabors.ImageSharp.Image.Load(blob.OpenReadStream()))
+                {
+                    string systemFileExtenstion = filename.Substring(filename.LastIndexOf('.'));
+
+                    var newfileName200 = GenerateFileName("Photo_200_200_", systemFileExtenstion);
+                    var filepath200 = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images")).Root + $@"\{newfileName200}";
+                    image.Mutate(x => x.Resize(200, 200));
+                    image.Save(filepath200);
+                }
+
+                return Json(new { Message = "OK" });
+            }
+            catch (Exception)
+            {
+                return Json(new { Message = "ERROR" });
+            }
+        }
+
+        public string GenerateFileName(string fileTypeName, string fileextenstion)
+        {
+            if (fileTypeName == null) throw new ArgumentNullException(nameof(fileTypeName));
+            if (fileextenstion == null) throw new ArgumentNullException(nameof(fileextenstion));
+            return $"{fileTypeName}_{DateTime.Now:yyyyMMddHHmmssfff}_{Guid.NewGuid():N}{fileextenstion}";
+        }
+        #endregion
+    }
+}

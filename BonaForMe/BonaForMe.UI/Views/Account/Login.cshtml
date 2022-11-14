@@ -1,0 +1,110 @@
+﻿
+@{ Layout = null; }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="author" content="MM Studio">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Bona For Me | Giriş</title>
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="~/css/my-login.css" rel="stylesheet" />
+    <link href="~/css/spinner.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/adminLTE/plugins/fontawesome-free/css/all.min.css">
+    <link href="~/css/countryFlag.css" rel="stylesheet" />
+</head>
+
+<body class="my-login-page" style="background: url('../../images/Sosyo-bg.jpg');background-position:center;background-repeat:no-repeat;background-size:cover;">
+    <section class="h-100">
+        <div class="container h-100">
+            <div class="row justify-content-md-center h-100">
+                <div class="card-wrapper" style="margin:20px auto;">
+                    <div class="card fat">
+                        <div class="brand">
+                            <img src="/images/MM-10.png" alt="logo" width="100" height="100">
+                        </div>
+                        <div class="card-body" style="margin-top:80%;">
+                            @*<img src="~/images/SOSYO.png" alt="logo">*@
+                            <h6 class="card-title" align="center">Bona For Me | Giriş</h6>
+
+                            <form class="my-login-validation" novalidate="" method="post" action="@Url.Action("Login","Account")" onsubmit="frmLogin()">
+                                <div class="form-group">
+                                    <!-- <i class="fa fa-envelope" aria-hidden="true"></i> -->
+                                    <input id="email" type="email" class="form-control" placeholder="Eposta" name="UserMail" value="" required autofocus>
+                                </div>
+
+                                <div class="input-group">
+                                    <input id="password" name="UserPassword" class="form-control" type="password" placeholder="Şifre" required>
+                                    <div class="input-group-addon">
+                                        <a id="btnChangePassword" href="#" onclick="changePasswordVisibility()"><i class="fas fa-eye" aria-hidden="true"></i></a>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="text-align:right;margin-top:10px;">
+                                    <div class="custom-checkbox custom-control">
+                                        <a href="@Url.Action("ForgetPassword","Account")" class="text-right" style="color:black;text-decoration:underline;font-weight:bold;">
+                                            Şifremi Unuttum
+                                        </a>
+                                    </div>
+                                </div>
+
+                                @*<div class="form-group" id="show_hide_password">
+                                        <input id="password" name="UserPassword" class="form-control" type="password" placeholder="Şifre" required>
+                                        <div class="input-group-addon">
+                                            <a href=""><i class="fas fa-eye-slash" aria-hidden="true"></i></a>
+                                        </div>
+                                    </div>*@
+
+                                <div class="col-6">
+                                    @*<button class="btn btn-primary btn-block" onclick="return GirisYap(this)">
+                                        Giriş Yap </button>*@
+                                    <input type="submit" class="btn btn-primary block full-width m-b" style="margin-top: 25px;" value="Giriş Yap" />
+
+                                </div>
+                                <!-- <div class="mt-4 text-center"> -->
+                                <!-- Hesabınız yok mu? -->
+                                <!-- <a style="margin-left: 20%; " href="register.html">Hesap Oluştur</a> -->
+                                <!-- </div> -->
+                            </form>
+
+                        </div>
+                        <div style="color:darkgreen;text-align:center;">
+                            @ViewBag.Success
+                        </div>
+                        <div style="color:darkred;text-align:center;">
+                            @ViewBag.Error
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <p>&copy; @DateTime.Now.Year | Bona For Me Her Hakkı Saklıdır.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="spinnerAnimation" style="display:none;"></div>
+
+    @*<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>*@
+    <script src="~/adminLTE/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function (event) {
+            function changePasswordVisibility() {
+                var element = document.getElementById("password");
+                if (element.type == "password") {
+                    element.type = "text";
+                    $('#btnChangePassword i').removeClass('fas fa-eye').addClass('fas fa-eye-slash');
+                } else {
+                    element.type = "password";
+                    $('#btnChangePassword i').removeClass('fas fa-eye-slash').addClass('fas fa-eye');
+                }
+            }
+
+            function frmLogin() {
+                $('.spinnerAnimation').css('display', 'block');
+            }
+    </script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+﻿<!-- REQUIRED SCRIPTS -->
+<!-- Bootstrap -->
+<script src="~/adminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables -->
+<script src="~/adminLTE/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/adminLTE/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="~/adminLTE/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="~/adminLTE/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<!-- overlayScrollbars -->
+<script src="~/adminLTE/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- AdminLTE App -->
+<script src="~/adminLTE/dist/js/adminlte.js"></script>
+
+<!-- OPTIONAL SCRIPTS -->
+<script src="~/adminLTE/dist/js/demo.js"></script>
+
+<!-- PAGE PLUGINS -->
+<!-- jQuery Mapael -->
+<script src="~/adminLTE/plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
+<script src="~/adminLTE/plugins/raphael/raphael.min.js"></script>
+<script src="~/adminLTE/plugins/jquery-mapael/jquery.mapael.min.js"></script>
+<script src="~/adminLTE/plugins/jquery-mapael/maps/usa_states.min.js"></script>
+<!-- ChartJS -->
+<script src="~/adminLTE/plugins/chart.js/Chart.min.js"></script>
+
+<!-- PAGE SCRIPTS -->
+<script src="~/adminLTE/dist/js/pages/dashboard2.js"></script>
+
+<link href="~/adminLTE/toastr/toastr.min.css" rel="stylesheet" />
+<script src="~/adminLTE/toastr/toastr.min.js"></script>
+<link href="~/adminLTE/toastr/jquery.toast.min.css" rel="stylesheet" />
+<script src="~/adminLTE/toastr/jquery.toast.min.js"></script>
+
+<script src="~/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+
+    function ShowMessage(message, header, isSuccess) {
+        try {
+            if (isSuccess) {
+                $.toast({
+                    heading: header,
+                    text: message,
+                    showHideTransition: 'slide',
+                    position: 'top-right',
+                    icon: 'info'
+                });
+            }
+            else {
+                $.toast({
+                    heading: header,
+                    text: message,
+                    showHideTransition: 'slide',
+                    position: 'top-right',
+                    icon: 'error'
+                })
+            }
+
+        }
+        catch (e) {
+            console.log("headScript:ShowMessage :" + e);
+            alert(e);
+        }
+    }
+
+    function ShowSuccessMsg(message) {
+        ShowMessage(message, 'Success', true)
+        //toastr.options.positionClass = 'toast-bottom-center';
+        //toastr.success(message);
+    };
+    function ShowFailure(message) {
+        ShowMessage(message, 'Failed', false)
+        // toastr.options.positionClass = 'toast-bottom-center';
+        // toastr.error(message);
+    };
+
+    function ajaxRequest(type, url, requestData, element) {
+        try {
+            var result = null;
+            var temp = "";
+            var href = "";
+            if (element != null && element != undefined) {
+                temp = element.innerHTML;
+                href = element.getAttribute("href");
+                element.removeAttribute("href");
+                element.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <span class="">Loading...</span>`;
+            }
+            $.ajax({
+                url: url,
+                type: type,
+                async: false,
+                //processData: false,
+                //contentType: false,
+                data: requestData
+            }).done(function (data) {
+                result = data;
+            }).fail(function (jqXHR, textStatus) {
+                //console.log(jqXHR);
+                //console.log(textStatus);
+            });
+
+        }
+        catch (e) {
+            //console.log("headScript:AjaxRequest :" + e);
+            alert(e);
+        }
+        if (element != null && element != undefined) {
+            element.setAttribute("href", href);
+            element.innerHTML = temp;
+        }
+        return result;
+    }
+
+    function CreateBlockUiElement() {
+        var divElement = document.createElement("div");
+        divElement.id = 'domMessage';
+        divElement.style.display = 'none';
+        var imgElement = document.createElement('img');
+        imgElement.src = '//cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif';
+        var pElement = document.createElement('p');
+        pElement.innerHTML = 'Lütfen Bekleyin';
+        document.body.appendChild(divElement);
+        var brElement = document.createElement('br');
+        divElement.appendChild(imgElement);
+        divElement.appendChild(brElement);
+        divElement.appendChild(pElement);
+    }
+    function ShowBlockUi() {
+
+        CreateBlockUiElement();
+
+        $.blockUI({
+            css: {
+                border: '5px solid #06c',
+                borderRadius: '5px',
+                padding: '20px 0',
+                baseZ: 2000
+            },
+            message: $('#domMessage')
+        });
+    }
+
+    function CloseBlockUi() {
+
+        $.unblockUI();
+    }
+</script>
+
