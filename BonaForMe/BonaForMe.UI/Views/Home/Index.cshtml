@@ -1,1 +1,61 @@
-﻿<p1>START PAGE</p1>
+﻿
+
+@{ Layout = null; }
+<p1>START PAGE</p1>
+
+
+<li class="nav-header">Menüler</li>
+
+<li class="nav-item">
+    <a href="@Url.Action("Index","Admin")" class="nav-link">
+        <i class="nav-icon fas fa-home"></i>
+        <p>
+            Yönetim Paneli
+        </p>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="@Url.Action("Index","User")" class="nav-link">
+        <i class="nav-icon fas fa-users"></i>
+        <p>
+            Kullanıcılar
+        </p>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="@Url.Action("Privacy","Home")" class="nav-link">
+        <i class="nav-icon fas fa-info-circle"></i>
+        <p>
+            Privacy
+        </p>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="@Url.Action("Login","Account")" class="nav-link">
+        <i class="nav-icon fas fa-info-circle"></i>
+        <p>
+            Login
+        </p>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="@Url.Action("ForgetPassword","Account")" class="nav-link">
+        <i class="nav-icon fas fa-info-circle"></i>
+        <p>
+            ForgetPassword
+        </p>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="@Url.Action("SignIn","Account")" class="nav-link">
+        <i class="nav-icon fas fa-info-circle"></i>
+        <p>
+            SignIn
+        </p>
+    </a>
+</li>

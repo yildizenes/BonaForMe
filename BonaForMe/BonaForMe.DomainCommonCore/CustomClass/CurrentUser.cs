@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Security.Claims;
-using System.Text;
 
 namespace BonaForMe.DomainCommonCore.CustomClass
 {

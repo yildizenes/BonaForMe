@@ -15,6 +15,18 @@ body.my-login-page {
     background-color: #3c8db4;
 }
 
+.btn-full-width {
+	margin: 25px 10%;
+	display: block;
+	width: 80%;
+}
+
+.card-style {
+	margin: 50px auto; 
+	padding:20px;
+	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
 .my-login-page .brand {
 	width: 100px;
 	height: 100px;

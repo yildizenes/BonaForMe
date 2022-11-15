@@ -5,8 +5,7 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="@Url.Action("Index","Admin")" class="brand-link">
-        <img src="~/images/SOSYO.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-             style="opacity: .8" width="50" height="50">
+        <img src="~/images/SOSYO.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8" width="50" height="50">
         <span class="brand-text font-weight-light">Bona For Me</span>
     </a>
 
@@ -25,17 +24,12 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <!-- Add icons to the links using the .nav-icon class
-    with font-awesome or any other icon font library -->
-
-
-                <li class="nav-header">Menüler</li>
-
+                <li class="nav-header">Menus</li>
                 <li class="nav-item">
                     <a href="@Url.Action("Index","Admin")" class="nav-link">
                         <i class="nav-icon fas fa-home"></i>
                         <p>
-                            Anasayfa
+                            Dashboard
                         </p>
                     </a>
                 </li>
@@ -44,55 +38,92 @@
                     <a href="@Url.Action("Index","User")" class="nav-link">
                         <i class="nav-icon fas fa-users"></i>
                         <p>
-                            Kullanıcılar
+                            User
                         </p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="@Url.Action("Index","MMCardInfo")" class="nav-link">
-                        <i class="nav-icon fas fa-info-circle"></i>
+                    <a href="@Url.Action("Index","Announcement")" class="nav-link">
+                        <i class="nav-icon fas fa-bullhorn"></i>
                         <p>
-                            Bona For Me Bilgi
-                        </p>
-                    </a>
-                </li>
-
-                @*<li class="nav-item">
-                    <a href="@Url.Action("Index","Communication")" class="nav-link">
-                        <i class="nav-icon fas fa-mail-bulk"></i>
-                        <p>
-                            İletişim
-                        </p>
-                    </a>
-                </li>*@
-
-                <li class="nav-item">
-                    <a href="@Url.Action("Index","Log")" class="nav-link">
-                        <i class="nav-icon fas fa-file-archive"></i>
-                        <p>
-                            Loglar
+                            Announcements
                         </p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="@Url.Action("Index","SocialMediaAssign")" class="nav-link">
-                        <i class="nav-icon fas fa-phone"></i>
+                    <a href="@Url.Action("Index","Category")" class="nav-link">
+                        <i class="nav-icon fas fa-tasks"></i>
                         <p>
-                            Sosyal Medya Kullanıcılar
+                            Categories
                         </p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="@Url.Action("Index","SocialMediaList")" class="nav-link">
+                    <a href="@Url.Action("Index","ContactInformation")" class="nav-link">
+                        <i class="nav-icon fas fa-id-card"></i>
+                        <p>
+                            Contact Informations
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="@Url.Action("Index","CurrencyUnit")" class="nav-link">
+                        <i class="nav-icon fas fa-money-check"></i>
+                        <p>
+                            Currency Units
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="@Url.Action("Index","Order")" class="nav-link">
+                        <i class="nav-icon fas fa-shopping-cart"></i>
+                        <p>
+                            Orders
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="@Url.Action("Index","OrderStatus")" class="nav-link">
+                        <i class="nav-icon fas fa-sort"></i>
+                        <p>
+                            Order Statuses
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="@Url.Action("Index","PaymentInfo")" class="nav-link">
+                        <i class="nav-icon fas fa-credit-card"></i>
+                        <p>
+                            Payment Infos
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="@Url.Action("Index","Product")" class="nav-link">
+                        <i class="nav-icon fas fa-cube"></i>
+                        <p>
+                            Products
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="@Url.Action("Index","ProductUnit")" class="nav-link">
                         <i class="nav-icon fas fa-list"></i>
                         <p>
-                            Sosyal Medya Listesi
+                            Product Units
                         </p>
                     </a>
                 </li>
+
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

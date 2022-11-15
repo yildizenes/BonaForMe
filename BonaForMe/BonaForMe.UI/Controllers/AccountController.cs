@@ -67,7 +67,7 @@ namespace BonaForMe.UI.Controllers
                     return RedirectToAction("Login", "Account");
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 TempData["Error"] = "Giriş yapma işleminde hata var!";
                 return RedirectToAction("Login", "Account");
@@ -93,16 +93,16 @@ namespace BonaForMe.UI.Controllers
                 if (!userDto.UserMail.Contains("@") && !userDto.UserMail.Contains(".com"))
                 {
                     TempData["Error"] = "Lütfen geçerli bir mail adresi giriniz!";
-                    return RedirectToAction("Register", "Account");
+                    return RedirectToAction("SignIn", "Account");
                 }
 
                 var mailCheck = _userService.GetUserByEmail(userDto.UserMail);
                 if (mailCheck.Data != null)
                 {
                     TempData["Error"] = "Girilen mail adresi başka bir kullanıcı ile sistemde kayıtlıdır!";
-                    return RedirectToAction("Register", "Account");
+                    return RedirectToAction("SignIn", "Account");
                 }
-                
+                userDto.UserPassword = PasswordHelper.PasswordEncoder(userDto.UserPassword);
                 var result = _userService.AddUser(userDto).Data;
                 if (result != null)
                 {
@@ -111,13 +111,13 @@ namespace BonaForMe.UI.Controllers
                 else
                 {
                     TempData["Error"] = "Yeni kullanıcı oluşturma işleminde hata var!";
-                    return RedirectToAction("Register", "Account");
+                    return RedirectToAction("SignIn", "Account");
                 }
             }
             catch (Exception e)
             {
                 TempData["Error"] = "Yeni kullanıcı oluşturma işleminde hata var!" + " " + e.Message;
-                return RedirectToAction("Register", "Account");
+                return RedirectToAction("SignIn", "Account");
             }
 
             return Redirect(returnTo);
