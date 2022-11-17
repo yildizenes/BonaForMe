@@ -1,6 +1,7 @@
 ﻿@model BonaForMe.DomainCore.DTO.UserDto
 @{
-    ViewData["Title"] = "Kullanıcılar";
+    ViewData["Title"] = "Users";
+    ViewData["SingleName"] = "User";
     Layout = "~/Views/Shared/_AdminLTE.cshtml";
 }
 
@@ -9,11 +10,11 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Kullanıcılar</h1>
+                    <h1>@ViewData["Title"]</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">User</a></li>
+                        <li class="breadcrumb-item"><a href="#">@ViewData["Title"]</a></li>
                         <li class="breadcrumb-item active">Index</li>
                     </ol>
                 </div>
@@ -26,11 +27,11 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Kullanıcılar</h3>
-                            <a id="btn_SaveUser" href="#" class="btn-success" style="margin-right: 10px;padding: 10px; float:right;">
-                                Yeni Kullanıcı
+                            <h3 class="card-title">@ViewData["Title"]</h3>
+                            <button class="btn-success" onclick="jsOpenSaveUser();" style="padding: 10px; float:right;">
                                 <i class="fas fa-save"></i>
-                            </a>
+                                New @ViewData["SingleName"]
+                            </button>
                         </div>
                         <div class="card-body" style="overflow-x:auto;">
                             <table id="tblUserList" class="table table-bordered table-striped table-responsive-lg" style="width: 100% !important;">
@@ -52,12 +53,12 @@
     </section>
 </div>
 
-<div class="modal fade" id="modalSaveUser" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalCaption" aria-hidden="true">
+<div class="modal fade" id="modalSave" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalCaption" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <span id="modalCaption">Kullanıcı Giriş Bilgilerini Düzenle</span>
+                    <span id="modalCaption">New @ViewData["SingleName"]</span>
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Kapat">
                     <span aria-hidden="true">
@@ -65,96 +66,120 @@
                     </span>
                 </button>
             </div>
-            <form asp-controller="User" asp-action="UpdateUser" method="post" enctype="multipart/form-data" role="form" id="frmUser">
-                <div class="modal-body">
-
-                    @*<div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label asp-for="UserName" class="control-label"><span style="color:red">*</span>Adı</label>
-                                    <input asp-for="UserName" name="UserName" id="UserName" class="form-control" required />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label asp-for="UserLastName" class="control-label"><span style="color:red">*</span>Soyadı</label>
-                                    <input asp-for="UserLastName" name="UserLastName" id="UserLastName" class="form-control" required />
-                                </div>
-                            </div>
-                        </div>*@
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label asp-for="UserMail" class="control-label"><span style="color:red">*</span>Eposta</label>
-                                <input asp-for="UserMail" name="UserMail" id="UserMail" class="form-control" required />
-                            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="FirstName" class="control-label"><span style="color:red">* </span>First Name</label>
+                            <input name="FirstName" id="FirstName" class="form-control" required />
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label asp-for="UserPassword" class="control-label"><span style="color:red">*</span>Parola</label>
-                                <input asp-for="UserPassword" name="UserPassword" id="UserPassword" class="form-control" required type="password" />
-                            </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="LastName" class="control-label"><span style="color:red">* </span>Last Name</label>
+                            <input name="LastName" id="LastName" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="UserMail" class="control-label"><span style="color:red">* </span>Mail Address</label>
+                            <input name="UserMail" id="UserMail" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="UserPhone" class="control-label"><span style="color:red">* </span>Phone</label>
+                            <input name="UserPhone" id="UserPhone" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="CompanyName" class="control-label"><span style="color:red">* </span>Company</label>
+                            <input name="CompanyName" id="CompanyName" class="form-control" required />
                         </div>
                     </div>
 
-                    <input type="hidden" asp-for="Id" name="Id" id="Id" value="" />
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="UserPassword" class="control-label"><span style="color:red">* </span>Password</label>
+                            <input name="UserPassword" id="UserPassword" class="form-control" required />
+                        </div>
+                    </div>
                 </div>
 
-                <div class="modal-footer">
-
-                    <button type="button"
-                            data-content="remove" class="btn btn-default" data-dismiss="modal">
-                        Vazgeç
-                    </button>
-
-                    <button type="submit" class="btn btn-primary" style="background-color: blue;" @*onclick="jsSaveUser()"*@>
-                        Kaydet
-                    </button>
-
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Country" class="control-label"><span style="color:red">* </span>Country</label>
+                            <input name="Country" id="Country" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="City" class="control-label"><span style="color:red">*</span>City</label>
+                            <input name="City" id="City" class="form-control" required />
+                        </div>
+                    </div>
                 </div>
-            </form>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="District" class="control-label"><span style="color:red">* </span>District</label>
+                            <input name="District" id="District" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Address" class="control-label"><span style="color:red">* </span>Address</label>
+                            <input name="Address" id="Address" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="CompanyName" class="control-label"><span style="color:red">* </span>Company</label>
+                            <input name="CompanyName" id="CompanyName" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" data-content="remove" class="btn btn-default" data-dismiss="modal"> Cancel </button>
+                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="jsSaveUser()"> Save </button>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- /.modal-delete -->
-<div class="modal fade" data-keyboard="false" data-backdrop="static" id="delete" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-
-                <h4 class="modal-title custom_align" id="HeadingDelete"></h4>
-                <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" data-dismiss="modal" title="Remove">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-
-                <div class="row" id="deletewarning">Bu Kullanıcıyı Silmek İstiyor musunuz?</div>
-
-            </div>
-            <div class="modal-footer ">
-                <button type="button" class="btn btn-danger" onclick="DeleteUser()"><i class="fa fa-trash"></i>&nbsp;Evet</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>Vazgeç</button>
-            </div>
-        </div>
-    </div>
-</div>
-
+@await Html.PartialAsync("_Delete")
 <input type="hidden" id="hdnUserId" value="" />
-
 <div class="spinnerAnimation" style="display:none;"></div>
-
 <link href="~/css/spinner.css" rel="stylesheet" />
 
 @await Html.PartialAsync("_datatableScripts")
-<script type="text/javascript">
-    var domString = getTableDom();
-    var buttons = getTableButtons("Users");
-    var table = $('#tblUserList')
-        .DataTable({
-            "proccessing": true,
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        createTable();
+    });
+
+    function createTable() {
+        var domString = getTableDom();
+        var buttons = getTableButtons("Users");
+        $('#tblUserList').DataTable
+        ({
+            "paging": true,
+            "ordering": true,
+            "pageLength": 25,
+            "processing": true,
             "serverSide": true,
             "filter": true,
             "orderMulti": false,
@@ -186,68 +211,91 @@
                         return buttonGroup;
                     }
                 },
-            ]
+            ],
+            "bDestroy": true,
         });
-
-    $("#frmUser").submit(function () {
-        $('#modalSaveUser').modal('hide');
-        ShowBlockUi();
-    });
-
-    $('#btn_SaveUser').click(function () {
-        jsOpenSaveUser();
-    });
+    }
 
     function jsOpenSaveUser(id) {
-        if (id != null && id !== "") {
-
-            var data = {
-                ID: id
-            }
-            var result = ajaxRequest('POST', '@Url.Action("GetUser", "User")', data)
-            debugger;
-            $(".modal-body #Id").val(id);
-            //$(".modal-body #UserName").val(result.userName);
-            //$(".modal-body #UserLastName").val(result.userLastName);
-            $(".modal-body #UserMail").val(result.userMail);
-            $(".modal-body #UserPassword").val(result.userPassword);
-            //$(".modal-body #UserBio").val(result.userBio);
-            //$(".modal-body #UserPhone").val(result.userPhone);
-    }
-    else {
         $("#hdnUserId").val("");
-        //$("#UserName").val("");
-        //$("#UserLastName").val("");
+        $("#FirstName").val("");
+        $("#LastName").val("");
         $("#UserMail").val("");
+        $("#UserPhone").val("");
         $("#UserPassword").val("");
-        //$("#UserBio").val("");
-        //$("#UserPhone").val("");
+        $("#Country").val("");
+        $("#City").val("");
+        $("#District").val("");
+        $("#Address").val("");
+        $("#CompanyName").val("");
+
+        if (id != null && id !== "") {
+            var data = { id: id }
+            var result = ajaxRequest('POST', '@Url.Action("GetUserById", "User")', data)
+            $("#hdnUserId").val(result.id);
+            $("#FirstName").val(result.firstName);
+            $("#LastName").val(result.lastName);
+            $("#UserMail").val(result.userMail);
+            $("#UserPhone").val(result.userPhone);
+            $("#UserPassword").val(result.userPassword);
+            $("#Country").val(result.country);
+            $("#City").val(result.city);
+            $("#District").val(result.district);
+            $("#Address").val(result.address);
+            $("#CompanyName").val(result.companyName);
+        }
+        $('#modalSave').modal('show');
     }
 
-    $("#modalSaveUser").modal('show');
+    function jsSaveUser() {
+        var data = {
+            Id: $("#hdnUserId").val(),
+            FirstName: $("#FirstName").val(),
+            LastName: $("#LastName").val(),
+            UserMail: $("#UserMail").val(),
+            UserPhone: $("#UserPhone").val(),
+            UserPassword: $("#UserPassword").val(),
+            Country: $("#Country").val(),
+            City: $("#City").val(),
+            District: $("#District").val(),
+            Address: $("#Address").val(),
+            CompanyName: $("#CompanyName").val(),
+        };
+
+        var result = ajaxRequest('POST', '@Url.Action("Save", "User")', data)
+        debugger;
+        if (result != null) {
+            if (result.success) {
+                $('#modalSave').modal('hide');
+                thisTable = $('#tblUserList').DataTable();
+                thisTable.draw();
+                toastr.success('Transaction successful.');
+            } else {
+                toastr.error(result.message);
+            }
+        } else {
+            $('#modalSave').modal('hide');
+            toastr.error('Error in saving!');
+        }
     }
 
-    function DeleteData(UserId) {
-        $('#delete').data('argument', UserId);
-
+    function DeleteData(id) {
+        $('#delete').data('argument', id);
         $('#delete').modal('show');
     }
 
-    function DeleteUser() {
-        ShowBlockUi();
-        var userId = $('#delete').data('argument');
-        var data = { uid: userId }
-
-        var result = ajaxRequest('POST', '@Url.Action("UserDelete", "User")', data)
-            if (result.success) {
-                CloseBlockUi();
+    function Delete() {
+        var id = $('#delete').data('argument');
+        var data = { id: id }
+        var result = ajaxRequest('POST', '@Url.Action("Delete", ViewData["SingleName"])', data);
+        if (result.success) {
             $('#delete').modal('hide');
-            location.href = '/User/Index';
-
-            } else {
-                CloseBlockUi();
+            thisTable = $('#tblUserList').DataTable();
+            thisTable.draw();
+            toastr.success('The deletion was successful.');
+        } else {
             $('#delete').modal('hide');
-            location.href = '/User/Index';
+            toastr.error('Error in deletion!');
         }
     }
 </script>

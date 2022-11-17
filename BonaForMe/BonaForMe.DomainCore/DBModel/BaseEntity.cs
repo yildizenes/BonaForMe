@@ -6,7 +6,7 @@ using System.Text;
 
 namespace BonaForMe.DomainCore.DBModel
 {
-    public class BaseEntity
+    public class BaseEntity : IBaseEntity
     {
         [Required]
         [Column("Id")]

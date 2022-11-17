@@ -33,12 +33,15 @@ namespace BonaForMe.ServiceCore.PaymentInfoService
                     var oldModel = _context.PaymentInfos.FirstOrDefault(x => x.Id == paymentInfoDto.Id);
                     if (oldModel != null)
                     {
+                        DBHelper.SetBaseValues(oldModel, paymentInfo);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(paymentInfo);
                     }
                     else
                         _context.Add(paymentInfo);
                 }
+                else
+                    _context.Add(paymentInfo);
                 _context.SaveChanges();
                 result.Data = _mapper.Map<PaymentInfoDto>(paymentInfo);
                 result.Success = true;
@@ -89,6 +92,7 @@ namespace BonaForMe.ServiceCore.PaymentInfoService
                     var oldModel = _context.PaymentInfos.FirstOrDefault(x => x.Id == paymentInfoDto.Id);
                     if (oldModel != null)
                     {
+                        DBHelper.SetBaseValues(oldModel, paymentInfo);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(paymentInfo);
                     }

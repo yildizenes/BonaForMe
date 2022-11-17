@@ -1,4 +1,5 @@
-﻿using BonaForMe.DomainCore.DTO;
+﻿using BonaForMe.DomainCommonCore.Helper;
+using BonaForMe.DomainCore.DTO;
 using BonaForMe.ServiceCore.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,8 @@ namespace BonaForMe.UI.Controllers
         {
             try
             {
+                if (userDto.Id == Guid.Empty)
+                    userDto.UserPassword = PasswordHelper.PasswordEncoder(userDto.UserPassword);
                 var result = _userService.AddUser(userDto);
                 return new JsonResult(result);
             }
@@ -74,7 +77,7 @@ namespace BonaForMe.UI.Controllers
                 var result = _userService.GetUserById(id);
                 if (result != null)
                 {
-                    return new JsonResult(result);
+                    return new JsonResult(result.Data);
                 }
                 return Json(new { success = false });
             }

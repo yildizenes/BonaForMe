@@ -74,7 +74,7 @@ namespace BonaForMe.UI.Controllers
                 var result = _orderService.GetOrderById(id);
                 if (result != null)
                 {
-                    return new JsonResult(result);
+                    return new JsonResult(result.Data);
                 }
                 return Json(new { success = false });
             }
@@ -90,7 +90,7 @@ namespace BonaForMe.UI.Controllers
             try
             {
                 var result = _orderService.GetAllOrder();
-                return new JsonResult(result);
+                return new JsonResult(result.Data);
             }
             catch (Exception)
             {

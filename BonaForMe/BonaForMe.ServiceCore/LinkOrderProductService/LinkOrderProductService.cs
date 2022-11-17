@@ -33,12 +33,15 @@ namespace BonaForMe.ServiceCore.LinkOrderProductService
                     var oldModel = _context.LinkOrderProducts.FirstOrDefault(x => x.Id == linkOrderProductDto.Id);
                     if (oldModel != null)
                     {
+                        DBHelper.SetBaseValues(oldModel, linkOrderProduct);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(linkOrderProduct);
                     }
                     else
                         _context.Add(linkOrderProduct);
                 }
+                else
+                    _context.Add(linkOrderProduct);
                 _context.SaveChanges();
                 result.Data = _mapper.Map<LinkOrderProductDto>(linkOrderProduct);
                 result.Success = true;
@@ -89,6 +92,7 @@ namespace BonaForMe.ServiceCore.LinkOrderProductService
                     var oldModel = _context.LinkOrderProducts.FirstOrDefault(x => x.Id == linkOrderProductDto.Id);
                     if (oldModel != null)
                     {
+                        DBHelper.SetBaseValues(oldModel, linkOrderProduct);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(linkOrderProduct);
                     }

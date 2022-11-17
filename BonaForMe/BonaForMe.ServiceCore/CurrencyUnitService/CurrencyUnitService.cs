@@ -33,12 +33,15 @@ namespace BonaForMe.ServiceCore.CurrencyUnitService
                     var oldModel = _context.CurrencyUnits.FirstOrDefault(x => x.Id == currencyUnitDto.Id);
                     if (oldModel != null)
                     {
+                        DBHelper.SetBaseValues(oldModel, currencyUnit);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(currencyUnit);
                     }
                     else
                         _context.Add(currencyUnit);
                 }
+                else
+                    _context.Add(currencyUnit);
                 _context.SaveChanges();
                 result.Data = _mapper.Map<CurrencyUnitDto>(currencyUnit);
                 result.Success = true;
@@ -89,6 +92,7 @@ namespace BonaForMe.ServiceCore.CurrencyUnitService
                     var oldModel = _context.CurrencyUnits.FirstOrDefault(x => x.Id == currencyUnitDto.Id);
                     if (oldModel != null)
                     {
+                        DBHelper.SetBaseValues(oldModel, currencyUnit);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(currencyUnit);
                     }

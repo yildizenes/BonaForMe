@@ -74,7 +74,7 @@ namespace BonaForMe.UI.Controllers
                 var result = _linkOrderProductService.GetLinkOrderProductById(id);
                 if (result != null)
                 {
-                    return new JsonResult(result);
+                    return new JsonResult(result.Data);
                 }
                 return Json(new { success = false });
             }
@@ -90,7 +90,7 @@ namespace BonaForMe.UI.Controllers
             try
             {
                 var result = _linkOrderProductService.GetAllLinkOrderProduct();
-                return new JsonResult(result);
+                return new JsonResult(result.Data);
             }
             catch (Exception)
             {

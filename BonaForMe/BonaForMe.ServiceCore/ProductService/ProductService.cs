@@ -33,12 +33,15 @@ namespace BonaForMe.ServiceCore.ProductService
                     var oldModel = _context.Products.FirstOrDefault(x => x.Id == productDto.Id);
                     if (oldModel != null)
                     {
+                        DBHelper.SetBaseValues(oldModel, product);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(product);
                     }
                     else
                         _context.Add(product);
                 }
+                else
+                    _context.Add(product);
                 _context.SaveChanges();
                 result.Data = _mapper.Map<ProductDto>(product);
                 result.Success = true;
@@ -89,6 +92,7 @@ namespace BonaForMe.ServiceCore.ProductService
                     var oldModel = _context.Products.FirstOrDefault(x => x.Id == productDto.Id);
                     if (oldModel != null)
                     {
+                        DBHelper.SetBaseValues(oldModel, product);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(product);
                     }

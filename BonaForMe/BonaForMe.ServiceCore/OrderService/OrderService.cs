@@ -33,12 +33,15 @@ namespace BonaForMe.ServiceCore.OrderService
                     var oldModel = _context.Orders.FirstOrDefault(x => x.Id == orderDto.Id);
                     if (oldModel != null)
                     {
+                        DBHelper.SetBaseValues(oldModel, order);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(order);
                     }
                     else
                         _context.Add(order);
                 }
+                else
+                    _context.Add(order);
                 _context.SaveChanges();
                 result.Data = _mapper.Map<OrderDto>(order);
                 result.Success = true;
@@ -89,6 +92,7 @@ namespace BonaForMe.ServiceCore.OrderService
                     var oldModel = _context.Orders.FirstOrDefault(x => x.Id == orderDto.Id);
                     if (oldModel != null)
                     {
+                        DBHelper.SetBaseValues(oldModel, order);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(order);
                     }

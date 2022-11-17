@@ -33,12 +33,15 @@ namespace BonaForMe.ServiceCore.AnnouncementService
                     var oldModel = _context.Announcements.FirstOrDefault(x => x.Id == announcementDto.Id);
                     if (oldModel != null)
                     {
+                        DBHelper.SetBaseValues(oldModel, announcement);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(announcement);
                     }
                     else
                         _context.Add(announcement);
                 }
+                else
+                    _context.Add(announcement);
                 _context.SaveChanges();
                 result.Data = _mapper.Map<AnnouncementDto>(announcement);
                 result.Success = true;
@@ -89,6 +92,7 @@ namespace BonaForMe.ServiceCore.AnnouncementService
                     var oldModel = _context.Announcements.FirstOrDefault(x => x.Id == announcementDto.Id);
                     if (oldModel != null)
                     {
+                        DBHelper.SetBaseValues(oldModel, announcement);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(announcement);
                     }

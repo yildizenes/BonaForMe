@@ -33,12 +33,16 @@ namespace BonaForMe.ServiceCore.ContactInformationService
                     var oldModel = _context.ContactInformations.FirstOrDefault(x => x.Id == contactInformationDto.Id);
                     if (oldModel != null)
                     {
+                        
+                        DBHelper.SetBaseValues(oldModel, contactInformation);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(contactInformation);
                     }
                     else
                         _context.Add(contactInformation);
                 }
+                else
+                    _context.Add(contactInformation);
                 _context.SaveChanges();
                 result.Data = _mapper.Map<ContactInformationDto>(contactInformation);
                 result.Success = true;
@@ -89,6 +93,7 @@ namespace BonaForMe.ServiceCore.ContactInformationService
                     var oldModel = _context.ContactInformations.FirstOrDefault(x => x.Id == contactInformationDto.Id);
                     if (oldModel != null)
                     {
+                        DBHelper.SetBaseValues(oldModel, contactInformation);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(contactInformation);
                     }

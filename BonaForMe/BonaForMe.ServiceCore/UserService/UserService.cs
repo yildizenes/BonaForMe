@@ -33,12 +33,15 @@ namespace BonaForMe.ServiceCore.UserService
                     var oldModel = _context.Users.FirstOrDefault(x => x.Id == userDto.Id);
                     if (oldModel != null)
                     {
+                        DBHelper.SetBaseValues(oldModel, user);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(user);
                     }
                     else
                         _context.Add(user);
                 }
+                else
+                    _context.Add(user);
                 _context.SaveChanges();
                 result.Data = _mapper.Map<UserDto>(user);
                 result.Success = true;
@@ -89,6 +92,7 @@ namespace BonaForMe.ServiceCore.UserService
                     var oldModel = _context.Users.FirstOrDefault(x => x.Id == userDto.Id);
                     if (oldModel != null)
                     {
+                        DBHelper.SetBaseValues(oldModel, user);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(user);
                     }
@@ -163,7 +167,7 @@ namespace BonaForMe.ServiceCore.UserService
                 return new JsonResult(new { success = false, message = ex });
             }
         }
-        
+
         public Result<UserDto> GetUserByEmail(string userMail)
         {
             Result<UserDto> result = new Result<UserDto>();

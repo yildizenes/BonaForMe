@@ -33,12 +33,15 @@ namespace BonaForMe.ServiceCore.CategoryService
                     var oldModel = _context.Categories.FirstOrDefault(x => x.Id == categoryDto.Id);
                     if (oldModel != null)
                     {
+                        DBHelper.SetBaseValues(oldModel, category);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(category);
                     }
                     else
                         _context.Add(category);
                 }
+                else
+                    _context.Add(category);
                 _context.SaveChanges();
                 result.Data = _mapper.Map<CategoryDto>(category);
                 result.Success = true;
@@ -89,6 +92,7 @@ namespace BonaForMe.ServiceCore.CategoryService
                     var oldModel = _context.Categories.FirstOrDefault(x => x.Id == categoryDto.Id);
                     if (oldModel != null)
                     {
+                        DBHelper.SetBaseValues(oldModel, category);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(category);
                     }
