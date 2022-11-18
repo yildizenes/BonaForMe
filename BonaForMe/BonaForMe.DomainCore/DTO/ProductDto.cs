@@ -13,15 +13,21 @@ namespace BonaForMe.DomainCore.DTO
 
         public Guid ProductUnitId { get; set; }
 
+        public string ProductUnitName { get; set; }
+
         public virtual ProductUnit ProductUnit { get; set; }
 
         public decimal Price { get; set; }
 
         public Guid CurrencyUnitId { get; set; }
 
+        public string CurrencyUnitName { get; set; }
+
         public virtual CurrencyUnit CurrencyUnit { get; set; }
 
         public Guid CategoryId { get; set; }
+
+        public string CategoryName { get; set; }
 
         public virtual Category Category { get; set; }
     }

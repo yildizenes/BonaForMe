@@ -12,6 +12,7 @@ namespace BonaForMe.DomainCore.DTO
         public string ImagePath { get; set; }
 
         public Guid? CategoryId { get; set; }
+        public string CategoryName { get; set; }
 
         public virtual Category Category { get; set; }
     }

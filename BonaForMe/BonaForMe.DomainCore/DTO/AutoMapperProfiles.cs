@@ -7,7 +7,8 @@ namespace BonaForMe.DomainCore.DTO
     {
         public AutoMapperProfiles()
         {
-            CreateMap<Announcement, AnnouncementDto>();
+            CreateMap<Announcement, AnnouncementDto>()
+                .ForMember(x => x.CategoryName, opt => opt.MapFrom(x => x.Category.Name));
             CreateMap<AnnouncementDto, Announcement>();
 
             CreateMap<Category, CategoryDto>();
@@ -25,7 +26,9 @@ namespace BonaForMe.DomainCore.DTO
             CreateMap<LinkOrderProduct, LinkOrderProductDto>();
             CreateMap<LinkOrderProductDto, LinkOrderProduct>();
 
-            CreateMap<Order, OrderDto>();
+            CreateMap<Order, OrderDto>()
+                .ForMember(x => x.UserName, opt => opt.MapFrom(x => x.User.FirstName + " " + x.User.LastName ))
+                .ForMember(x => x.OrderStatusName, opt => opt.MapFrom(x => x.OrderStatus.Name));
             CreateMap<OrderDto, Order>();
 
             CreateMap<OrderStatus, OrderStatusDto>();
@@ -34,7 +37,10 @@ namespace BonaForMe.DomainCore.DTO
             CreateMap<PaymentInfo, PaymentInfoDto>();
             CreateMap<PaymentInfoDto, PaymentInfo>();
 
-            CreateMap<Product, ProductDto>();
+            CreateMap<Product, ProductDto>()
+                .ForMember(x => x.ProductUnitName, opt => opt.MapFrom(x => x.ProductUnit.Name))
+                .ForMember(x => x.CurrencyUnitName, opt => opt.MapFrom(x => x.CurrencyUnit.Name))
+                .ForMember(x => x.CategoryName, opt => opt.MapFrom(x => x.Category.Name));
             CreateMap<ProductDto, Product>();
 
             CreateMap<ProductUnit, ProductUnitDto>();

@@ -45,4 +45,14 @@
                 }
             ];
         };
+
+        function fillOptions(selectName, list, attrName) {
+            debugger;
+            var defaultOp = "<option id=id_0'" + "' value='0' >---</option>";
+            $("#" + selectName).append(defaultOp);
+            for (var i = 0; i < list.length; i++) {
+                var op = '<option ' + ' id=id_"' + list[i]["id"] + '" value="' + list[i]["id"] + '">' + list[i][attrName] + '</option>'
+                $("#" + selectName).append(op);
+            }
+        }
     </script>

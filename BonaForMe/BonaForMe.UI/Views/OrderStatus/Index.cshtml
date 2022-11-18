@@ -1,7 +1,7 @@
-﻿@model BonaForMe.DomainCore.DTO.AnnouncementDto
+﻿@model BonaForMe.DomainCore.DTO.OrderStatusDto
 @{
-    ViewData["Title"] = "Announcements";
-    ViewData["SingleName"] = "Announcement";
+    ViewData["Title"] = "OrderStatuses";
+    ViewData["SingleName"] = "OrderStatus";
     Layout = "~/Views/Shared/_AdminLTE.cshtml";
 }
 
@@ -28,20 +28,18 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">@ViewData["Title"]</h3>
-                            <button class="btn-success" onclick="jsOpenSaveAnnouncement();" style="padding: 10px; float:right;">
+                            <button class="btn-success" onclick="jsOpenSaveOrderStatus();" style="padding: 10px; float:right;">
                                 <i class="fas fa-save"></i>
                                 New @ViewData["SingleName"]
                             </button>
                         </div>
                         <div class="card-body" style="overflow-x:auto;">
-                            <table id="tblAnnouncementList" class="table table-bordered table-striped table-responsive-lg" style="width: 100% !important;">
+                            <table id="tblOrderStatusList" class="table table-bordered table-striped table-responsive-lg" style="width: 100% !important;">
                                 <thead>
                                     <tr>
                                         <th>Id</th>
-                                        <th>Title</th>
-                                        <th>Description</th>
-                                        <th>ImagePath</th>
-                                        <th>Category</th>
+                                        <th>Name</th>
+                                        <th>Color Code</th>
                                         <th class="noExport">Actions</th>
                                     </tr>
                                 </thead>
@@ -71,32 +69,16 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="Title" class="control-label"><span style="color:red">* </span>Title</label>
-                            <input name="Title" id="Title" class="form-control" required />
+                            <label for="Name" class="control-label"><span style="color:red">* </span>Name</label>
+                            <input name="Name" id="Name" class="form-control" required />
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="Description" class="control-label"><span style="color:red">* </span>Description</label>
-                            <input name="Description" id="Description" class="form-control" required />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="ImagePath" class="control-label"><span style="color:red">* </span>ImagePath</label>
-                            <input name="ImagePath" id="ImagePath" class="form-control" required />
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="CategoryId" class="control-label"><span style="color:red">* </span>Category</label>
-                            <select id="CategoryId" class="custom-select" name="CategoryId" required>
-                            </select>
+                            <label for="ColorCode" class="control-label"><span style="color:red">* </span>ColorCode</label>
+                            <input name="ColorCode" id="ColorCode" class="form-control" required />
                         </div>
                     </div>
                 </div>
@@ -104,14 +86,14 @@
 
             <div class="modal-footer">
                 <button type="button" data-content="remove" class="btn btn-default" data-dismiss="modal"> Cancel </button>
-                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="jsSaveAnnouncement()"> Save </button>
+                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="jsSaveOrderStatus()"> Save </button>
             </div>
         </div>
     </div>
 </div>
 
 @await Html.PartialAsync("_Delete")
-<input type="hidden" id="hdnAnnouncementId" value="" />
+<input type="hidden" id="hdnOrderStatusId" value="" />
 <div class="spinnerAnimation" style="display:none;"></div>
 <link href="~/css/spinner.css" rel="stylesheet" />
 
@@ -119,13 +101,12 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         createTable();
-        fillCategorySelect();
     });
 
     function createTable() {
         var domString = getTableDom();
-        var buttons = getTableButtons("Announcements");
-        $('#tblAnnouncementList').DataTable
+        var buttons = getTableButtons("OrderStatuses");
+        $('#tblOrderStatusList').DataTable
         ({
             "paging": true,
             "ordering": true,
@@ -138,7 +119,7 @@
             dom: domString,
             buttons: buttons,
             "ajax": {
-                "url": "/Announcement/LoadAnnouncementData/",
+                "url": "/OrderStatus/LoadOrderStatusData/",
                 "type": 'POST',
                 "dataType": "json"
             },
@@ -149,15 +130,13 @@
             }],
             "columns": [
                 getCell("Id"),
-                getCell("Title"),
-                getCell("Description"),
-                getCell("ImagePath"),
-                getCell("CategoryName"),
+                getCell("Name"),
+                getCell("ColorCode"),
                 {
                     "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
                     "render": function (data, type, full, meta) {
                         var buttonGroup = "<div class='btn-group role='group'>";
-                        buttonGroup += "<a href='#' class='btn btn-warning btn-sm' style='color:white; margin:0px 5px;' onclick=jsOpenSaveAnnouncement('" + full.id + "');><i class='fas fa-edit'></i> Edit </a>"
+                        buttonGroup += "<a href='#' class='btn btn-warning btn-sm' style='color:white; margin:0px 5px;' onclick=jsOpenSaveOrderStatus('" + full.id + "');><i class='fas fa-edit'></i> Edit </a>"
                         buttonGroup += "<a href='#' class='btn btn-danger btn-sm' style='color:white; margin:0px 5px;' onclick=DeleteData('" + full.id + "');> <i class='fas fa-trash'></i> Delete </a>";
                         buttonGroup += "</div>"
                         return buttonGroup;
@@ -168,40 +147,35 @@
         });
     }
 
-    function jsOpenSaveAnnouncement(id) {
-        $("#hdnAnnouncementId").val("");
-        $("#Title").val("");
-        $("#Description").val("");
-        $("#ImagePath").val("");
-        $("#CategoryId").val("");
+    function jsOpenSaveOrderStatus(id) {
+        $("#hdnOrderStatusId").val("");
+        $("#Name").val("");
+        $("#ColorCode").val("");
 
         if (id != null && id !== "") {
             var data = { id: id }
-            var result = ajaxRequest('POST', '@Url.Action("GetAnnouncementById", "Announcement")', data)
-            $("#hdnAnnouncementId").val(result.id);
-            $("#Title").val(result.title);
-            $("#Description").val(result.description);
-            $("#ImagePath").val(result.imagePath);
-            $("#CategoryId").val(result.categoryId);
+            var result = ajaxRequest('POST', '@Url.Action("GetOrderStatusById", "OrderStatus")', data)
+            $("#hdnOrderStatusId").val(result.id);
+            $("#Name").val(result.name);
+            $("#ColorCode").val(result.colorCode);
         }
         $('#modalSave').modal('show');
     }
 
-    function jsSaveAnnouncement() {
+    function jsSaveOrderStatus() {
         var data = {
-            Id: $("#hdnAnnouncementId").val(),
-            Title: $("#Title").val(),
-            Description: $("#Description").val(),
+            Id: $("#hdnOrderStatusId").val(),
+            Name: $("#Name").val(),
+            ColorCode: $("#ColorCode").val(),
             ImagePath: $("#ImagePath").val(),
-            CategoryId: $("#CategoryId").val(),
         };
 
-        var result = ajaxRequest('POST', '@Url.Action("Save", "Announcement")', data)
+        var result = ajaxRequest('POST', '@Url.Action("Save", "OrderStatus")', data)
         debugger;
         if (result != null) {
             if (result.success) {
                 $('#modalSave').modal('hide');
-                thisTable = $('#tblAnnouncementList').DataTable();
+                thisTable = $('#tblOrderStatusList').DataTable();
                 thisTable.draw();
                 toastr.success('Transaction successful.');
             } else {
@@ -224,17 +198,12 @@
         var result = ajaxRequest('POST', '@Url.Action("Delete", ViewData["SingleName"])', data);
         if (result.success) {
             $('#delete').modal('hide');
-            thisTable = $('#tblAnnouncementList').DataTable();
+            thisTable = $('#tblOrderStatusList').DataTable();
             thisTable.draw();
             toastr.success('The deletion was successful.');
         } else {
             $('#delete').modal('hide');
             toastr.error('Error in deletion!');
         }
-    }
-
-    function fillCategorySelect() {
-        var result = ajaxRequest('POST', '@Url.Action("GetAllCategory", "Category")')
-        fillOptions("CategoryId", result, "name");
     }
 </script>

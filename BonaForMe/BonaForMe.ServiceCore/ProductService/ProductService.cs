@@ -114,7 +114,9 @@ namespace BonaForMe.ServiceCore.ProductService
             Result<ProductDto> result = new Result<ProductDto>();
             try
             {
-                var model = _context.Products.Where(x => x.Id == id && x.IsActive && !x.IsDeleted).FirstOrDefault();
+                var model = _context.Products.Where(x => x.Id == id && x.IsActive && !x.IsDeleted)
+                    .Include(x => x.ProductUnit).Include(x => x.CurrencyUnit).Include(x => x.Category)
+                    .FirstOrDefault();
                 result.Data = _mapper.Map<ProductDto>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
@@ -132,7 +134,9 @@ namespace BonaForMe.ServiceCore.ProductService
             Result<List<ProductDto>> result = new Result<List<ProductDto>>();
             try
             {
-                var model = _context.Products.Where(x => x.IsActive && !x.IsDeleted).ToList();
+                var model = _context.Products.Where(x => x.IsActive && !x.IsDeleted)
+                    .Include(x => x.ProductUnit).Include(x => x.CurrencyUnit).Include(x => x.Category)
+                    .ToList();
                 result.Data = _mapper.Map<List<Product>, List<ProductDto>>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;

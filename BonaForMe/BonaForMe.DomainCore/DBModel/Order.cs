@@ -14,7 +14,7 @@ namespace BonaForMe.DomainCore.DBModel
         public Guid UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public virtual OrderStatus User { get; set; }
+        public virtual User User { get; set; }
 
         [Required]
         public int Count { get; set; }

@@ -1,7 +1,7 @@
-﻿@model BonaForMe.DomainCore.DTO.AnnouncementDto
+﻿@model BonaForMe.DomainCore.DTO.ContactInformationDto
 @{
-    ViewData["Title"] = "Announcements";
-    ViewData["SingleName"] = "Announcement";
+    ViewData["Title"] = "ContactInformations";
+    ViewData["SingleName"] = "ContactInformation";
     Layout = "~/Views/Shared/_AdminLTE.cshtml";
 }
 
@@ -28,20 +28,19 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">@ViewData["Title"]</h3>
-                            <button class="btn-success" onclick="jsOpenSaveAnnouncement();" style="padding: 10px; float:right;">
+                            <button class="btn-success" onclick="jsOpenSaveContactInformation();" style="padding: 10px; float:right;">
                                 <i class="fas fa-save"></i>
                                 New @ViewData["SingleName"]
                             </button>
                         </div>
                         <div class="card-body" style="overflow-x:auto;">
-                            <table id="tblAnnouncementList" class="table table-bordered table-striped table-responsive-lg" style="width: 100% !important;">
+                            <table id="tblContactInformationList" class="table table-bordered table-striped table-responsive-lg" style="width: 100% !important;">
                                 <thead>
                                     <tr>
                                         <th>Id</th>
-                                        <th>Title</th>
-                                        <th>Description</th>
-                                        <th>ImagePath</th>
-                                        <th>Category</th>
+                                        <th>Email Info</th>
+                                        <th>Whattsapp Phone</th>
+                                        <th>Customer Support Phone</th>
                                         <th class="noExport">Actions</th>
                                     </tr>
                                 </thead>
@@ -71,32 +70,25 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="Title" class="control-label"><span style="color:red">* </span>Title</label>
-                            <input name="Title" id="Title" class="form-control" required />
+                            <label for="EmailInfo" class="control-label"><span style="color:red">* </span>Email Info</label>
+                            <input name="EmailInfo" id="EmailInfo" class="form-control" required />
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="Description" class="control-label"><span style="color:red">* </span>Description</label>
-                            <input name="Description" id="Description" class="form-control" required />
+                            <label for="WhattsappPhone" class="control-label"><span style="color:red">* </span>WhattsappPhone</label>
+                            <input name="WhattsappPhone" id="WhattsappPhone" class="form-control" required />
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="form-group">
-                            <label for="ImagePath" class="control-label"><span style="color:red">* </span>ImagePath</label>
-                            <input name="ImagePath" id="ImagePath" class="form-control" required />
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="CategoryId" class="control-label"><span style="color:red">* </span>Category</label>
-                            <select id="CategoryId" class="custom-select" name="CategoryId" required>
-                            </select>
+                            <label for="CustomerSupportPhone" class="control-label"><span style="color:red">* </span>CustomerSupportPhone</label>
+                            <input name="CustomerSupportPhone" id="CustomerSupportPhone" class="form-control" required />
                         </div>
                     </div>
                 </div>
@@ -104,14 +96,14 @@
 
             <div class="modal-footer">
                 <button type="button" data-content="remove" class="btn btn-default" data-dismiss="modal"> Cancel </button>
-                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="jsSaveAnnouncement()"> Save </button>
+                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="jsSaveContactInformation()"> Save </button>
             </div>
         </div>
     </div>
 </div>
 
 @await Html.PartialAsync("_Delete")
-<input type="hidden" id="hdnAnnouncementId" value="" />
+<input type="hidden" id="hdnContactInformationId" value="" />
 <div class="spinnerAnimation" style="display:none;"></div>
 <link href="~/css/spinner.css" rel="stylesheet" />
 
@@ -119,13 +111,12 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         createTable();
-        fillCategorySelect();
     });
 
     function createTable() {
         var domString = getTableDom();
-        var buttons = getTableButtons("Announcements");
-        $('#tblAnnouncementList').DataTable
+        var buttons = getTableButtons("ContactInformations");
+        $('#tblContactInformationList').DataTable
         ({
             "paging": true,
             "ordering": true,
@@ -138,7 +129,7 @@
             dom: domString,
             buttons: buttons,
             "ajax": {
-                "url": "/Announcement/LoadAnnouncementData/",
+                "url": "/ContactInformation/LoadContactInformationData/",
                 "type": 'POST',
                 "dataType": "json"
             },
@@ -149,15 +140,14 @@
             }],
             "columns": [
                 getCell("Id"),
-                getCell("Title"),
-                getCell("Description"),
-                getCell("ImagePath"),
-                getCell("CategoryName"),
+                getCell("EmailInfo"),
+                getCell("WhattsappPhone"),
+                getCell("CustomerSupportPhone"),
                 {
                     "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
                     "render": function (data, type, full, meta) {
                         var buttonGroup = "<div class='btn-group role='group'>";
-                        buttonGroup += "<a href='#' class='btn btn-warning btn-sm' style='color:white; margin:0px 5px;' onclick=jsOpenSaveAnnouncement('" + full.id + "');><i class='fas fa-edit'></i> Edit </a>"
+                        buttonGroup += "<a href='#' class='btn btn-warning btn-sm' style='color:white; margin:0px 5px;' onclick=jsOpenSaveContactInformation('" + full.id + "');><i class='fas fa-edit'></i> Edit </a>"
                         buttonGroup += "<a href='#' class='btn btn-danger btn-sm' style='color:white; margin:0px 5px;' onclick=DeleteData('" + full.id + "');> <i class='fas fa-trash'></i> Delete </a>";
                         buttonGroup += "</div>"
                         return buttonGroup;
@@ -168,40 +158,37 @@
         });
     }
 
-    function jsOpenSaveAnnouncement(id) {
-        $("#hdnAnnouncementId").val("");
-        $("#Title").val("");
-        $("#Description").val("");
-        $("#ImagePath").val("");
-        $("#CategoryId").val("");
+    function jsOpenSaveContactInformation(id) {
+        $("#hdnContactInformationId").val("");
+        $("#EmailInfo").val("");
+        $("#WhattsappPhone").val("");
+        $("#CustomerSupportPhone").val("");
 
         if (id != null && id !== "") {
             var data = { id: id }
-            var result = ajaxRequest('POST', '@Url.Action("GetAnnouncementById", "Announcement")', data)
-            $("#hdnAnnouncementId").val(result.id);
-            $("#Title").val(result.title);
-            $("#Description").val(result.description);
-            $("#ImagePath").val(result.imagePath);
-            $("#CategoryId").val(result.categoryId);
+            var result = ajaxRequest('POST', '@Url.Action("GetContactInformationById", "ContactInformation")', data)
+            $("#hdnContactInformationId").val(result.id);
+            $("#EmailInfo").val(result.emailInfo);
+            $("#WhattsappPhone").val(result.whattsappPhone);
+            $("#CustomerSupportPhone").val(result.customerSupportPhone);
         }
         $('#modalSave').modal('show');
     }
 
-    function jsSaveAnnouncement() {
+    function jsSaveContactInformation() {
         var data = {
-            Id: $("#hdnAnnouncementId").val(),
-            Title: $("#Title").val(),
-            Description: $("#Description").val(),
-            ImagePath: $("#ImagePath").val(),
-            CategoryId: $("#CategoryId").val(),
+            Id: $("#hdnContactInformationId").val(),
+            EmailInfo: $("#EmailInfo").val(),
+            WhattsappPhone: $("#WhattsappPhone").val(),
+            CustomerSupportPhone: $("#CustomerSupportPhone").val(),
         };
 
-        var result = ajaxRequest('POST', '@Url.Action("Save", "Announcement")', data)
+        var result = ajaxRequest('POST', '@Url.Action("Save", "ContactInformation")', data)
         debugger;
         if (result != null) {
             if (result.success) {
                 $('#modalSave').modal('hide');
-                thisTable = $('#tblAnnouncementList').DataTable();
+                thisTable = $('#tblContactInformationList').DataTable();
                 thisTable.draw();
                 toastr.success('Transaction successful.');
             } else {
@@ -224,17 +211,12 @@
         var result = ajaxRequest('POST', '@Url.Action("Delete", ViewData["SingleName"])', data);
         if (result.success) {
             $('#delete').modal('hide');
-            thisTable = $('#tblAnnouncementList').DataTable();
+            thisTable = $('#tblContactInformationList').DataTable();
             thisTable.draw();
             toastr.success('The deletion was successful.');
         } else {
             $('#delete').modal('hide');
             toastr.error('Error in deletion!');
         }
-    }
-
-    function fillCategorySelect() {
-        var result = ajaxRequest('POST', '@Url.Action("GetAllCategory", "Category")')
-        fillOptions("CategoryId", result, "name");
     }
 </script>

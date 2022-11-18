@@ -35,7 +35,6 @@ namespace BonaForMe.UI.Infrastucture.Registry
                     cfg.AddProfile(profile);
                 }
             });
-
             //Create a mapper that will be used by the DI container
             var mapper = config.CreateMapper();
 

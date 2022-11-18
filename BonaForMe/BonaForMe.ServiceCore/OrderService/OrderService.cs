@@ -114,7 +114,7 @@ namespace BonaForMe.ServiceCore.OrderService
             Result<OrderDto> result = new Result<OrderDto>();
             try
             {
-                var model = _context.Orders.Where(x => x.Id == id && x.IsActive && !x.IsDeleted).FirstOrDefault();
+                var model = _context.Orders.Where(x => x.Id == id && x.IsActive && !x.IsDeleted).Include(x=> x.User).Include(x=> x.OrderStatus).FirstOrDefault();
                 result.Data = _mapper.Map<OrderDto>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
@@ -132,7 +132,7 @@ namespace BonaForMe.ServiceCore.OrderService
             Result<List<OrderDto>> result = new Result<List<OrderDto>>();
             try
             {
-                var model = _context.Orders.Where(x => x.IsActive && !x.IsDeleted).ToList();
+                var model = _context.Orders.Where(x => x.IsActive && !x.IsDeleted).Include(x => x.User).Include(x => x.OrderStatus).ToList();
                 result.Data = _mapper.Map<List<Order>, List<OrderDto>>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;

@@ -93,7 +93,7 @@ namespace BonaForMe.UI.Controllers
             try
             {
                 var result = _userService.GetAllUser();
-                return new JsonResult(result);
+                return new JsonResult(result.Data);
             }
             catch (Exception)
             {

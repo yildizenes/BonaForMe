@@ -114,7 +114,7 @@ namespace BonaForMe.ServiceCore.AnnouncementService
             Result<AnnouncementDto> result = new Result<AnnouncementDto>();
             try
             {
-                var model = _context.Announcements.Where(x => x.Id == id && x.IsActive && !x.IsDeleted).FirstOrDefault();
+                var model = _context.Announcements.Where(x => x.Id == id && x.IsActive && !x.IsDeleted).Include(x => x.Category).FirstOrDefault();
                 result.Data = _mapper.Map<AnnouncementDto>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
@@ -132,7 +132,7 @@ namespace BonaForMe.ServiceCore.AnnouncementService
             Result<List<AnnouncementDto>> result = new Result<List<AnnouncementDto>>();
             try
             {
-                var model = _context.Announcements.Where(x => x.IsActive && !x.IsDeleted).ToList();
+                var model = _context.Announcements.Where(x => x.IsActive && !x.IsDeleted).Include(x=> x.Category).ToList();
                 result.Data = _mapper.Map<List<Announcement>, List<AnnouncementDto>>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
