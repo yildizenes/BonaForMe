@@ -15,5 +15,6 @@ namespace BonaForMe.ServiceCore.UserService
         Result<List<UserDto>> GetAllUser();
         JsonResult FillDataTable(DataTableDto dataTable);
         Result<UserDto> GetUserByEmail(string userMail);
+        Result ChangeApproveStatus(Guid userId, bool isApprove);
     }
 }

@@ -185,5 +185,29 @@ namespace BonaForMe.ServiceCore.UserService
             }
             return result;
         }
+
+        public Result ChangeApproveStatus(Guid userId, bool isApprove)
+        {
+            Result result = new Result();
+            try
+            {
+                var model = _context.Users.FirstOrDefault(x => x.Id == userId);
+                if (model != null)
+                {
+                    model.IsApproved = isApprove;
+                    _context.Entry(model).State = EntityState.Detached;
+                    _context.Update(model);
+                }
+                _context.SaveChanges();
+                result.Success = true;
+                result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
     }
 }

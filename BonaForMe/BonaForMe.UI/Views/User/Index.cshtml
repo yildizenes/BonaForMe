@@ -41,6 +41,7 @@
                                         <th>Name</th>
                                         <th>Mail Address</th>
                                         <th>Phone</th>
+                                        <th>Confirmation Status</th>
                                         <th class="noExport">Actions</th>
                                     </tr>
                                 </thead>
@@ -204,6 +205,14 @@
                 {
                     "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
                     "render": function (data, type, full, meta) {
+                        var checkboxId = "isApproved_" + full.id;
+                        var isChecked = full.isApproved == true ? "checked" : "";
+                        return "<input type='checkbox' id='"+checkboxId+"' style='margin-left:5px; transform: scale(2.0)' onchange=approveUser('" + full.id + "'); " + isChecked + ">"
+                    }
+                },
+                {
+                    "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
+                    "render": function (data, type, full, meta) {
                         var buttonGroup = "<div class='btn-group role='group'>";
                         buttonGroup += "<a href='#' class='btn btn-warning btn-sm' style='color:white; margin:0px 5px;' onclick=jsOpenSaveUser('" + full.id + "');><i class='fas fa-edit'></i> Edit </a>"
                         buttonGroup += "<a href='#' class='btn btn-danger btn-sm' style='color:white; margin:0px 5px;' onclick=DeleteData('" + full.id + "');> <i class='fas fa-trash'></i> Delete </a>";
@@ -263,7 +272,6 @@
         };
 
         var result = ajaxRequest('POST', '@Url.Action("Save", "User")', data)
-        debugger;
         if (result != null) {
             if (result.success) {
                 $('#modalSave').modal('hide');
@@ -297,5 +305,21 @@
             $('#delete').modal('hide');
             toastr.error('Error in deletion!');
         }
+    }
+
+    function approveUser(id) {
+        var checkboxId = "#isApproved_" + id;
+        var isApproved = $(checkboxId).is(':checked');
+        var data = { userId: id, isApproved: isApproved }
+        var result = ajaxRequest('POST', '@Url.Action("ChangeApproveStatus", "Account")', data);
+
+        if (result != null) {
+            if (result.success)
+                toastr.success('Transaction successful.');
+            else
+                toastr.error(result.message);
+        }
+        else
+            toastr.error('Error in approving!');
     }
 </script>

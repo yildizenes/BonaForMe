@@ -52,12 +52,23 @@ namespace BonaForMe.UI.Controllers
         public async Task<IActionResult> Login(AccountDto accountDto)
         {
             var returnTo = "/Account/Login";
+
+            if (!accountDto.UserMail.Contains("@") && !accountDto.UserMail.Contains(".com"))
+            {
+                TempData["Error"] = "Lütfen geçerli bir mail adresi giriniz!";
+                return RedirectToAction("Login", "Account");
+            }
             try
             {
                 accountDto.UserPassword = PasswordHelper.PasswordEncoder(accountDto.UserPassword);
                 var result = _accountService.Login(accountDto);
                 if (result.Success)
                 {
+                    if (!result.Data.IsApproved)
+                    {
+                        TempData["Error"] = "Hesabınız onay bekliyor.";
+                        return RedirectToAction("Login", "Account");
+                    }
                     await CreateClaims(result.Data);
                     returnTo = "/Home/Dashboard";
                 }
@@ -193,6 +204,20 @@ namespace BonaForMe.UI.Controllers
                 ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30),
             };
             await HttpContext.SignInAsync( CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+        }
+
+        [HttpPost]
+        public JsonResult ChangeApproveStatus(Guid userId, bool isApproved)
+        {
+            try
+            {
+                var result = _userService.ChangeApproveStatus(userId, isApproved);
+                return new JsonResult(result);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         #region Image Process

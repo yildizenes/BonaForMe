@@ -14,5 +14,6 @@ namespace BonaForMe.ServiceCore.ProductService
         Result<ProductDto> GetProductById(Guid id);
         Result<List<ProductDto>> GetAllProduct();
         JsonResult FillDataTable(DataTableDto dataTable);
+        Result<List<ProductDto>> GetAllProductByCategoryId(Guid categoryId);
     }
 }

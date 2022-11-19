@@ -31,7 +31,7 @@ namespace BonaForMe.DomainCommonCore.Helper
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
 
-            client.Send(message);
+            //client.Send(message);
         }
 
         public static string GetMailBody(string baslik, string icerik, string sifre) 

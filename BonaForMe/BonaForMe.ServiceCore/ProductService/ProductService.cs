@@ -172,5 +172,25 @@ namespace BonaForMe.ServiceCore.ProductService
                 return new JsonResult(new { success = false, message = ex });
             }
         }
+
+        public Result<List<ProductDto>> GetAllProductByCategoryId(Guid categoryId)
+        {
+            Result<List<ProductDto>> result = new Result<List<ProductDto>>();
+            try
+            {
+                var model = _context.Products.Where(x => x.CategoryId == categoryId && x.IsActive && !x.IsDeleted)
+                    .Include(x => x.ProductUnit).Include(x => x.CurrencyUnit).Include(x => x.Category)
+                    .ToList();
+                result.Data = _mapper.Map<List<Product>, List<ProductDto>>(model);
+                result.Success = true;
+                result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
     }
 }
