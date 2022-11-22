@@ -100,6 +100,7 @@ namespace BonaForMe.ServiceCore.CategoryService
                 _context.SaveChanges();
                 result.Data = _mapper.Map<CategoryDto>(category);
                 result.Success = true;
+                result.Message = ResultMessages.Success;
             }
             catch (Exception ex)
             {

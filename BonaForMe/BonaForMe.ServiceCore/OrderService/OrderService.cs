@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Mvc;
+using BonaForMe.ServiceCore.LinkOrderProductService;
 
 namespace BonaForMe.ServiceCore.OrderService
 {
@@ -16,11 +17,13 @@ namespace BonaForMe.ServiceCore.OrderService
     {
         private readonly BonaForMeDBContext _context;
         IMapper _mapper;
+        private readonly ILinkOrderProductService _linkOrderProductService;
 
-        public OrderService(BonaForMeDBContext context, IMapper mapper)
+        public OrderService(BonaForMeDBContext context, IMapper mapper, ILinkOrderProductService linkOrderProductService)
         {
             _context = context;
             _mapper = mapper;
+            _linkOrderProductService = linkOrderProductService;
         }
         public Result<OrderDto> AddOrder(OrderDto orderDto)
         {
@@ -114,8 +117,15 @@ namespace BonaForMe.ServiceCore.OrderService
             Result<OrderDto> result = new Result<OrderDto>();
             try
             {
-                var model = _context.Orders.Where(x => x.Id == id && x.IsActive && !x.IsDeleted).Include(x=> x.User).Include(x=> x.OrderStatus).FirstOrDefault();
+                var model = _context.Orders.Where(x => x.Id == id && x.IsActive && !x.IsDeleted)
+                    .Include(x => x.User).Include(x => x.OrderStatus)
+                    .FirstOrDefault();
+
                 result.Data = _mapper.Map<OrderDto>(model);
+                if (result.Data != null)
+                {
+                    result.Data.ProductList = _linkOrderProductService.GetAllLinkOrderProductByOrderId(id).Data;
+                }
                 result.Success = true;
                 result.Message = ResultMessages.Success;
             }

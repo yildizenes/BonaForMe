@@ -1,5 +1,6 @@
 ﻿using BonaForMe.DomainCore.DBModel;
 using System;
+using System.Collections.Generic;
 
 namespace BonaForMe.DomainCore.DTO
 {
@@ -18,5 +19,7 @@ namespace BonaForMe.DomainCore.DTO
         public string OrderStatusName { get; set; }
 
         public virtual OrderStatus OrderStatus { get; set; }
+
+        public virtual List<LinkOrderProductDto> ProductList { get; set; }
     }
 }

@@ -168,5 +168,41 @@ namespace BonaForMe.ServiceCore.LinkOrderProductService
                 return new JsonResult(new { success = false, message = ex });
             }
         }
+
+        public Result<List<LinkOrderProductDto>> GetAllLinkOrderProductByOrderId(Guid id)
+        {
+            Result<List<LinkOrderProductDto>> result = new Result<List<LinkOrderProductDto>>();
+            try
+            {
+                var model = _context.LinkOrderProducts.Where(x => x.OrderId == id && x.IsActive && !x.IsDeleted).ToList();
+                result.Data = _mapper.Map<List<LinkOrderProduct>, List<LinkOrderProductDto>>(model);
+                result.Success = true;
+                result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
+        public Result<List<LinkOrderProductDto>> GetAllLinkOrderProductByProductId(Guid id)
+        {
+            Result<List<LinkOrderProductDto>> result = new Result<List<LinkOrderProductDto>>();
+            try
+            {
+                var model = _context.LinkOrderProducts.Where(x => x.ProductId == id && x.IsActive && !x.IsDeleted).ToList();
+                result.Data = _mapper.Map<List<LinkOrderProduct>, List<LinkOrderProductDto>>(model);
+                result.Success = true;
+                result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
     }
 }

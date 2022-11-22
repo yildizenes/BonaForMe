@@ -49,10 +49,9 @@ namespace BonaForMe.DataAccessCore
                     user = CurrentUser.Get(_httpContextAccessor.HttpContext.User);
                     userid = user!=null ? Guid.Parse(user.UserId) : Guid.Parse("1FCC262D-5EA7-4BA6-890B-681AC0886971");
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                 }
-                //TODO
 
                 if (entity.State == EntityState.Added)
                 {

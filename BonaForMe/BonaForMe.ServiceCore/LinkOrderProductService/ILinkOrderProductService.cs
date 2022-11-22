@@ -13,6 +13,8 @@ namespace BonaForMe.ServiceCore.LinkOrderProductService
         Result<LinkOrderProductDto> UpdateLinkOrderProduct(LinkOrderProductDto linkOrderProductDto);
         Result<LinkOrderProductDto> GetLinkOrderProductById(Guid id);
         Result<List<LinkOrderProductDto>> GetAllLinkOrderProduct();
+        Result<List<LinkOrderProductDto>> GetAllLinkOrderProductByOrderId(Guid id);
+        Result<List<LinkOrderProductDto>> GetAllLinkOrderProductByProductId(Guid id);
         JsonResult FillDataTable(DataTableDto dataTable);
     }
 }

@@ -78,7 +78,7 @@ namespace BonaForMe.UI.Controllers
                     return RedirectToAction("Login", "Account");
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 TempData["Error"] = "Giriş yapma işleminde hata var!";
                 return RedirectToAction("Login", "Account");
@@ -162,7 +162,7 @@ namespace BonaForMe.UI.Controllers
                 var userData = _userService.GetUserByEmail(userMail);
                 if (userData == null)
                 {
-                    TempData["Error"] = "Eposta adresi sisteme kayıtlı değildir! Lütfen adresinizi kontrol ediniz.";
+                    TempData["Error"] = "This email address is not found on the system! Please check your email address.";
                     return RedirectToAction("ForgetPassword", "Account");
                 }
 
@@ -181,7 +181,6 @@ namespace BonaForMe.UI.Controllers
                 return RedirectToAction("ForgetPassword", "Account");
             }
         }
-
 
         private async Task CreateClaims(UserDto userDto)
         {
