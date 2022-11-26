@@ -16,7 +16,6 @@ using System.Threading.Tasks;
 namespace BonaForMe.API.Controllers
 {
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("[controller]/[action]")]
     public class AccountController : Controller
     {

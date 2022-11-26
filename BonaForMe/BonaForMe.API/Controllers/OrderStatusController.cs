@@ -33,7 +33,7 @@ namespace BonaForMe.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("{id}")]
+        [HttpGet]
         public IActionResult GetOrderStatusById(Guid id)
         {
             try
@@ -78,7 +78,7 @@ namespace BonaForMe.API.Controllers
             }
         }
 
-        [HttpPost("{id}")]
+        [HttpPost]
         public IActionResult DeleteOrderStatus(Guid id)
         {
             try

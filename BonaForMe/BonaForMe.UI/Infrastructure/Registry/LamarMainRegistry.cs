@@ -13,8 +13,6 @@ namespace BonaForMe.UI.Infrastucture.Registry
     {
         public LamarMainRegistry(IConfiguration configuration)
         {
-
-
             Scan(x =>
             {
                 x.Assembly(typeof(Program).Assembly);
@@ -29,15 +27,10 @@ namespace BonaForMe.UI.Infrastucture.Registry
             var optionsBuilder = new DbContextOptionsBuilder<BonaForMeDBContext>();  // Contextin İsmi Gelecek
             optionsBuilder.UseSqlServer(connectionString);
 
-            //For<UIRegistry>().Use<UIRegistry>();
-
 
             For<BonaForMeDBContext>().Use<BonaForMeDBContext>()
                   .Ctor<DbContextOptions<BonaForMeDBContext>>("options")
                               .Is(optionsBuilder.Options);
-            //For<ILogService>().Use<LogService>();
-            //Policies.SetAllProperties(y => y.OfType<ILogService>());
-
         }
     }
 }

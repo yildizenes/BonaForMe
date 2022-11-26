@@ -60,9 +60,7 @@ namespace BonaForMe.UI
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme   /*JwtBearerDefaults.AuthenticationScheme*/).AddCookie(
                 options =>
                 {
-
                     options.LoginPath = new PathString("/Account/Login/");
-
                 })
                .AddJwtBearer(options =>
                {

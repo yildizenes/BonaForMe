@@ -22,7 +22,7 @@ namespace BonaForMe.API.Controllers
             _accountService = accountService;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         public IActionResult GetUser(Guid id)
         {
             try
@@ -63,7 +63,7 @@ namespace BonaForMe.API.Controllers
             }
         }
 
-        [HttpGet()]
+        [HttpGet]
         public IActionResult GetAllUser()
         {
             try

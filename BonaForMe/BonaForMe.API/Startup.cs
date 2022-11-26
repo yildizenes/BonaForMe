@@ -1,24 +1,20 @@
+using AutoMapper;
+using BonaForMe.API.Infrastucture;
+using BonaForMe.DataAccessCore;
+using BonaForMe.DomainCommonCore.Constants;
+using BonaForMe.ServicesCore.JwtService;
 using Lamar.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using BonaForMe.API.Infrastucture;
-using BonaForMe.DataAccessCore;
-using BonaForMe.DomainCommonCore.Constants;
-using BonaForMe.ServicesCore.JwtService;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BonaForMe.API
 {
@@ -48,9 +44,9 @@ namespace BonaForMe.API
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            Configuration.GetConnectionString("InovationBusinessDBContext");
+            Configuration.GetConnectionString("BonaForMeDBContext");
             services.AddDbContext<BonaForMeDBContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("InovationBusinessDBContext")), ServiceLifetime.Transient);
+            options.UseSqlServer(Configuration.GetConnectionString("BonaForMeDBContext")), ServiceLifetime.Transient);
 
             JwtSettings.Audience = Configuration["JwtSettings:Audience"];
             JwtSettings.Encryptkey = Configuration["JwtSettings:Encryptkey"];
@@ -60,7 +56,7 @@ namespace BonaForMe.API
             JwtSettings.NotBeforeMinutes = int.Parse(Configuration["JwtSettings:NotBeforeMinutes"]);
 
             services.AddLamar(new LamarMainRegistry(Configuration));
-
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped(typeof(IJwtService), typeof(JwtService));
 
             //jwt start
@@ -68,7 +64,7 @@ namespace BonaForMe.API
                 options =>
                 {
 
-                    options.LoginPath = new PathString("/User/Login/");
+                    options.LoginPath = new PathString("/Account/Login/");
 
                 })
                .AddJwtBearer(options =>
@@ -124,7 +120,7 @@ namespace BonaForMe.API
                 //endpoints.MapControllers();
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=User}/{action=Index}");
+                    pattern: "{controller=Account}/{action=Login}");
             });
 
             SeedDB.Initialize(dbcontext);

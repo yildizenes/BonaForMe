@@ -1,11 +1,7 @@
-﻿using Lamar;
+﻿using BonaForMe.DataAccessCore;
+using Lamar;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using BonaForMe.DataAccessCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BonaForMe.API.Infrastucture
 {
@@ -23,10 +19,9 @@ namespace BonaForMe.API.Infrastucture
 
             });
 
-            var connectionString = configuration.GetConnectionString("InovationBusinessDBContext");
+            var connectionString = configuration.GetConnectionString("BonaForMeDBContext");
             var optionsBuilder = new DbContextOptionsBuilder<BonaForMeDBContext>();  // Contextin İsmi Gelecek
             optionsBuilder.UseSqlServer(connectionString);
-
 
             For<BonaForMeDBContext>().Use<BonaForMeDBContext>()
                   .Ctor<DbContextOptions<BonaForMeDBContext>>("options")
