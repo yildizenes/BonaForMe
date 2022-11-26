@@ -17,7 +17,6 @@ namespace BonaForMe.API.Controllers
             _paymentInfoService = paymentInfoService;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAllPaymentInfo()
         {
@@ -32,7 +31,6 @@ namespace BonaForMe.API.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetPaymentInfoById(Guid id)
         {

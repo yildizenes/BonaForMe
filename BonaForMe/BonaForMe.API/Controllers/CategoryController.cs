@@ -17,7 +17,6 @@ namespace BonaForMe.API.Controllers
             _categoryService = categoryService;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAllCategory()
         {
@@ -32,7 +31,6 @@ namespace BonaForMe.API.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetCategoryById(Guid id)
         {

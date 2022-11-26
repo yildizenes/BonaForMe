@@ -17,7 +17,6 @@ namespace BonaForMe.API.Controllers
             _announcementService = announcementService;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAllAnnouncement()
         {
@@ -32,7 +31,6 @@ namespace BonaForMe.API.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAnnouncementById(Guid id)
         {

@@ -17,7 +17,6 @@ namespace BonaForMe.API.Controllers
             _currencyUnitService = currencyUnitService;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAllCurrencyUnit()
         {
@@ -32,7 +31,6 @@ namespace BonaForMe.API.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetCurrencyUnitById(Guid id)
         {

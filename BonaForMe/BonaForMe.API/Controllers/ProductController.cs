@@ -17,7 +17,6 @@ namespace BonaForMe.API.Controllers
             _productService = productService;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAllProduct()
         {
@@ -32,7 +31,6 @@ namespace BonaForMe.API.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetProductById(Guid id)
         {

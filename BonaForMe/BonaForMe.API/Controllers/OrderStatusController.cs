@@ -17,7 +17,6 @@ namespace BonaForMe.API.Controllers
             _orderStatusService = orderStatusService;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAllOrderStatus()
         {
@@ -32,7 +31,6 @@ namespace BonaForMe.API.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetOrderStatusById(Guid id)
         {

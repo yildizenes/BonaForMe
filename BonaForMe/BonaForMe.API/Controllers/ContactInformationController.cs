@@ -17,7 +17,6 @@ namespace BonaForMe.API.Controllers
             _contactInformationService = contactInformationService;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAllContactInformation()
         {
@@ -32,7 +31,6 @@ namespace BonaForMe.API.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetContactInformationById(Guid id)
         {
