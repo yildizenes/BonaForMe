@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Hosting;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System;
@@ -55,7 +54,7 @@ namespace BonaForMe.UI.Controllers
 
             if (!accountDto.UserMail.Contains("@") && !accountDto.UserMail.Contains(".com"))
             {
-                TempData["Error"] = "Lütfen geçerli bir mail adresi giriniz!";
+                TempData["Error"] = "Please enter a valid email address!";
                 return RedirectToAction("Login", "Account");
             }
             try
@@ -66,7 +65,7 @@ namespace BonaForMe.UI.Controllers
                 {
                     if (!result.Data.IsApproved)
                     {
-                        TempData["Error"] = "Hesabınız onay bekliyor.";
+                        TempData["Error"] = "Your account is awaiting approval.";
                         return RedirectToAction("Login", "Account");
                     }
                     await CreateClaims(result.Data);
@@ -74,13 +73,13 @@ namespace BonaForMe.UI.Controllers
                 }
                 else
                 {
-                    TempData["Error"] = "Email adresi yada şifre yanlış";
+                    TempData["Error"] = "Email address or password is incorrect.";
                     return RedirectToAction("Login", "Account");
                 }
             }
             catch (Exception)
             {
-                TempData["Error"] = "Giriş yapma işleminde hata var!";
+                TempData["Error"] = "There was an error in the login process!";
                 return RedirectToAction("Login", "Account");
             }
 
@@ -103,14 +102,14 @@ namespace BonaForMe.UI.Controllers
             {
                 if (!userDto.UserMail.Contains("@") && !userDto.UserMail.Contains(".com"))
                 {
-                    TempData["Error"] = "Lütfen geçerli bir mail adresi giriniz!";
+                    TempData["Error"] = "Please enter a valid email address!";
                     return RedirectToAction("SignIn", "Account");
                 }
 
                 var mailCheck = _userService.GetUserByEmail(userDto.UserMail);
                 if (mailCheck.Data != null)
                 {
-                    TempData["Error"] = "Girilen mail adresi başka bir kullanıcı ile sistemde kayıtlıdır!";
+                    TempData["Error"] = "The entered e-mail address is registered in the system with another user!";
                     return RedirectToAction("SignIn", "Account");
                 }
                 userDto.UserPassword = PasswordHelper.PasswordEncoder(userDto.UserPassword);
@@ -121,13 +120,13 @@ namespace BonaForMe.UI.Controllers
                 }
                 else
                 {
-                    TempData["Error"] = "Yeni kullanıcı oluşturma işleminde hata var!";
+                    TempData["Error"] = "Error creating new user!";
                     return RedirectToAction("SignIn", "Account");
                 }
             }
             catch (Exception e)
             {
-                TempData["Error"] = "Yeni kullanıcı oluşturma işleminde hata var!" + " " + e.Message;
+                TempData["Error"] = "Error creating new user!" + " " + e.Message;
                 return RedirectToAction("SignIn", "Account");
             }
 
@@ -172,12 +171,12 @@ namespace BonaForMe.UI.Controllers
 
                 EmailHelper.SendForgetPasswordMail(userMail, userNewPassword);
 
-                TempData["Success"] = "Yeni şifreniz mail adresinize gönderilmiştir.Not: Mail spam(gereksiz) kutusuna düşebilir!";
+                TempData["Success"] = "Your new password has been sent to your e-mail address. Note: Mail may go to spam (junk) box!";
                 return RedirectToAction("Login", "Account");
             }
             catch (Exception)
             {
-                TempData["Error"] = "Şifre yenileme işleminde hata var. Lütfen daha sonra tekrar deneyiniz !";
+                TempData["Error"] = "There was an error in password reset. Please try again later!";
                 return RedirectToAction("ForgetPassword", "Account");
             }
         }

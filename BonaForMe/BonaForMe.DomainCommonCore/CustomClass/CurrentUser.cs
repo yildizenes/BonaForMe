@@ -9,7 +9,7 @@ namespace BonaForMe.DomainCommonCore.CustomClass
         {
             try
             {
-                if (!User.Identity.IsAuthenticated)
+                if (User.Identity.IsAuthenticated)
                 {
                     return new UserClaimsInfo()
                     {

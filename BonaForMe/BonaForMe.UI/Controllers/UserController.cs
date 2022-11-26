@@ -3,7 +3,6 @@ using BonaForMe.DomainCore.DTO;
 using BonaForMe.ServiceCore.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 

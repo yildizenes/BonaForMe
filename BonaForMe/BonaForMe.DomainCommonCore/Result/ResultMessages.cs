@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BonaForMe.DomainCommonCore.Result
+﻿namespace BonaForMe.DomainCommonCore.Result
 {
     public static class ResultMessages
     {
-        public static string NonExistingData = "Mevcut Olmayan Veri";
-        public static string InValidOrNullParameter= "Geçersiz veya NULL Parametre";
-        public static string NonConvertibleParameters = "Birbirine Dönüştürülemeyen Parametre";
-        public static string AlreadyExistingData = "Zaten Ekli Veri";
-        public static string IllegalState = "Uygun Durumda olmayan Veri";
-        public static string NotCompletedBatchWork = "Çoklu İşlem Başarı İle Tamamlanamadı";
-        public static string DataUptateError = "Veri Güncelleme Hatası";
-        public static string Success = "Başarıyla gerçekliştirildi.";
+        public static string NonExistingData = "Data not existing.";
+        public static string InValidOrNullParameter= "Invalid or NULL Parameter.";
+        public static string NonConvertibleParameters = "Non Convertible Parameters.";
+        public static string AlreadyExistingData = "The data is already attached.";
+        public static string IllegalState = "Data not available.";
+        public static string NotCompletedBatchWork = "Multiprocessing could not be completed successfully.";
+        public static string DataUptateError = "Data update error.";
+        public static string Success = "It was process out successfully.";
     }
 }

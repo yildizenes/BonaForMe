@@ -1,8 +1,5 @@
 ﻿using BonaForMe.DomainCommonCore.Constants;
-using BonaForMe.DomainCommonCore.Enums;
 using BonaForMe.DomainCommonCore.Helper;
-using BonaForMe.DomainCommonCore.Result;
-using BonaForMe.DomainCore.DBModel;
 using BonaForMe.DomainCore.DTO;
 using BonaForMe.ServiceCore.AccountService;
 using BonaForMe.ServiceCore.UserService;
