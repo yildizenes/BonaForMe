@@ -40,7 +40,6 @@
                                         <th>Id</th>
                                         <th>Order Code</th>
                                         <th>User</th>
-                                        <th>Count</th>
                                         <th>Status</th>
                                         <th class="noExport">Actions</th>
                                     </tr>
@@ -83,15 +82,6 @@
                             <label for="UserId" class="control-label"><span style="color:red">* </span>User</label>
                             <select id="UserId" class="custom-select" name="UserId" required>
                             </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="Count" class="control-label"><span style="color:red">* </span>Count</label>
-                            <input name="Count" id="Count" class="form-control" required type="number"/>
                         </div>
                     </div>
                 </div>
@@ -157,7 +147,6 @@
                 getCell("Id"),
                 getCell("OrderCode"),
                 getCell("UserName"),
-                getCell("Count"),
                 getCell("OrderStatusName"),
                 {
                     "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
@@ -178,7 +167,6 @@
         $("#hdnOrderId").val("");
         $("#OrderCode").val("");
         $("#UserId").val("");
-        $("#Count").val("");
         $("#OrderStatusId").val("");
 
         if (id != null && id !== "") {
@@ -187,7 +175,6 @@
             $("#hdnOrderId").val(result.id);
             $("#OrderCode").val(result.orderCode);
             $("#UserId").val(result.userId);
-            $("#Count").val(result.count);
             $("#OrderStatusId").val(result.orderStatusId);
         }
         $('#modalSave').modal('show');
@@ -198,7 +185,6 @@
             Id: $("#hdnOrderId").val(),
             OrderCode: $("#OrderCode").val(),
             UserId: $("#UserId").val(),
-            Count: $("#Count").val(),
             OrderStatusId: $("#OrderStatusId").val(),
         };
 

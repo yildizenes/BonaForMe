@@ -158,7 +158,7 @@ namespace BonaForMe.ServiceCore.PaymentInfoService
                 //Search
                 if (!string.IsNullOrEmpty(dataTable.SearchValue))
                 {
-                    paymentInfos = paymentInfos.Where(m => m.Name.ToLower().Contains(dataTable.SearchValue.ToLower()));
+                    paymentInfos = paymentInfos.Where(m => m.Description.ToLower().Contains(dataTable.SearchValue.ToLower()));
                 }
                 var data = paymentInfos.Skip(dataTable.Skip).Take(dataTable.PageSize);
                 return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = paymentInfos.Count(), recordsTotal = paymentInfos.Count(), data = data });

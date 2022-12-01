@@ -13,8 +13,6 @@ namespace BonaForMe.DomainCore.DTO
 
         public virtual User User { get; set; }
 
-        public int Count { get; set; }
-
         public Guid OrderStatusId { get; set; }
         public string OrderStatusName { get; set; }
 

@@ -5,6 +5,6 @@ namespace BonaForMe.DomainCore.DBModel
     public class PaymentInfo : BaseEntity
     {
         [Required]
-        public string Name { get; set; }
+        public string Description { get; set; }
     }
 }

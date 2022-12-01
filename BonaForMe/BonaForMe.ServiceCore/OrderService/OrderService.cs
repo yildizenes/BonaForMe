@@ -41,10 +41,21 @@ namespace BonaForMe.ServiceCore.OrderService
                         _context.Update(order);
                     }
                     else
+                    {
+                        order.OrderCode = GenerateOrderCode();
                         _context.Add(order);
+                        List<LinkOrderProductDto> productList = orderDto.ProductList.Select(x => { x.OrderId = order.Id; return x; }).ToList();
+                        _context.AddRange(_mapper.Map<List<LinkOrderProductDto>, List<LinkOrderProduct>>(productList));
+                    }
                 }
                 else
+                {
+                    order.OrderCode = GenerateOrderCode();
                     _context.Add(order);
+                    List<LinkOrderProductDto> productList = orderDto.ProductList.Select(x => { x.OrderId = order.Id; return x; }).ToList();
+                    _context.AddRange(_mapper.Map<List<LinkOrderProductDto>, List<LinkOrderProduct>>(productList));
+                }
+
                 _context.SaveChanges();
                 result.Data = _mapper.Map<OrderDto>(order);
                 result.Success = true;
@@ -177,6 +188,17 @@ namespace BonaForMe.ServiceCore.OrderService
             {
                 return new JsonResult(new { success = false, message = ex });
             }
+        }
+
+        public string GenerateOrderCode()
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var random = new Random();
+            var result = new string(
+                Enumerable.Repeat(chars, 8)
+                          .Select(s => s[random.Next(s.Length)])
+                          .ToArray());
+            return result;
         }
     }
 }

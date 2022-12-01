@@ -15,6 +15,9 @@ namespace BonaForMe.DomainCore.DBModel
         [Required]
         public Guid ProductId { get; set; }
 
+        [Required]
+        public int Count { get; set; }
+
         [ForeignKey(nameof(ProductId))]
         public virtual Product Product { get; set; }
     }

@@ -92,5 +92,19 @@ namespace BonaForMe.API.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
+        [HttpGet]
+        public IActionResult GetAllProductByCategoryId(Guid id)
+        {
+            try
+            {
+                var result = _productService.GetAllProductByCategoryId(id);
+                return Json(new { success = result.Success, data = result.Data, message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, data = "", message = ex.Message });
+            }
+        }
     }
 }

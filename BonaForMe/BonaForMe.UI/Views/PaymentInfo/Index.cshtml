@@ -38,7 +38,7 @@
                                 <thead>
                                     <tr>
                                         <th>Id</th>
-                                        <th>Name</th>
+                                        <th>Description</th>
                                         <th class="noExport">Actions</th>
                                     </tr>
                                 </thead>
@@ -68,8 +68,8 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="Name" class="control-label"><span style="color:red">* </span>Name</label>
-                            <input name="Name" id="Name" class="form-control" required />
+                            <label for="Description" class="control-label"><span style="color:red">* </span>Description</label>
+                            <input name="Description" id="Description" class="form-control" required />
                         </div>
                     </div>
                 </div>
@@ -121,7 +121,7 @@
             }],
             "columns": [
                 getCell("Id"),
-                getCell("Name"),
+                getCell("Description"),
                 {
                     "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
                     "render": function (data, type, full, meta) {
@@ -139,13 +139,13 @@
 
     function jsOpenSavePaymentInfo(id) {
         $("#hdnPaymentInfoId").val("");
-        $("#Name").val("");
+        $("#Description").val("");
 
         if (id != null && id !== "") {
             var data = { id: id }
             var result = ajaxRequest('POST', '@Url.Action("GetPaymentInfoById", "PaymentInfo")', data)
             $("#hdnPaymentInfoId").val(result.id);
-            $("#Name").val(result.name);
+            $("#Description").val(result.description);
         }
         $('#modalSave').modal('show');
     }
@@ -153,11 +153,10 @@
     function jsSavePaymentInfo() {
         var data = {
             Id: $("#hdnPaymentInfoId").val(),
-            Name: $("#Name").val(),
+            Description: $("#Description").val(),
         };
 
         var result = ajaxRequest('POST', '@Url.Action("Save", "PaymentInfo")', data)
-        debugger;
         if (result != null) {
             if (result.success) {
                 $('#modalSave').modal('hide');

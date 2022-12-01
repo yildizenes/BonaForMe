@@ -34,7 +34,14 @@ namespace BonaForMe.API.Controllers
             try
             {
                 accountDto.UserPassword = PasswordHelper.PasswordEncoder(accountDto.UserPassword);
+                if (!accountDto.UserMail.Contains("@") && !accountDto.UserMail.Contains(".com"))
+                    return Json(new { success = false, message = "Please enter a valid email address." });
+
                 var result = _accountService.Login(accountDto);
+
+                if (result.Data == null)
+                    return Json(new { success = false, message = "Email address or password is incorrect." });
+
                 if (result.Success)
                 {
                     var claims = new List<Claim>
@@ -83,7 +90,7 @@ namespace BonaForMe.API.Controllers
                     return Json(new { success = false, message = "Please enter a valid email address" });
 
                 var mailCheck = _userService.GetUserByEmail(userDto.UserMail);
-                if (mailCheck != null)
+                if (mailCheck.Data != null)
                     return Json(new { success = false, message = "There is Entered value already on the system" });
 
                 var result = _userService.AddUser(userDto);
