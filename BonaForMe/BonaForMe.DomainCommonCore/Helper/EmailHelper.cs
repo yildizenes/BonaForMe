@@ -9,7 +9,7 @@ namespace BonaForMe.DomainCommonCore.Helper
     {
         public static void SendForgetPasswordMail(string Email, string newPassword)
         {
-            string bodyMessage = GetMailBody("Bona For Me Şifre Yenileme", "mmcard.online yeni geçici kullanıcı şifreniz aşağıda verilmiştir.</br> Güvenliğiniz için lütfen şifrenizi değiştiriniz! </br>", newPassword);
+            string bodyMessage = GetMailBody("Bona Me For Me Şifre Yenileme", "mmcard.online yeni geçici kullanıcı şifreniz aşağıda verilmiştir.</br> Güvenliğiniz için lütfen şifrenizi değiştiriniz! </br>", newPassword);
 
             var message = new System.Net.Mail.MailMessage("info@mmcard.online", Email)
             {

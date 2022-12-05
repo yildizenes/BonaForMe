@@ -91,8 +91,9 @@ namespace BonaForMe.API.Controllers
 
                 var mailCheck = _userService.GetUserByEmail(userDto.UserMail);
                 if (mailCheck.Data != null)
-                    return Json(new { success = false, message = "There is Entered value already on the system" });
+                    return Json(new { success = false, message = "The entered e-mail address is registered in the system with another user." });
 
+                userDto.UserPassword = PasswordHelper.PasswordEncoder(userDto.UserPassword);
                 var result = _userService.AddUser(userDto);
                 return Json(new { success = result.Success, data = result.Data, message = result.Message });
             }
@@ -103,13 +104,13 @@ namespace BonaForMe.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("{mail}")]
+        [HttpPost]
         public JsonResult ForgetPassword(string mail)
         {
             try
             {
                 var userData = _userService.GetUserByEmail(mail);
-                if (userData == null)
+                if (userData.Data == null)
                     return Json(new { success = false, message = "This email address is not found on the system! Please check your email address." });
 
                 string userNewPassword = PasswordHelper.GeneratePassword();
