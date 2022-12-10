@@ -52,12 +52,12 @@ namespace BonaForMe.ServiceCore.OrderService
                 {
                     order.OrderCode = GenerateOrderCode();
                     _context.Add(order);
-                    List<LinkOrderProductDto> productList = orderDto.ProductList.Select(x => { x.OrderId = order.Id; return x; }).ToList();
+                    List<LinkOrderProductDto> productList = orderDto.ProductList?.Select(x => { x.OrderId = order.Id; return x; }).ToList();
                     _context.AddRange(_mapper.Map<List<LinkOrderProductDto>, List<LinkOrderProduct>>(productList));
                 }
 
                 _context.SaveChanges();
-                result.Data = _mapper.Map<OrderDto>(order);
+                //result.Data = _mapper.Map<OrderDto>(order);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
             }
@@ -166,11 +166,11 @@ namespace BonaForMe.ServiceCore.OrderService
             return result;
         }
 
-        public JsonResult FillDataTable(DataTableDto dataTable)
+        public JsonResult FillDataTable(DataTableDto dataTable, int orderStatusId)
         {
             try
             {
-                var orders = GetAllOrder().Data.AsQueryable();
+                var orders = GetAllOrder().Data.Where(x=> x.OrderStatusId == orderStatusId).AsQueryable();
                 //Sorting
                 if (!string.IsNullOrEmpty(dataTable.SortColumn) && !string.IsNullOrEmpty(dataTable.SortColumnDirection))
                 {

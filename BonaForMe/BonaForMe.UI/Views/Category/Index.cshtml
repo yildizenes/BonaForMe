@@ -87,8 +87,8 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="ImagePath" class="control-label"><span style="color:red">* </span>ImagePath</label>
-                            <input name="ImagePath" id="ImagePath" class="form-control" required />
+                            <label for="FormFile" class="control-label"><span style="color:red">* </span>Image</label>
+                            <input name="FormFile" id="FormFile" class="form-control" type="file" required />
                         </div>
                     </div>
                 </div>
@@ -162,7 +162,7 @@
         $("#hdnCategoryId").val("");
         $("#Name").val("");
         $("#Description").val("");
-        $("#ImagePath").val("");
+        $("#FormFile").val("");
 
         if (id != null && id !== "") {
             var data = { id: id }
@@ -170,34 +170,45 @@
             $("#hdnCategoryId").val(result.id);
             $("#Name").val(result.name);
             $("#Description").val(result.description);
-            $("#ImagePath").val(result.imagePath);
+            //$("#ImagePath").val(result.imagePath);
         }
         $('#modalSave').modal('show');
     }
 
     function jsSaveCategory() {
-        var data = {
-            Id: $("#hdnCategoryId").val(),
-            Name: $("#Name").val(),
-            Description: $("#Description").val(),
-            ImagePath: $("#ImagePath").val(),
-        };
+        var formData = new FormData();
+        formData.append('Id', $("#hdnCategoryId").val());
+        formData.append('Name', $("#Name").val());
+        formData.append('Description', $("#Description").val());
+        //formData.append('ImagePath', uFile);
+        formData.append('FormFile', $('#FormFile')[0].files[0]);
 
-        var result = ajaxRequest('POST', '@Url.Action("Save", "Category")', data)
-        debugger;
-        if (result != null) {
-            if (result.success) {
-                $('#modalSave').modal('hide');
-                thisTable = $('#tblCategoryList').DataTable();
-                thisTable.draw();
-                toastr.success('Transaction successful.');
-            } else {
-                toastr.error(result.message);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Save", "Category")',
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function (result)
+            {
+                if (result != null) {
+                    if (result.success) {
+                        $('#modalSave').modal('hide');
+                        thisTable = $('#tblCategoryList').DataTable();
+                        thisTable.draw();
+                        toastr.success('Transaction successful.');
+                    } else {
+                        toastr.error(result.message);
+                    }
+                } else {
+                    $('#modalSave').modal('hide');
+                    toastr.error('Error in saving!');
+                }
+            },
+            error: function () {
+                alert('Error!');
             }
-        } else {
-            $('#modalSave').modal('hide');
-            toastr.error('Error in saving!');
-        }
+        });
     }
 
     function DeleteData(id) {

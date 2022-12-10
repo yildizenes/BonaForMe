@@ -1,6 +1,6 @@
 ﻿namespace BonaForMe.DomainCore.DTO
 {
-    public class CurrencyUnitDto : DtoBaseEntity
+    public class CurrencyUnitDto : DtoBaseEntityInt
     {
         public string Name { get; set; }
     }

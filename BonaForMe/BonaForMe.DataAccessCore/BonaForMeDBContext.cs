@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace BonaForMe.DataAccessCore
 {
-    public partial class BonaForMeDBContext:DbContext
+    public partial class BonaForMeDBContext : DbContext
     {
         public DbSet<Announcement> Announcements { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -39,31 +39,46 @@ namespace BonaForMe.DataAccessCore
         }
         private void AddTimestamps()
         {
-            var entities = ChangeTracker.Entries().Where(x => x.Entity is BaseEntity && (x.State == EntityState.Added || x.State == EntityState.Modified));
+            var entities = ChangeTracker.Entries().Where(x => (x.Entity is BaseEntity || x.Entity is BaseEntityInt) && (x.State == EntityState.Added || x.State == EntityState.Modified));
             UserClaimsInfo user = null;
             foreach (var entity in entities)
-            {   
+            {
                 Guid userid = Guid.Empty;
                 try
                 {
                     user = CurrentUser.Get(_httpContextAccessor.HttpContext.User);
-                    userid = user!=null ? Guid.Parse(user.UserId) : Guid.Parse("1FCC262D-5EA7-4BA6-890B-681AC0886971");
+                    userid = user != null ? Guid.Parse(user.UserId) : Guid.Parse("1FCC262D-5EA7-4BA6-890B-681AC0886971");
                 }
                 catch (Exception)
                 {
                 }
-
-                if (entity.State == EntityState.Added)
+                if (entity.Entity is BaseEntity)
                 {
-                    ((BaseEntity)entity.Entity).Id = Guid.NewGuid();
-                    ((BaseEntity)entity.Entity).DateCreated = DateTime.Now;
-                    ((BaseEntity)entity.Entity).UserCreated = userid;
-                    ((BaseEntity)entity.Entity).IsActive = true;
-                    ((BaseEntity)entity.Entity).IsDeleted = false;
-                }
+                    if (entity.State == EntityState.Added)
+                    {
+                        ((BaseEntity)entity.Entity).Id = Guid.NewGuid();
+                        ((BaseEntity)entity.Entity).DateCreated = DateTime.Now;
+                        ((BaseEntity)entity.Entity).UserCreated = userid;
+                        ((BaseEntity)entity.Entity).IsActive = true;
+                        ((BaseEntity)entity.Entity).IsDeleted = false;
+                    }
 
-                ((BaseEntity)entity.Entity).DateModified = DateTime.Now;
-                ((BaseEntity)entity.Entity).UserModified = userid;
+                    ((BaseEntity)entity.Entity).DateModified = DateTime.Now;
+                    ((BaseEntity)entity.Entity).UserModified = userid;
+                }
+                if (entity.Entity is BaseEntityInt)
+                {
+                    if (entity.State == EntityState.Added)
+                    {
+                        ((BaseEntityInt)entity.Entity).DateCreated = DateTime.Now;
+                        ((BaseEntityInt)entity.Entity).UserCreated = userid;
+                        ((BaseEntityInt)entity.Entity).IsActive = true;
+                        ((BaseEntityInt)entity.Entity).IsDeleted = false;
+                    }
+
+                    ((BaseEntityInt)entity.Entity).DateModified = DateTime.Now;
+                    ((BaseEntityInt)entity.Entity).UserModified = userid;
+                }
             }
         }
 

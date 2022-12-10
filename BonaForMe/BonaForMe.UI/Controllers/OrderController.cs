@@ -99,7 +99,7 @@ namespace BonaForMe.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult LoadOrderData()
+        public IActionResult LoadOrderData(int orderStatusId)
         {
             try
             {
@@ -127,7 +127,7 @@ namespace BonaForMe.UI.Controllers
                     SortColumnDirection = sortColumnDirection,
                     SortColumn = sortColumn
                 };
-                return _orderService.FillDataTable(dataTable);
+                return _orderService.FillDataTable(dataTable, orderStatusId);
             }
             catch (Exception)
             {

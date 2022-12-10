@@ -1,5 +1,6 @@
 ﻿using BonaForMe.DomainCore.DBModel;
 using System;
+using Microsoft.AspNetCore.Http;
 
 namespace BonaForMe.DomainCore.DTO
 {
@@ -15,5 +16,7 @@ namespace BonaForMe.DomainCore.DTO
         public string CategoryName { get; set; }
 
         public virtual Category Category { get; set; }
+
+        public IFormFile FormFile { get; set; }
     }
 }

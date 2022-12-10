@@ -53,7 +53,7 @@ namespace BonaForMe.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(Guid id)
+        public IActionResult Delete(int id)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace BonaForMe.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetProductUnitById(Guid id)
+        public IActionResult GetProductUnitById(int id)
         {
             try
             {

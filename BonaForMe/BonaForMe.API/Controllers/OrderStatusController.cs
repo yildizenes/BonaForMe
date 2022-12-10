@@ -32,11 +32,11 @@ namespace BonaForMe.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetOrderStatusById(Guid id)
+        public IActionResult GetOrderStatusById(int id)
         {
             try
             {
-                if (id == Guid.Empty)
+                if (id == 0)
                     return Json(new { Success = false, Data = "", Message = "Request parameter is not found." });
 
                 var result = _orderStatusService.GetOrderStatusById(id);
@@ -77,11 +77,11 @@ namespace BonaForMe.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteOrderStatus(Guid id)
+        public IActionResult DeleteOrderStatus(int id)
         {
             try
             {
-                if (id == Guid.Empty)
+                if (id == 0)
                     return Json(new { Success = false, Data = "", Message = "Request parameter is not found." });
 
                 var result = _orderStatusService.DeleteOrderStatus(id);

@@ -9,9 +9,9 @@ namespace BonaForMe.ServiceCore.CurrencyUnitService
     public interface ICurrencyUnitService
     {
         Result<CurrencyUnitDto> AddCurrencyUnit(CurrencyUnitDto currencyUnitDto);
-        Result DeleteCurrencyUnit(Guid id);
+        Result DeleteCurrencyUnit(int id);
         Result<CurrencyUnitDto> UpdateCurrencyUnit(CurrencyUnitDto currencyUnitDto);
-        Result<CurrencyUnitDto> GetCurrencyUnitById(Guid id);
+        Result<CurrencyUnitDto> GetCurrencyUnitById(int id);
         Result<List<CurrencyUnitDto>> GetAllCurrencyUnit();
         JsonResult FillDataTable(DataTableDto dataTable);
     }

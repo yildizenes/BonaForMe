@@ -19,5 +19,15 @@ namespace BonaForMe.ServiceCore
             newModel.IsActive = oldModel.IsActive;
             newModel.IsDeleted = oldModel.IsDeleted;
         }
+        public static void SetBaseValuesInt(IBaseEntityInt oldModel, IBaseEntityInt newModel)
+        {
+            newModel.Id = oldModel.Id;
+            newModel.DateCreated = oldModel.DateCreated;
+            newModel.DateModified = oldModel.DateModified;
+            newModel.UserModified = oldModel.UserModified;
+            newModel.UserCreated = oldModel.UserCreated;
+            newModel.IsActive = oldModel.IsActive;
+            newModel.IsDeleted = oldModel.IsDeleted;
+        }
     }
 }

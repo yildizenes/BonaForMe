@@ -9,9 +9,9 @@ namespace BonaForMe.ServiceCore.OrderStatusService
     public interface IOrderStatusService
     {
         Result<OrderStatusDto> AddOrderStatus(OrderStatusDto orderStatusDto);
-        Result DeleteOrderStatus(Guid id);
+        Result DeleteOrderStatus(int id);
         Result<OrderStatusDto> UpdateOrderStatus(OrderStatusDto orderStatusDto);
-        Result<OrderStatusDto> GetOrderStatusById(Guid id);
+        Result<OrderStatusDto> GetOrderStatusById(int id);
         Result<List<OrderStatusDto>> GetAllOrderStatus();
         JsonResult FillDataTable(DataTableDto dataTable);
     }

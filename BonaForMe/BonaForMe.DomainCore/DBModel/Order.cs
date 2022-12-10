@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,7 +18,7 @@ namespace BonaForMe.DomainCore.DBModel
         public virtual User User { get; set; }
 
         [Required]
-        public Guid OrderStatusId { get; set; }
+        public int OrderStatusId { get; set; }
 
         [ForeignKey(nameof(OrderStatusId))]
         public virtual OrderStatus OrderStatus { get; set; }

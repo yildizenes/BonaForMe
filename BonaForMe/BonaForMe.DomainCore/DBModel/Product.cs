@@ -15,7 +15,7 @@ namespace BonaForMe.DomainCore.DBModel
         public string ImagePath { get; set; }
 
         [Required]
-        public Guid ProductUnitId { get; set; }
+        public int ProductUnitId { get; set; }
 
         [ForeignKey(nameof(ProductUnitId))]
         public virtual ProductUnit ProductUnit { get; set; }
@@ -24,7 +24,7 @@ namespace BonaForMe.DomainCore.DBModel
         public decimal Price { get; set; }
 
         [Required]
-        public Guid CurrencyUnitId { get; set; }
+        public int CurrencyUnitId { get; set; }
 
         [ForeignKey(nameof(CurrencyUnitId))]
         public virtual CurrencyUnit CurrencyUnit { get; set; }

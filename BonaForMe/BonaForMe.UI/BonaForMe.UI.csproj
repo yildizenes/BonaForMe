@@ -30,6 +30,9 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\adminLTE\plugins\datatables-bs4\css\" />
+    <Folder Include="wwwroot\images\Announcement\" />
+    <Folder Include="wwwroot\images\Category\" />
+    <Folder Include="wwwroot\images\Product\" />
   </ItemGroup>
 
 </Project>

@@ -28,12 +28,12 @@ namespace BonaForMe.ServiceCore.OrderStatusService
             try
             {
                 OrderStatus orderStatus = _mapper.Map<OrderStatus>(orderStatusDto);
-                if (orderStatusDto.Id != Guid.Empty)
+                if (orderStatusDto.Id != 0)
                 {
                     var oldModel = _context.OrderStatuses.FirstOrDefault(x => x.Id == orderStatusDto.Id);
                     if (oldModel != null)
                     {
-                        DBHelper.SetBaseValues(oldModel, orderStatus);
+                        DBHelper.SetBaseValuesInt(oldModel, orderStatus);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(orderStatus);
                     }
@@ -55,7 +55,7 @@ namespace BonaForMe.ServiceCore.OrderStatusService
             return result;
         }
 
-        public Result DeleteOrderStatus(Guid id)
+        public Result DeleteOrderStatus(int id)
         {
             Result result = new Result();
             try
@@ -87,12 +87,12 @@ namespace BonaForMe.ServiceCore.OrderStatusService
             try
             {
                 OrderStatus orderStatus = _mapper.Map<OrderStatus>(orderStatusDto);
-                if (orderStatusDto.Id != Guid.Empty)
+                if (orderStatusDto.Id != 0)
                 {
                     var oldModel = _context.OrderStatuses.FirstOrDefault(x => x.Id == orderStatusDto.Id);
                     if (oldModel != null)
                     {
-                        DBHelper.SetBaseValues(oldModel, orderStatus);
+                        DBHelper.SetBaseValuesInt(oldModel, orderStatus);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(orderStatus);
                     }
@@ -109,7 +109,7 @@ namespace BonaForMe.ServiceCore.OrderStatusService
             return result;
         }
 
-        public Result<OrderStatusDto> GetOrderStatusById(Guid id)
+        public Result<OrderStatusDto> GetOrderStatusById(int id)
         {
             Result<OrderStatusDto> result = new Result<OrderStatusDto>();
             try

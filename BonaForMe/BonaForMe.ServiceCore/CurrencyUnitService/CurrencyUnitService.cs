@@ -28,12 +28,12 @@ namespace BonaForMe.ServiceCore.CurrencyUnitService
             try
             {
                 CurrencyUnit currencyUnit = _mapper.Map<CurrencyUnit>(currencyUnitDto);
-                if (currencyUnitDto.Id != Guid.Empty)
+                if (currencyUnitDto.Id != 0)
                 {
                     var oldModel = _context.CurrencyUnits.FirstOrDefault(x => x.Id == currencyUnitDto.Id);
                     if (oldModel != null)
                     {
-                        DBHelper.SetBaseValues(oldModel, currencyUnit);
+                        DBHelper.SetBaseValuesInt(oldModel, currencyUnit);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(currencyUnit);
                     }
@@ -55,7 +55,7 @@ namespace BonaForMe.ServiceCore.CurrencyUnitService
             return result;
         }
 
-        public Result DeleteCurrencyUnit(Guid id)
+        public Result DeleteCurrencyUnit(int id)
         {
             Result result = new Result();
             try
@@ -87,12 +87,12 @@ namespace BonaForMe.ServiceCore.CurrencyUnitService
             try
             {
                 CurrencyUnit currencyUnit = _mapper.Map<CurrencyUnit>(currencyUnitDto);
-                if (currencyUnitDto.Id != Guid.Empty)
+                if (currencyUnitDto.Id != 0)
                 {
                     var oldModel = _context.CurrencyUnits.FirstOrDefault(x => x.Id == currencyUnitDto.Id);
                     if (oldModel != null)
                     {
-                        DBHelper.SetBaseValues(oldModel, currencyUnit);
+                        DBHelper.SetBaseValuesInt(oldModel, currencyUnit);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(currencyUnit);
                     }
@@ -109,7 +109,7 @@ namespace BonaForMe.ServiceCore.CurrencyUnitService
             return result;
         }
 
-        public Result<CurrencyUnitDto> GetCurrencyUnitById(Guid id)
+        public Result<CurrencyUnitDto> GetCurrencyUnitById(int id)
         {
             Result<CurrencyUnitDto> result = new Result<CurrencyUnitDto>();
             try

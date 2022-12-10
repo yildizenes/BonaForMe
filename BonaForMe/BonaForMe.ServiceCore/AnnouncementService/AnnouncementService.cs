@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace BonaForMe.ServiceCore.AnnouncementService
 {
@@ -43,6 +45,9 @@ namespace BonaForMe.ServiceCore.AnnouncementService
                 else
                     _context.Add(announcement);
                 _context.SaveChanges();
+
+                if (announcementDto.FormFile != null)
+                    SaveImage(announcementDto.FormFile, announcement);
                 result.Data = _mapper.Map<AnnouncementDto>(announcement);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
@@ -167,6 +172,30 @@ namespace BonaForMe.ServiceCore.AnnouncementService
             {
                 return new JsonResult(new { success = false, message = ex });
             }
+        }
+
+        private void SaveImage(IFormFile formFile, Announcement announcement)
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory()) + @"\";
+            byte[] picture = null;
+            using (var ms = new MemoryStream())
+            {
+                formFile.CopyTo(ms);
+                picture = ms.ToArray();
+            }
+
+            var fileExtension = "." + formFile.FileName.Split('.').Last();
+            var filePath =  @"wwwroot\images\Announcement\" + announcement.Id + fileExtension;
+            var fullpath = path + filePath;
+
+            if (File.Exists(fullpath))
+            {
+                File.Delete(path + @"wwwroot\images\Announcement\" + announcement.Id + fileExtension);
+            }
+            File.WriteAllBytes(path + @"wwwroot\images\Announcement\" + announcement.Id + fileExtension, picture);
+
+            announcement.ImagePath = filePath;
+            UpdateAnnouncement(_mapper.Map<AnnouncementDto>(announcement));
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace BonaForMe.DomainCore.DBModel
 {
-    public class ProductUnit : BaseEntity
+    public class ProductUnit : BaseEntityInt
     {
         [Required]
         public string Name { get; set; }

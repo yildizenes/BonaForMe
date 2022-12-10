@@ -2,7 +2,7 @@
 
 namespace BonaForMe.DomainCore.DBModel
 {
-    public class OrderStatus : BaseEntity
+    public class OrderStatus : BaseEntityInt
     {
         [Required]
         [MaxLength(50)]

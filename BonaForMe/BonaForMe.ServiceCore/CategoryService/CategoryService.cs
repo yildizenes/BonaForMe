@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace BonaForMe.ServiceCore.CategoryService
 {
@@ -43,6 +45,10 @@ namespace BonaForMe.ServiceCore.CategoryService
                 else
                     _context.Add(category);
                 _context.SaveChanges();
+
+                if (categoryDto.FormFile != null)
+                    SaveImage(categoryDto.FormFile, category);
+
                 result.Data = _mapper.Map<CategoryDto>(category);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
@@ -168,6 +174,30 @@ namespace BonaForMe.ServiceCore.CategoryService
             {
                 return new JsonResult(new { success = false, message = ex });
             }
+        }
+
+        private void SaveImage(IFormFile formFile, Category category)
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory()) + @"\";
+            byte[] picture = null;
+            using (var ms = new MemoryStream())
+            {
+                formFile.CopyTo(ms);
+                picture = ms.ToArray();
+            }
+
+            var fileExtension = "." + formFile.FileName.Split('.').Last();
+            var filePath = @"wwwroot\images\Category\" + category.Id + fileExtension;
+            var fullpath = path + filePath;
+
+            if (File.Exists(fullpath))
+            {
+                File.Delete(path + @"wwwroot\images\Category\" + category.Id + fileExtension);
+            }
+            File.WriteAllBytes(path + @"wwwroot\images\Category\" + category.Id + fileExtension, picture);
+
+            category.ImagePath = filePath;
+            UpdateCategory(_mapper.Map<CategoryDto>(category));
         }
     }
 }

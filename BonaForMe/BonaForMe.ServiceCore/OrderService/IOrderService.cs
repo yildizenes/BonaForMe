@@ -13,6 +13,6 @@ namespace BonaForMe.ServiceCore.OrderService
         Result<OrderDto> UpdateOrder(OrderDto orderDto);
         Result<OrderDto> GetOrderById(Guid id);
         Result<List<OrderDto>> GetAllOrder();
-        JsonResult FillDataTable(DataTableDto dataTable);
+        JsonResult FillDataTable(DataTableDto dataTable, int OrderStatusId);
     }
 }

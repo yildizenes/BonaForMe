@@ -1,4 +1,5 @@
 ﻿using BonaForMe.DomainCore.DBModel;
+using Microsoft.AspNetCore.Http;
 using System;
 
 namespace BonaForMe.DomainCore.DTO
@@ -11,7 +12,7 @@ namespace BonaForMe.DomainCore.DTO
 
         public string ImagePath { get; set; }
 
-        public Guid ProductUnitId { get; set; }
+        public int ProductUnitId { get; set; }
 
         public string ProductUnitName { get; set; }
 
@@ -19,7 +20,7 @@ namespace BonaForMe.DomainCore.DTO
 
         public decimal Price { get; set; }
 
-        public Guid CurrencyUnitId { get; set; }
+        public int CurrencyUnitId { get; set; }
 
         public string CurrencyUnitName { get; set; }
 
@@ -30,5 +31,6 @@ namespace BonaForMe.DomainCore.DTO
         public string CategoryName { get; set; }
 
         public virtual Category Category { get; set; }
+        public IFormFile FormFile { get; set; }
     }
 }

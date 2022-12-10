@@ -32,11 +32,11 @@ namespace BonaForMe.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetCurrencyUnitById(Guid id)
+        public IActionResult GetCurrencyUnitById(int id)
         {
             try
             {
-                if (id == Guid.Empty)
+                if (id == 0)
                     return Json(new { Success = false, Data = "", Message = "Request parameter is not found." });
 
                 var result = _currencyUnitService.GetCurrencyUnitById(id);
@@ -77,11 +77,11 @@ namespace BonaForMe.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteCurrencyUnit(Guid id)
+        public IActionResult DeleteCurrencyUnit(int id)
         {
             try
             {
-                if (id == Guid.Empty)
+                if (id == 0)
                     return Json(new { Success = false, Data = "", Message = "Request parameter is not found." });
 
                 var result = _currencyUnitService.DeleteCurrencyUnit(id);

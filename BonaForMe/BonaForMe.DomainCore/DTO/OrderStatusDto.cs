@@ -1,6 +1,6 @@
 ﻿namespace BonaForMe.DomainCore.DTO
 {
-    public class OrderStatusDto : DtoBaseEntity
+    public class OrderStatusDto : DtoBaseEntityInt
     {
         public string Name { get; set; }
 

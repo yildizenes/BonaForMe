@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace BonaForMe.ServiceCore.ProductService
 {
@@ -43,6 +45,9 @@ namespace BonaForMe.ServiceCore.ProductService
                 else
                     _context.Add(product);
                 _context.SaveChanges();
+
+                if (productDto.FormFile != null)
+                    SaveImage(productDto.FormFile, product);
                 result.Data = _mapper.Map<ProductDto>(product);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
@@ -191,6 +196,29 @@ namespace BonaForMe.ServiceCore.ProductService
                 result.Success = false;
             }
             return result;
+        }
+        private void SaveImage(IFormFile formFile, Product product)
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory()) + @"\";
+            byte[] picture = null;
+            using (var ms = new MemoryStream())
+            {
+                formFile.CopyTo(ms);
+                picture = ms.ToArray();
+            }
+
+            var fileExtension = "." + formFile.FileName.Split('.').Last();
+            var filePath = @"wwwroot\images\Product\" + product.Id + fileExtension;
+            var fullpath = path + filePath;
+
+            if (File.Exists(fullpath))
+            {
+                File.Delete(path + @"wwwroot\images\Product\" + product.Id + fileExtension);
+            }
+            File.WriteAllBytes(path + @"wwwroot\images\Product\" + product.Id + fileExtension, picture);
+
+            product.ImagePath = filePath;
+            UpdateProduct(_mapper.Map<ProductDto>(product));
         }
     }
 }

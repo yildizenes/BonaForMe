@@ -28,12 +28,12 @@ namespace BonaForMe.ServiceCore.ProductUnitService
             try
             {
                 ProductUnit productUnit = _mapper.Map<ProductUnit>(productUnitDto);
-                if (productUnitDto.Id != Guid.Empty)
+                if (productUnitDto.Id != 0)
                 {
                     var oldModel = _context.ProductUnits.FirstOrDefault(x => x.Id == productUnitDto.Id);
                     if (oldModel != null)
                     {
-                        DBHelper.SetBaseValues(oldModel, productUnit);
+                        DBHelper.SetBaseValuesInt(oldModel, productUnit);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(productUnit);
                     }
@@ -55,7 +55,7 @@ namespace BonaForMe.ServiceCore.ProductUnitService
             return result;
         }
 
-        public Result DeleteProductUnit(Guid id)
+        public Result DeleteProductUnit(int id)
         {
             Result result = new Result();
             try
@@ -87,12 +87,12 @@ namespace BonaForMe.ServiceCore.ProductUnitService
             try
             {
                 ProductUnit productUnit = _mapper.Map<ProductUnit>(productUnitDto);
-                if (productUnitDto.Id != Guid.Empty)
+                if (productUnitDto.Id != 0)
                 {
                     var oldModel = _context.ProductUnits.FirstOrDefault(x => x.Id == productUnitDto.Id);
                     if (oldModel != null)
                     {
-                        DBHelper.SetBaseValues(oldModel, productUnit);
+                        DBHelper.SetBaseValuesInt(oldModel, productUnit);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(productUnit);
                     }
@@ -109,7 +109,7 @@ namespace BonaForMe.ServiceCore.ProductUnitService
             return result;
         }
 
-        public Result<ProductUnitDto> GetProductUnitById(Guid id)
+        public Result<ProductUnitDto> GetProductUnitById(int id)
         {
             Result<ProductUnitDto> result = new Result<ProductUnitDto>();
             try

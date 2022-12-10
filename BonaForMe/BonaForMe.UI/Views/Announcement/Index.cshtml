@@ -88,8 +88,8 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="ImagePath" class="control-label"><span style="color:red">* </span>ImagePath</label>
-                            <input name="ImagePath" id="ImagePath" class="form-control" required />
+                            <label for="FormFile" class="control-label"><span style="color:red">* </span>Image</label>
+                            <input name="FormFile" id="FormFile" class="form-control" type="file" required />
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -172,7 +172,7 @@
         $("#hdnAnnouncementId").val("");
         $("#Title").val("");
         $("#Description").val("");
-        $("#ImagePath").val("");
+        $("#FormFile").val("");
         $("#CategoryId").val("");
 
         if (id != null && id !== "") {
@@ -181,43 +181,47 @@
             $("#hdnAnnouncementId").val(result.id);
             $("#Title").val(result.title);
             $("#Description").val(result.description);
-            $("#ImagePath").val(result.imagePath);
+            //$("#ImagePath").val(result.imagePath);
             $("#CategoryId").val(result.categoryId);
         }
         $('#modalSave').modal('show');
     }
 
     function jsSaveAnnouncement() {
-        //var formData = new FormData();
-        //formData.append('Id', $("#hdnAnnouncementId").val());
-        //formData.append('Title', $("#Title").val());
-        //formData.append('Description', $("#Description").val());
-        //formData.append('ImagePath', $('#ImagePath')[0].files[0]);
-        //formData.append('CategoryId', $("#CategoryId").val());
+        var formData = new FormData();
+        formData.append('Id', $("#hdnAnnouncementId").val());
+        formData.append('Title', $("#Title").val());
+        formData.append('Description', $("#Description").val());
+        //formData.append('ImagePath', uFile);
+        formData.append('CategoryId', $("#CategoryId").val());
+        formData.append('FormFile', $('#FormFile')[0].files[0]);
 
-        var data = {
-            Id: $("#hdnAnnouncementId").val(),
-            Title: $("#Title").val(),
-            Description: $("#Description").val(),
-            ImagePath: $("#ImagePath").val(),
-            CategoryId: $("#CategoryId").val(),
-        };
-
-        var result = ajaxRequest('POST', '@Url.Action("Save", "Announcement")', data)
-        debugger;
-        if (result != null) {
-            if (result.success) {
-                $('#modalSave').modal('hide');
-                thisTable = $('#tblAnnouncementList').DataTable();
-                thisTable.draw();
-                toastr.success('Transaction successful.');
-            } else {
-                toastr.error(result.message);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Save", "Announcement")',
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function (result)
+            {
+                if (result != null) {
+                    if (result.success) {
+                        $('#modalSave').modal('hide');
+                        thisTable = $('#tblAnnouncementList').DataTable();
+                        thisTable.draw();
+                        toastr.success('Transaction successful.');
+                    } else {
+                        toastr.error(result.message);
+                    }
+                } else {
+                    $('#modalSave').modal('hide');
+                    toastr.error('Error in saving!');
+                }
+            },
+            error: function () {
+                alert('Error!');
             }
-        } else {
-            $('#modalSave').modal('hide');
-            toastr.error('Error in saving!');
-        }
+        });
     }
 
     function DeleteData(id) {

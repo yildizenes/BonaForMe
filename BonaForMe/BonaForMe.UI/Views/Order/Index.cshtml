@@ -27,11 +27,21 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">@ViewData["Title"]</h3>
-                            <button class="btn-success" onclick="jsOpenSaveOrder();" style="padding: 10px; float:right;">
-                                <i class="fas fa-save"></i>
-                                New @ViewData["SingleName"]
-                            </button>
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h3 class="card-title">@ViewData["Title"]</h3>
+                                </div>
+                                <div class="col">
+                                    <select id="OrderStatues" class="custom-select" name="OrderStatues" onchange="filterFunc(this)">
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <button class="btn-success" onclick="jsOpenSaveOrder();" style="padding: 10px; float:right;">
+                                        <i class="fas fa-save"></i>
+                                        New @ViewData["SingleName"]
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body" style="overflow-x:auto;">
                             <table id="tblOrderList" class="table table-bordered table-striped table-responsive-lg" style="width: 100% !important;">
@@ -51,6 +61,93 @@
             </div>
         </div>
     </section>
+</div>
+
+<div class="modal fade" id="modalDetail" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalCaption" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span id="modalCaption">@ViewData["SingleName"] Detail </span>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="FormFile" class="control-label">Order Code : </label>
+                                    <label id="detailOrderCode" class="control-label"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="CategoryId" class="control-label">Orderer : </label>
+                                    <label id="detailOrderer" class="control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table" id="productTable">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Product Unit</th>
+                                    <th scope="col">Count</th>
+                                    <th scope="col">Unit Price</th>
+                                    <th scope="col">Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @*<tr>
+                                    <th scope="row">1</th>
+                                    <td>Chocolate</td>
+                                    <td>Piece</td>
+                                    <td>2</td>
+                                    <td>5₺</td>
+                                    <td>10₺</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>Bread</td>
+                                    <td>Piece</td>
+                                    <td>4</td>
+                                    <td>6₺</td>
+                                    <td>24₺</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td>Water</td>
+                                    <td>Liter</td>
+                                    <td>5</td>
+                                    <td>8₺</td>
+                                    <td>40₺</td>
+                                </tr>*@
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Total Price:</td>
+                                    <td>74₺</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" data-content="remove" class="btn btn-default" data-dismiss="modal"> Cancel </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" id="modalSave" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalCaption" aria-hidden="true">
@@ -113,9 +210,9 @@
 @await Html.PartialAsync("_datatableScripts")
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        createTable();
         fillUserSelect();
         fillOrderStatusSelect();
+        createTable();
     });
 
     function createTable() {
@@ -136,7 +233,8 @@
             "ajax": {
                 "url": "/Order/LoadOrderData/",
                 "type": 'POST',
-                "dataType": "json"
+                "dataType": "json",
+                "data": { orderStatusId: $('#OrderStatues').val()}
             },
             "columnDefs": [{
                 "targets": [0],
@@ -154,6 +252,7 @@
                         var buttonGroup = "<div class='btn-group role='group'>";
                         buttonGroup += "<a href='#' class='btn btn-warning btn-sm' style='color:white; margin:0px 5px;' onclick=jsOpenSaveOrder('" + full.id + "');><i class='fas fa-edit'></i> Edit </a>"
                         buttonGroup += "<a href='#' class='btn btn-danger btn-sm' style='color:white; margin:0px 5px;' onclick=DeleteData('" + full.id + "');> <i class='fas fa-trash'></i> Delete </a>";
+                        buttonGroup += "<a href='#' class='btn btn-primary btn-sm' style='color:white; margin:0px 5px;' onclick=DetailPage('" + full.id + "');> <i class='fas fa-info'></i> Detail </a>";
                         buttonGroup += "</div>"
                         return buttonGroup;
                     }
@@ -162,6 +261,40 @@
             "bDestroy": true,
         });
     }
+
+    function DetailPage(id) {
+        $("#hdnOrderId").val("");
+        $("#detailOrderCode").text("");
+        $("#detailOrderer").text("");
+
+        if (id != null && id !== "") {
+            var data = { id: id }
+            var result = ajaxRequest('POST', '@Url.Action("GetOrderById", "Order")', data)
+            $("#hdnOrderId").val(result.id);
+            $("#detailOrderCode").text(result.orderCode);
+            $("#detailOrderer").text(result.userName);
+
+            var tableRef = document.getElementById('productTable').getElementsByTagName('tbody')[0];
+
+            var tb = document.getElementById('productTable');
+            while (tb.rows.length > 1) {
+                tb.deleteRow(1);
+            }
+
+            result.productList.forEach((item, index) => {
+                var totalPrice = item.count * item.product.price;
+                var newRow = tableRef.insertRow(tableRef.rows.length);
+                var cell1 = newRow.insertCell(0).appendChild(document.createTextNode(index + 1));
+                var cell2 = newRow.insertCell(1).appendChild(document.createTextNode(item.product.name));
+                var cell3 = newRow.insertCell(2).appendChild(document.createTextNode(item.product.productUnit.name));
+                var cell4 = newRow.insertCell(3).appendChild(document.createTextNode(item.count));
+                var cell5 = newRow.insertCell(4).appendChild(document.createTextNode(item.product.price));
+                var cell6 = newRow.insertCell(5).appendChild(document.createTextNode(totalPrice));
+            })
+        }
+        $('#modalDetail').modal('show');
+    }
+
 
     function jsOpenSaveOrder(id) {
         $("#hdnOrderId").val("");
@@ -226,13 +359,19 @@
     }
 
     function fillUserSelect() {
-        debugger;
         var result = ajaxRequest('POST', '@Url.Action("GetAllUser", "User")')
         fillOptions("UserId", result, "fullName");
     }
 
     function fillOrderStatusSelect() {
         var result = ajaxRequest('POST', '@Url.Action("GetAllOrderStatus", "OrderStatus")')
+        fillOptions("OrderStatues", result, "name");
+        $('#OrderStatues').val('1');
+        $('#OrderStatues').trigger('change');
         fillOptions("OrderStatusId", result, "name");
+    }
+
+    function filterFunc() {
+        createTable();
     }
 </script>
