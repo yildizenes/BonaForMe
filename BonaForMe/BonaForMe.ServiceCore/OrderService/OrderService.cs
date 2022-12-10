@@ -166,6 +166,50 @@ namespace BonaForMe.ServiceCore.OrderService
             return result;
         }
 
+        public Result<List<OrderDto>> GetUserOrderDetail(Guid userId)
+        {
+            Result<List<OrderDto>> result = new Result<List<OrderDto>>();
+            try
+            {
+                var model = _context.Orders.Where(x => x.UserId == userId && x.IsActive && !x.IsDeleted)
+                    .Include(x => x.User).Include(x => x.OrderStatus)
+                    .ToList();
+                result.Data = _mapper.Map<List<Order>, List<OrderDto>>(model);
+                result.Success = true;
+                result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
+        public Result<OrderDto> UpdateOrderStatus(Guid orderId, int orderStatusId)
+        {
+            Result<OrderDto> result = new Result<OrderDto>();
+            try
+            {
+                var model = _context.Orders.Where(x => x.Id == orderId && x.IsActive && !x.IsDeleted).FirstOrDefault();
+                if (model != null)
+                {
+                    _context.Entry(model).State = EntityState.Detached;
+                    model.OrderStatusId = orderStatusId;
+                    _context.Update(model);
+                }
+                result.Data = _mapper.Map<OrderDto>(model);
+                result.Success = true;
+                result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
         public JsonResult FillDataTable(DataTableDto dataTable, int orderStatusId)
         {
             try

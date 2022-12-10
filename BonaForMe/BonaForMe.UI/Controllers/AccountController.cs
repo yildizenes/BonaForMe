@@ -68,6 +68,11 @@ namespace BonaForMe.UI.Controllers
                         TempData["Error"] = "Your account is awaiting approval.";
                         return RedirectToAction("Login", "Account");
                     }
+                    if (!result.Data.IsAdmin)
+                    {
+                        TempData["Error"] = "Only admin users can login.";
+                        return RedirectToAction("Login", "Account");
+                    }
                     await CreateClaims(result.Data);
                     returnTo = "/Home/Dashboard";
                 }

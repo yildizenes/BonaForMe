@@ -47,13 +47,6 @@ namespace BonaForMe.API.Controllers
                 if (userDto == null)
                     return Json(new { success = false });
 
-                //if (userDto.b64File != null)
-                //{
-                //    byte[] b;
-                //    b = Convert.FromBase64String(userDto.b64File);
-                //    userDto.UserPicture = b;
-                //}
-
                 var result = _userService.UpdateUser(userDto);
                 return Json(new { success = result.Success, data = result.Data, message = result.Message });
             }
