@@ -174,7 +174,13 @@ namespace BonaForMe.ServiceCore.OrderService
                 var model = _context.Orders.Where(x => x.UserId == userId && x.IsActive && !x.IsDeleted)
                     .Include(x => x.User).Include(x => x.OrderStatus)
                     .ToList();
-                result.Data = _mapper.Map<List<Order>, List<OrderDto>>(model);
+                var orderDtos = _mapper.Map<List<Order>, List<OrderDto>>(model);
+                foreach (var item in orderDtos)
+                {
+                    var linkOrderProducts = _context.LinkOrderProducts.Where(x => x.OrderId == item.Id).ToList();
+                    item.ProductList = _mapper.Map<List<LinkOrderProduct>, List<LinkOrderProductDto>>(linkOrderProducts);
+                }
+                result.Data = orderDtos;
                 result.Success = true;
                 result.Message = ResultMessages.Success;
             }
@@ -186,18 +192,23 @@ namespace BonaForMe.ServiceCore.OrderService
             return result;
         }
 
-        public Result<OrderDto> UpdateOrderStatus(Guid orderId, int orderStatusId)
+        public Result<OrderDto> UpdateOrderStatus(UpdateOrderDto updateOrderDto)
         {
             Result<OrderDto> result = new Result<OrderDto>();
             try
             {
-                var model = _context.Orders.Where(x => x.Id == orderId && x.IsActive && !x.IsDeleted).FirstOrDefault();
-                if (model != null)
+                var model = _context.Orders.Where(x => x.Id == updateOrderDto.OrderId && x.IsActive && !x.IsDeleted).FirstOrDefault();
+                if (model == null)
                 {
-                    _context.Entry(model).State = EntityState.Detached;
-                    model.OrderStatusId = orderStatusId;
-                    _context.Update(model);
+                    result.Success = false;
+                    result.Message = "Order not found.";
+                    return result;
                 }
+
+                _context.Entry(model).State = EntityState.Detached;
+                model.OrderStatusId = updateOrderDto.OrderStatusId;
+                _context.Update(model);
+
                 result.Data = _mapper.Map<OrderDto>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;

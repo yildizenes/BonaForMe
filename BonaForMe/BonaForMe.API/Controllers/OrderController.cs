@@ -18,11 +18,15 @@ namespace BonaForMe.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateOrderStatus(Guid orderId, int orderStatusId)
+        public IActionResult UpdateOrderStatus(UpdateOrderDto updateOrderDto)
         {
             try
             {
-                var result = _orderService.UpdateOrderStatus(orderId, orderStatusId);
+                if (updateOrderDto.OrderId == Guid.Empty || updateOrderDto.OrderStatusId == 0)
+                {
+                    return Json(new { success = false, data = "", message = "Please enter a valid parameter." });
+                }
+                var result = _orderService.UpdateOrderStatus(updateOrderDto);
                 return Json(new { success = result.Success, data = result.Data, message = result.Message });
             }
             catch (Exception ex)
