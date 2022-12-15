@@ -208,14 +208,14 @@ namespace BonaForMe.ServiceCore.ProductService
             }
 
             var fileExtension = "." + formFile.FileName.Split('.').Last();
-            var filePath = @"wwwroot\images\Product\" + product.Id + fileExtension;
-            var fullpath = path + filePath;
+            var filePath = @"\images\Product\" + product.Id + fileExtension;
+            var fullpath = path + "wwwroot" + filePath;
 
             if (File.Exists(fullpath))
             {
-                File.Delete(path + @"wwwroot\images\Product\" + product.Id + fileExtension);
+                File.Delete(fullpath);
             }
-            File.WriteAllBytes(path + @"wwwroot\images\Product\" + product.Id + fileExtension, picture);
+            File.WriteAllBytes(fullpath, picture);
 
             product.ImagePath = filePath;
             UpdateProduct(_mapper.Map<ProductDto>(product));

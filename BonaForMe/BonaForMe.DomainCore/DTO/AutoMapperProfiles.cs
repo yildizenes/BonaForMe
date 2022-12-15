@@ -8,7 +8,7 @@ namespace BonaForMe.DomainCore.DTO
         public AutoMapperProfiles()
         {
             CreateMap<Announcement, AnnouncementDto>()
-                .ForMember(x => x.CategoryName, opt => opt.MapFrom(x => x.Category.Name));
+                .ForMember(x => x.CategoryName, opt => opt.MapFrom(x => x.Category != null ? x.Category.Name : ""));
             CreateMap<AnnouncementDto, Announcement>();
 
             CreateMap<Category, CategoryDto>();
@@ -27,8 +27,8 @@ namespace BonaForMe.DomainCore.DTO
             CreateMap<LinkOrderProductDto, LinkOrderProduct>();
 
             CreateMap<Order, OrderDto>()
-                .ForMember(x => x.UserName, opt => opt.MapFrom(x => x.User.FirstName + " " + x.User.LastName ))
-                .ForMember(x => x.OrderStatusName, opt => opt.MapFrom(x => x.OrderStatus.Name));
+                .ForMember(x => x.UserName, opt => opt.MapFrom(x => x.User != null ? x.User.FirstName + " " + x.User.LastName : ""))
+                .ForMember(x => x.OrderStatusName, opt => opt.MapFrom(x => x.OrderStatus != null ? x.OrderStatus.Name : ""));
             CreateMap<OrderDto, Order>();
 
             CreateMap<OrderStatus, OrderStatusDto>();
@@ -38,9 +38,9 @@ namespace BonaForMe.DomainCore.DTO
             CreateMap<PaymentInfoDto, PaymentInfo>();
 
             CreateMap<Product, ProductDto>()
-                .ForMember(x => x.ProductUnitName, opt => opt.MapFrom(x => x.ProductUnit.Name))
-                .ForMember(x => x.CurrencyUnitName, opt => opt.MapFrom(x => x.CurrencyUnit.Name))
-                .ForMember(x => x.CategoryName, opt => opt.MapFrom(x => x.Category.Name));
+                .ForMember(x => x.ProductUnitName, opt => opt.MapFrom(x => x.ProductUnit != null ? x.ProductUnit.Name : ""))
+                .ForMember(x => x.CurrencyUnitName, opt => opt.MapFrom(x => x.CurrencyUnit != null ? x.CurrencyUnit.Name : ""))
+                .ForMember(x => x.CategoryName, opt => opt.MapFrom(x => x.Category != null ? x.Category.Name : ""));
             CreateMap<ProductDto, Product>();
 
             CreateMap<ProductUnit, ProductUnitDto>();

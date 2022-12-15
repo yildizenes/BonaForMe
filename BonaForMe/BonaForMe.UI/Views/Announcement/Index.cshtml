@@ -151,7 +151,13 @@
                 getCell("Id"),
                 getCell("Title"),
                 getCell("Description"),
-                getCell("ImagePath"),
+                {
+                    "data": "", "ImagePath": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
+                    "render": function (data, type, full, meta) {
+                        var image = "<img src='" + full.imagePath + "' width='100' height='100'>";
+                        return image;
+                    }
+                },
                 getCell("CategoryName"),
                 {
                     "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",

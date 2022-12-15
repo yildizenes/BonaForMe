@@ -177,7 +177,7 @@ namespace BonaForMe.ServiceCore.OrderService
                 var orderDtos = _mapper.Map<List<Order>, List<OrderDto>>(model);
                 foreach (var item in orderDtos)
                 {
-                    var linkOrderProducts = _context.LinkOrderProducts.Where(x => x.OrderId == item.Id).ToList();
+                    var linkOrderProducts = _context.LinkOrderProducts.Where(x => x.OrderId == item.Id).Include(x=> x.Product).ToList();
                     item.ProductList = _mapper.Map<List<LinkOrderProduct>, List<LinkOrderProductDto>>(linkOrderProducts);
                 }
                 result.Data = orderDtos;
@@ -205,9 +205,10 @@ namespace BonaForMe.ServiceCore.OrderService
                     return result;
                 }
 
-                _context.Entry(model).State = EntityState.Detached;
+                _context.Entry(model).State = EntityState.Modified;
                 model.OrderStatusId = updateOrderDto.OrderStatusId;
                 _context.Update(model);
+                _context.SaveChanges();
 
                 result.Data = _mapper.Map<OrderDto>(model);
                 result.Success = true;

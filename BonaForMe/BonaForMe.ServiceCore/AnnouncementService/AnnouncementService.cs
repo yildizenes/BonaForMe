@@ -137,7 +137,7 @@ namespace BonaForMe.ServiceCore.AnnouncementService
             Result<List<AnnouncementDto>> result = new Result<List<AnnouncementDto>>();
             try
             {
-                var model = _context.Announcements.Where(x => x.IsActive && !x.IsDeleted).Include(x=> x.Category).ToList();
+                var model = _context.Announcements.Where(x => x.IsActive && !x.IsDeleted).Include(x => x.Category).ToList();
                 result.Data = _mapper.Map<List<Announcement>, List<AnnouncementDto>>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
@@ -185,14 +185,14 @@ namespace BonaForMe.ServiceCore.AnnouncementService
             }
 
             var fileExtension = "." + formFile.FileName.Split('.').Last();
-            var filePath =  @"wwwroot\images\Announcement\" + announcement.Id + fileExtension;
-            var fullpath = path + filePath;
+            var filePath = @"\images\Announcement\" + announcement.Id + fileExtension;
+            var fullpath = path + "wwwroot" + filePath;
 
             if (File.Exists(fullpath))
             {
-                File.Delete(path + @"wwwroot\images\Announcement\" + announcement.Id + fileExtension);
+                File.Delete(fullpath);
             }
-            File.WriteAllBytes(path + @"wwwroot\images\Announcement\" + announcement.Id + fileExtension, picture);
+            File.WriteAllBytes(fullpath, picture);
 
             announcement.ImagePath = filePath;
             UpdateAnnouncement(_mapper.Map<AnnouncementDto>(announcement));

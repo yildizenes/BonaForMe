@@ -187,14 +187,14 @@ namespace BonaForMe.ServiceCore.CategoryService
             }
 
             var fileExtension = "." + formFile.FileName.Split('.').Last();
-            var filePath = @"wwwroot\images\Category\" + category.Id + fileExtension;
-            var fullpath = path + filePath;
+            var filePath = @"\images\Category\" + category.Id + fileExtension;
+            var fullpath = path + "wwwroot" + filePath;
 
             if (File.Exists(fullpath))
             {
-                File.Delete(path + @"wwwroot\images\Category\" + category.Id + fileExtension);
+                File.Delete(fullpath);
             }
-            File.WriteAllBytes(path + @"wwwroot\images\Category\" + category.Id + fileExtension, picture);
+            File.WriteAllBytes(fullpath, picture);
 
             category.ImagePath = filePath;
             UpdateCategory(_mapper.Map<CategoryDto>(category));
