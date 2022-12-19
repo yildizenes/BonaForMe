@@ -47,6 +47,10 @@ namespace BonaForMe.API.Controllers
                 if (userDto == null)
                     return Json(new { success = false });
 
+                var userResult = _userService.GetUserById(userDto.Id);
+                if (userResult.Data == null || !userResult.Success)
+                    return Json(new { Success = false, Data = "", Message = "User not found." });
+
                 var result = _userService.UpdateUser(userDto);
                 return Json(new { success = result.Success, data = result.Data, message = result.Message });
             }

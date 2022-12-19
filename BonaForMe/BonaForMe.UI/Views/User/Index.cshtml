@@ -97,7 +97,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" id="passwordPanel">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="CompanyName" class="control-label"><span style="color:red">* </span>Company</label>
@@ -109,6 +109,14 @@
                         <div class="form-group">
                             <label for="UserPassword" class="control-label"><span style="color:red">* </span>Password</label>
                             <input name="UserPassword" id="UserPassword" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="companyPanel" style="display:none;">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="CompanyName" class="control-label"><span style="color:red">* </span>Company</label>
+                            <input name="CompanyName" id="CompanyName" class="form-control" required />
                         </div>
                     </div>
                 </div>
@@ -139,15 +147,6 @@
                         <div class="form-group">
                             <label for="Address" class="control-label"><span style="color:red">* </span>Address</label>
                             <input name="Address" id="Address" class="form-control" required />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="CompanyName" class="control-label"><span style="color:red">* </span>Company</label>
-                            <input name="CompanyName" id="CompanyName" class="form-control" required />
                         </div>
                     </div>
                 </div>
@@ -237,6 +236,8 @@
         $("#District").val("");
         $("#Address").val("");
         $("#CompanyName").val("");
+        $("#passwordPanel").show();
+        $("#companyPanel").hide();
 
         if (id != null && id !== "") {
             var data = { id: id }
@@ -252,6 +253,8 @@
             $("#District").val(result.district);
             $("#Address").val(result.address);
             $("#CompanyName").val(result.companyName);
+            $("#passwordPanel").hide();
+            $("#companyPanel").show();
         }
         $('#modalSave').modal('show');
     }

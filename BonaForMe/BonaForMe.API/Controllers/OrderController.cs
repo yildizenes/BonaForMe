@@ -64,6 +64,34 @@ namespace BonaForMe.API.Controllers
         }
 
         [HttpGet]
+        public IActionResult GetUserNowOrderDetail()
+        {
+            try
+            {
+                var result = _orderService.GetUserNowOrderDetail();
+                return Json(new { success = result.Success, data = result.Data, message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, data = "", message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetUserLastOrderDetail()
+        {
+            try
+            {
+                var result = _orderService.GetUserLastOrderDetail();
+                return Json(new { success = result.Success, data = result.Data, message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, data = "", message = ex.Message });
+            }
+        }
+
+        [HttpGet]
         public IActionResult GetOrderById(Guid id)
         {
             try

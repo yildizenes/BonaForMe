@@ -33,7 +33,10 @@ namespace BonaForMe.ServiceCore.UserService
                     var oldModel = _context.Users.FirstOrDefault(x => x.Id == userDto.Id);
                     if (oldModel != null)
                     {
+                        user.UserPassword = oldModel.UserPassword; // Password güncellenmesin.
                         DBHelper.SetBaseValues(oldModel, user);
+                        user.IsAdmin = oldModel.IsAdmin;
+                        user.IsApproved = oldModel.IsApproved;
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(user);
                     }
@@ -94,6 +97,8 @@ namespace BonaForMe.ServiceCore.UserService
                     {
                         user.UserPassword = oldModel.UserPassword; // Password güncellenmesin.
                         DBHelper.SetBaseValues(oldModel, user);
+                        user.IsAdmin = oldModel.IsAdmin;
+                        user.IsApproved = oldModel.IsApproved;
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(user);
                     }

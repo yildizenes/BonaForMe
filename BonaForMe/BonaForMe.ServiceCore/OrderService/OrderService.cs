@@ -153,7 +153,50 @@ namespace BonaForMe.ServiceCore.OrderService
             Result<List<OrderDto>> result = new Result<List<OrderDto>>();
             try
             {
-                var model = _context.Orders.Where(x => x.IsActive && !x.IsDeleted).Include(x => x.User).Include(x => x.OrderStatus).ToList();
+                var model = _context.Orders.Where(x => x.IsActive && !x.IsDeleted).Include(x => x.User).Include(x => x.OrderStatus).OrderByDescending(x => x.DateCreated).ToList();
+                result.Data = _mapper.Map<List<Order>, List<OrderDto>>(model);
+                result.Success = true;
+                result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
+        public Result<List<OrderDto>> GetUserNowOrderDetail()
+        {
+            Result<List<OrderDto>> result = new Result<List<OrderDto>>();
+            try
+            {
+                var nowOrderStatusList = new List<int> { 1, 2, 3 };
+                var model = _context.Orders.Where(x => nowOrderStatusList.Contains(x.OrderStatusId) && x.IsActive && !x.IsDeleted)
+                    .Include(x => x.User).Include(x => x.OrderStatus)
+                    .OrderByDescending(x => x.DateCreated)
+                    .ToList();
+                result.Data = _mapper.Map<List<Order>, List<OrderDto>>(model);
+                result.Success = true;
+                result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
+        public Result<List<OrderDto>> GetUserLastOrderDetail()
+        {
+            Result<List<OrderDto>> result = new Result<List<OrderDto>>();
+            try
+            {
+                var model = _context.Orders.Where(x => x.OrderStatusId > 3 && x.IsActive && !x.IsDeleted)
+                    .Include(x => x.User).Include(x => x.OrderStatus)
+                    .OrderByDescending(x => x.DateCreated)
+                    .ToList();
                 result.Data = _mapper.Map<List<Order>, List<OrderDto>>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
@@ -177,7 +220,7 @@ namespace BonaForMe.ServiceCore.OrderService
                 var orderDtos = _mapper.Map<List<Order>, List<OrderDto>>(model);
                 foreach (var item in orderDtos)
                 {
-                    var linkOrderProducts = _context.LinkOrderProducts.Where(x => x.OrderId == item.Id).Include(x=> x.Product).ToList();
+                    var linkOrderProducts = _context.LinkOrderProducts.Where(x => x.OrderId == item.Id).Include(x => x.Product).ToList();
                     item.ProductList = _mapper.Map<List<LinkOrderProduct>, List<LinkOrderProductDto>>(linkOrderProducts);
                 }
                 result.Data = orderDtos;
@@ -226,7 +269,7 @@ namespace BonaForMe.ServiceCore.OrderService
         {
             try
             {
-                var orders = GetAllOrder().Data.Where(x=> x.OrderStatusId == orderStatusId).AsQueryable();
+                var orders = GetAllOrder().Data.Where(x => x.OrderStatusId == orderStatusId).AsQueryable();
                 //Sorting
                 if (!string.IsNullOrEmpty(dataTable.SortColumn) && !string.IsNullOrEmpty(dataTable.SortColumnDirection))
                 {

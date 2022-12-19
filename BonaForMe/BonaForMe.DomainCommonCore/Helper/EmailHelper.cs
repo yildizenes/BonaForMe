@@ -9,11 +9,11 @@ namespace BonaForMe.DomainCommonCore.Helper
     {
         public static void SendForgetPasswordMail(string Email, string newPassword)
         {
-            string bodyMessage = GetMailBody("Bona Me For Me Şifre Yenileme", "mmcard.online yeni geçici kullanıcı şifreniz aşağıda verilmiştir.</br> Güvenliğiniz için lütfen şifrenizi değiştiriniz! </br>", newPassword);
+            string bodyMessage = GetMailBody("Bona Me For Me Password Reset", "Bona Me For Me Your new temporary user password is given below.</br> For your security, please change your password! </br>", newPassword);
 
-            var message = new System.Net.Mail.MailMessage("info@mmcard.online", Email)
+            var message = new System.Net.Mail.MailMessage("info@bonameforme.com", Email)
             {
-                Subject = "mmcard Kullanıcı Şifre Yenileme İşlemi.",
+                Subject = "Bona Me For Me User Password Renewal Process",
                 Body = bodyMessage
 
             };
@@ -24,14 +24,14 @@ namespace BonaForMe.DomainCommonCore.Helper
 
             var client = new System.Net.Mail.SmtpClient();
             client.EnableSsl = false;
-            client.Host = "mail.mmcard.online";
+            client.Host = "mail.bonameforme.com";
             client.Port = 587;
-            client.Credentials = new NetworkCredential("info@mmcard.online", "y3wfpt-kC1vu@Hd.");
+            client.Credentials = new NetworkCredential("info@bonameforme.com", "Bgw9v457^");
             client.Timeout = 10000;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
 
-            //client.Send(message);
+            client.Send(message);
         }
 
         public static string GetMailBody(string baslik, string icerik, string sifre) 

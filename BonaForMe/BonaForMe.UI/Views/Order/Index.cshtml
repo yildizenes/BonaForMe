@@ -51,6 +51,7 @@
                                         <th>Order Code</th>
                                         <th>User</th>
                                         <th>Status</th>
+                                        <th>Order Date</th>
                                         <th class="noExport">Actions</th>
                                     </tr>
                                 </thead>
@@ -93,6 +94,20 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Phone" class="control-label">Phone : </label>
+                                    <label id="detailPhone" class="control-label"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Address" class="control-label">Address : </label>
+                                    <label id="detailAddress" class="control-label"></label>
+                                </div>
+                            </div>
+                        </div>
                         <table class="table" id="productTable">
                             <thead>
                                 <tr>
@@ -105,38 +120,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @*<tr>
-                                    <th scope="row">1</th>
-                                    <td>Chocolate</td>
-                                    <td>Piece</td>
-                                    <td>2</td>
-                                    <td>5₺</td>
-                                    <td>10₺</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Bread</td>
-                                    <td>Piece</td>
-                                    <td>4</td>
-                                    <td>6₺</td>
-                                    <td>24₺</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Water</td>
-                                    <td>Liter</td>
-                                    <td>5</td>
-                                    <td>8₺</td>
-                                    <td>40₺</td>
-                                </tr>*@
-                                <tr>
-                                    <th scope="row"></th>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>Total Price:</td>
-                                    <td>74₺</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -227,7 +210,7 @@
             "serverSide": true,
             "filter": true,
             "orderMulti": false,
-            "order": [[1, "desc"]],
+            "order": [],
             dom: domString,
             buttons: buttons,
             "ajax": {
@@ -249,6 +232,22 @@
                 {
                     "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
                     "render": function (data, type, full, meta) {
+                        var dt = full.dateCreated;
+                        var dateString = "";
+                        var timestamp = Date.parse(dt);
+
+                        if (isNaN(timestamp) == true) {
+                            dateString = "";
+                        }
+
+                        dt = new Date(timestamp);
+                        dateString = dt.toLocaleString('tr-TR');
+                        return dateString;
+                    }
+                },
+                {
+                    "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
+                    "render": function (data, type, full, meta) {
                         var buttonGroup = "<div class='btn-group role='group'>";
                         buttonGroup += "<a href='#' class='btn btn-warning btn-sm' style='color:white; margin:0px 5px;' onclick=jsOpenSaveOrder('" + full.id + "');><i class='fas fa-edit'></i> Edit </a>"
                         buttonGroup += "<a href='#' class='btn btn-danger btn-sm' style='color:white; margin:0px 5px;' onclick=DeleteData('" + full.id + "');> <i class='fas fa-trash'></i> Delete </a>";
@@ -266,6 +265,8 @@
         $("#hdnOrderId").val("");
         $("#detailOrderCode").text("");
         $("#detailOrderer").text("");
+        $("#detailPhone").text("");
+        $("#detailAddress").text("");
 
         if (id != null && id !== "") {
             var data = { id: id }
@@ -273,6 +274,8 @@
             $("#hdnOrderId").val(result.id);
             $("#detailOrderCode").text(result.orderCode);
             $("#detailOrderer").text(result.userName);
+            $("#detailPhone").text(result.user.userPhone);
+            $("#detailAddress").text(result.user.address);
 
             var tableRef = document.getElementById('productTable').getElementsByTagName('tbody')[0];
 
