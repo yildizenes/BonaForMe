@@ -105,11 +105,11 @@ namespace BonaForMe.API.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public JsonResult ForgetPassword(string mail)
+        public JsonResult ForgetPassword(AccountDto accountDto)
         {
             try
             {
-                var userData = _userService.GetUserByEmail(mail);
+                var userData = _userService.GetUserByEmail(accountDto.UserMail);
                 if (userData.Data == null)
                     return Json(new { success = false, message = "This email address is not found on the system! Please check your email address." });
 
@@ -117,7 +117,7 @@ namespace BonaForMe.API.Controllers
                 userData.Data.UserPassword = PasswordHelper.PasswordEncoder(userNewPassword);
                 var result = _userService.UpdateUser(userData.Data);
 
-                EmailHelper.SendForgetPasswordMail(mail, userNewPassword);
+                EmailHelper.SendForgetPasswordMail(accountDto.UserMail, userNewPassword);
                 return Json(new { success = result.Success, data = result.Data, message = result.Message });
             }
             catch (Exception ex)

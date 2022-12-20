@@ -176,7 +176,15 @@ namespace BonaForMe.ServiceCore.OrderService
                     .Include(x => x.User).Include(x => x.OrderStatus)
                     .OrderByDescending(x => x.DateCreated)
                     .ToList();
-                result.Data = _mapper.Map<List<Order>, List<OrderDto>>(model);
+
+                var orderDtos = _mapper.Map<List<Order>, List<OrderDto>>(model);
+                foreach (var item in orderDtos)
+                {
+                    var linkOrderProducts = _context.LinkOrderProducts.Where(x => x.OrderId == item.Id).Include(x => x.Product).ToList();
+                    item.ProductList = _mapper.Map<List<LinkOrderProduct>, List<LinkOrderProductDto>>(linkOrderProducts);
+                }
+
+                result.Data = orderDtos;
                 result.Success = true;
                 result.Message = ResultMessages.Success;
             }
@@ -197,7 +205,15 @@ namespace BonaForMe.ServiceCore.OrderService
                     .Include(x => x.User).Include(x => x.OrderStatus)
                     .OrderByDescending(x => x.DateCreated)
                     .ToList();
-                result.Data = _mapper.Map<List<Order>, List<OrderDto>>(model);
+
+                var orderDtos = _mapper.Map<List<Order>, List<OrderDto>>(model);
+                foreach (var item in orderDtos)
+                {
+                    var linkOrderProducts = _context.LinkOrderProducts.Where(x => x.OrderId == item.Id).Include(x => x.Product).ToList();
+                    item.ProductList = _mapper.Map<List<LinkOrderProduct>, List<LinkOrderProductDto>>(linkOrderProducts);
+                }
+
+                result.Data = orderDtos;
                 result.Success = true;
                 result.Message = ResultMessages.Success;
             }
