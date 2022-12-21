@@ -3,6 +3,7 @@ using BonaForMe.DataAccessCore;
 using BonaForMe.DomainCommonCore.Result;
 using BonaForMe.DomainCore.DTO;
 using BonaForMe.ServiceCore.UserService;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -31,6 +32,43 @@ namespace BonaForMe.ServiceCore.AccountService
                 if (model != null)
                 {
                     result.Data = _mapper.Map<UserDto>(model);
+                    result.Success = true;
+                    result.Message = ResultMessages.Success;
+                }
+                else
+                {
+                    result.Success = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
+        public Result<ResetPasswordDto> ResetPassword(ResetPasswordDto resetPasswordDto)
+        {
+            Result<ResetPasswordDto> result = new Result<ResetPasswordDto>();
+            try
+            {
+                var model = _context.Users.FirstOrDefault(x => x.Id == resetPasswordDto.UserId && x.IsActive && !x.IsDeleted);
+
+                if (model != null)
+                {
+                    if (model.UserPassword != resetPasswordDto.OldPassword)
+                    {
+                        result.Success = false;
+                        result.Message = "Old password wrong!";
+                    }
+
+                    model.UserPassword = resetPasswordDto.NewPassword;
+                    _context.Entry(model).State = EntityState.Detached;
+                    _context.Update(model);
+                    _context.SaveChanges();
+
+                    result.Data = resetPasswordDto;
                     result.Success = true;
                     result.Message = ResultMessages.Success;
                 }

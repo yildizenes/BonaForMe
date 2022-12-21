@@ -12,6 +12,10 @@ namespace BonaForMe.DomainCore.DBModel
         public string OrderCode { get; set; }
 
         [Required]
+        [MaxLength(100)]
+        public string PayType { get; set; }
+
+        [Required]
         public Guid UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]

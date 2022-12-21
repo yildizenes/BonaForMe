@@ -9,6 +9,8 @@ namespace BonaForMe.DomainCore.DTO
     {
         public string OrderCode { get; set; }
 
+        public string PayType { get; set; }
+
         public Guid UserId { get; set; }
         public string UserName { get; set; }
 

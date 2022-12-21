@@ -1,4 +1,5 @@
-﻿using BonaForMe.DomainCommonCore.Helper;
+﻿using BonaForMe.DomainCommonCore.CustomClass;
+using BonaForMe.DomainCommonCore.Helper;
 using BonaForMe.DomainCore.DTO;
 using BonaForMe.ServiceCore.AccountService;
 using BonaForMe.ServiceCore.UserService;
@@ -186,6 +187,26 @@ namespace BonaForMe.UI.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult ResetPassword(ResetPasswordDto resetPasswordDto)
+        {
+            try
+            {
+                var user = CurrentUser.Get(HttpContext.User);
+                resetPasswordDto.UserId = Guid.Parse(user.UserId);
+                resetPasswordDto.OldPassword = PasswordHelper.PasswordEncoder(resetPasswordDto.OldPassword);
+                resetPasswordDto.NewPassword = PasswordHelper.PasswordEncoder(resetPasswordDto.NewPassword);
+                resetPasswordDto.VerificationNewPassword = PasswordHelper.PasswordEncoder(resetPasswordDto.VerificationNewPassword);
+
+                var result = _accountService.ResetPassword(resetPasswordDto);
+                return new JsonResult(result);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         private async Task CreateClaims(UserDto userDto)
         {
             var claims = new List<Claim>()
@@ -206,7 +227,7 @@ namespace BonaForMe.UI.Controllers
                 AllowRefresh = true,
                 ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30),
             };
-            await HttpContext.SignInAsync( CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
         }
 
         [HttpPost]

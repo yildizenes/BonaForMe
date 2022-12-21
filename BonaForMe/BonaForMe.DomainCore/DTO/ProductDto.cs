@@ -18,6 +18,7 @@ namespace BonaForMe.DomainCore.DTO
 
         public virtual ProductUnit ProductUnit { get; set; }
 
+        public int TaxRate { get; set; }
         public decimal Price { get; set; }
 
         public int CurrencyUnitId { get; set; }
@@ -31,6 +32,7 @@ namespace BonaForMe.DomainCore.DTO
         public string CategoryName { get; set; }
 
         public virtual Category Category { get; set; }
+
         public IFormFile FormFile { get; set; }
     }
 }

@@ -43,6 +43,7 @@
                                         <th>Image Path</th>
                                         <th>Product Unit</th>
                                         <th>Price</th>
+                                        <th>Tax Rate</th>
                                         <th>Currency Unit</th>
                                         <th>Category</th>
                                         <th class="noExport">Actions</th>
@@ -106,10 +107,16 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="Price" class="control-label"><span style="color:red">* </span>Price</label>
                             <input name="Price" id="Price" class="form-control" required type="number" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="TaxRate" class="control-label"><span style="color:red">* </span>Tax Rate</label>
+                            <input name="TaxRate" id="TaxRate" class="form-control" required type="number" />
                         </div>
                     </div>
                 </div>
@@ -193,6 +200,7 @@
                 },
                 getCell("ProductUnitName"),
                 getCell("Price"),
+                getCell("TaxRate"),
                 getCell("CurrencyUnitName"),
                 getCell("CategoryName"),
                 {
@@ -217,6 +225,7 @@
         $("#FormFile").val("");
         $("#ProductUnitId").val("");
         $("#Price").val("");
+        $("#TaxRate").val("");
         $("#CurrencyUnitId").val("");
         $("#CategoryId").val("");
 
@@ -229,6 +238,7 @@
             //$("#ImagePath").val(result.imagePath);
             $("#ProductUnitId").val(result.productUnitId);
             $("#Price").val(result.price);
+            $("#TaxRate").val(result.taxRate);
             $("#CurrencyUnitId").val(result.currencyUnitId);
             $("#CategoryId").val(result.categoryId);
 
@@ -243,6 +253,7 @@
         formData.append('Description', $("#Description").val());
         formData.append('ProductUnitId', $("#ProductUnitId").val());
         formData.append('Price', $("#Price").val());
+        formData.append('TaxRate', $("#TaxRate").val());
         formData.append('CurrencyUnitId', $("#CurrencyUnitId").val());
         formData.append('CategoryId', $("#CategoryId").val());
         formData.append('FormFile', $('#FormFile')[0].files[0]);

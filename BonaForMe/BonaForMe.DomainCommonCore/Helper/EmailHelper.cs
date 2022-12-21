@@ -37,7 +37,9 @@ namespace BonaForMe.DomainCommonCore.Helper
         public static string GetMailBody(string baslik, string icerik, string sifre) 
         {
             var content = "";
-            using (StreamReader streamReader = new StreamReader("Views/Shared/EmailTemplate.html", Encoding.UTF8))
+            var path = Path.Combine(Directory.GetCurrentDirectory()) + @"\";
+            var fullPath = path + "Views/Shared/EmailTemplate.html";
+            using (StreamReader streamReader = new StreamReader(fullPath, Encoding.UTF8))
             {
                 content = streamReader.ReadToEnd();
             }

@@ -6,24 +6,24 @@
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         @*<li class="nav-item d-none d-sm-inline-block">
-            <a href="index3.html" class="nav-link">Home</a>
-        </li>
-        <li class="nav-item d-none d-sm-inline-block">
-            <a href="#" class="nav-link">Contact</a>
-        </li>*@
+                <a href="index3.html" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="#" class="nav-link">Contact</a>
+            </li>*@
     </ul>
 
     <!-- SEARCH FORM -->
     @*<form class="form-inline ml-3">
-        <div class="input-group input-group-sm">
-            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-            <div class="input-group-append">
-                <button class="btn btn-navbar" type="submit">
-                    <i class="fas fa-search"></i>
-                </button>
+            <div class="input-group input-group-sm">
+                <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+                <div class="input-group-append">
+                    <button class="btn btn-navbar" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
             </div>
-        </div>
-    </form>*@
+        </form>*@
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
@@ -33,12 +33,47 @@
                 <i class="fas fa-user"></i>
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <a href="#" onclick="return ShowResetPasswordModal();" class="dropdown-item">
+                    <i class="fas fa-key mr-2"></i> Reset Password
+                </a>
                 <a href="@Url.Action("Logout","Account")" class="dropdown-item">
                     <i class="fas fa-sign-out-alt mr-2"></i> Log Out
                 </a>
-                <div class="dropdown-divider"></div>          
+                <div class="dropdown-divider"></div>
             </div>
         </li>
     </ul>
 </nav>
 <!-- /.navbar -->
+@await Html.PartialAsync("_ResetPassword")
+
+<script>
+    function ShowResetPasswordModal(id) {
+        $('#resetPasswordModal').modal('show');
+    }
+
+    function jsResetPassword() {
+        if ($("#NewPassword").val() != $("#VerificationNewPassword").val()) {
+            toastr.error("Verification New Password is wrong!");
+            return;
+        }
+        var data = {
+            OldPassword: $("#OldPassword").val(),
+            NewPassword: $("#NewPassword").val(),
+            VerificationNewPassword: $("#VerificationNewPassword").val(),
+        };
+
+        var result = ajaxRequest('POST', '@Url.Action("ResetPassword", "Account")', data)
+        if (result != null) {
+            if (result.success) {
+                $('#resetPasswordModal').modal('hide');
+                toastr.success('Transaction successful.');
+            } else {
+                toastr.error(result.message);
+            }
+        } else {
+            $('#resetPasswordModal').modal('hide');
+            toastr.error('Error in saving!');
+        }
+    }
+</script>

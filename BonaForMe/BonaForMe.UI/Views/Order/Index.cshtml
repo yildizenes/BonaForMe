@@ -52,6 +52,7 @@
                                         <th>User</th>
                                         <th>Status</th>
                                         <th>Order Date</th>
+                                        <th>Pay Type</th>
                                         <th class="noExport">Actions</th>
                                     </tr>
                                 </thead>
@@ -116,6 +117,7 @@
                                     <th scope="col">Product Unit</th>
                                     <th scope="col">Count</th>
                                     <th scope="col">Unit Price</th>
+                                    <th scope="col">Tax Rate</th>
                                     <th scope="col">Total Price</th>
                                 </tr>
                             </thead>
@@ -152,6 +154,14 @@
                         <div class="form-group">
                             <label for="OrderCode" class="control-label"><span style="color:red">* </span>Order Code</label>
                             <input name="OrderCode" id="OrderCode" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="PayType" class="control-label"><span style="color:red">* </span>Pay Type</label>
+                            <input name="PayType" id="PayType" class="form-control" required />
                         </div>
                     </div>
                 </div>
@@ -227,6 +237,7 @@
             "columns": [
                 getCell("Id"),
                 getCell("OrderCode"),
+                getCell("PayType"),
                 getCell("UserName"),
                 getCell("OrderStatusName"),
                 {
@@ -292,7 +303,8 @@
                 var cell3 = newRow.insertCell(2).appendChild(document.createTextNode(item.product.productUnit.name));
                 var cell4 = newRow.insertCell(3).appendChild(document.createTextNode(item.count));
                 var cell5 = newRow.insertCell(4).appendChild(document.createTextNode(item.product.price));
-                var cell6 = newRow.insertCell(5).appendChild(document.createTextNode(totalPrice));
+                var cell5 = newRow.insertCell(5).appendChild(document.createTextNode(item.product.taxRate));
+                var cell6 = newRow.insertCell(6).appendChild(document.createTextNode(totalPrice));
             })
         }
         $('#modalDetail').modal('show');
@@ -302,6 +314,7 @@
     function jsOpenSaveOrder(id) {
         $("#hdnOrderId").val("");
         $("#OrderCode").val("");
+        $("#PayType").val("");
         $("#UserId").val("");
         $("#OrderStatusId").val("");
 
@@ -310,6 +323,7 @@
             var result = ajaxRequest('POST', '@Url.Action("GetOrderById", "Order")', data)
             $("#hdnOrderId").val(result.id);
             $("#OrderCode").val(result.orderCode);
+            $("#PayType").val(result.payType);
             $("#UserId").val(result.userId);
             $("#OrderStatusId").val(result.orderStatusId);
         }
@@ -320,6 +334,7 @@
         var data = {
             Id: $("#hdnOrderId").val(),
             OrderCode: $("#OrderCode").val(),
+            PayType: $("#PayType").val(),
             UserId: $("#UserId").val(),
             OrderStatusId: $("#OrderStatusId").val(),
         };

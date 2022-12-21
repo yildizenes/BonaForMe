@@ -23,6 +23,8 @@ namespace BonaForMe.DomainCore.DBModel
         [DataType(DataType.Currency)]
         public decimal Price { get; set; }
 
+        public int TaxRate { get; set; }
+
         [Required]
         public int CurrencyUnitId { get; set; }
 

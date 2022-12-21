@@ -29,12 +29,12 @@ namespace BonaForMe.ServiceCore.HomeService
         {
             Result<DashboardDto> result = new Result<DashboardDto>();
             var model = new DashboardDto();
-            var thisMount = DateTime.Now.Month;
+            var thisMonth = DateTime.Now.Month;
             try
             {
                 model.UserCount = _context.Users.Count(x => x.IsActive && !x.IsDeleted);
                 model.NewOrdersCount = _context.Orders.Count(x => x.OrderStatusId == 1 && x.IsActive && !x.IsDeleted);
-                model.OrdersCountOfThisMount = _context.Orders.Count(x => x.DateCreated.Value.Month == thisMount && x.OrderStatusId > 4 && x.IsActive && !x.IsDeleted);
+                model.OrdersCountOfThisMonth = _context.Orders.Count(x => x.DateCreated.Value.Month == thisMonth && x.OrderStatusId > 4 && x.IsActive && !x.IsDeleted);
                 model.TotalOrderCount = _context.Orders.Count(x => x.IsActive && !x.IsDeleted);
 
                 result.Data = model;
