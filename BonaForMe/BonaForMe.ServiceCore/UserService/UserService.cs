@@ -84,7 +84,7 @@ namespace BonaForMe.ServiceCore.UserService
             return result;
         }
 
-        public Result<UserDto> UpdateUser(UserDto userDto)
+        public Result<UserDto> UpdateUser(UserDto userDto, bool isResetPassword = false)
         {
             Result<UserDto> result = new Result<UserDto>();
             try
@@ -95,7 +95,9 @@ namespace BonaForMe.ServiceCore.UserService
                     var oldModel = _context.Users.FirstOrDefault(x => x.Id == userDto.Id);
                     if (oldModel != null)
                     {
-                        user.UserPassword = oldModel.UserPassword; // Password güncellenmesin.
+                        if (!isResetPassword)
+                            user.UserPassword = oldModel.UserPassword; // Password güncellenmesin.
+
                         DBHelper.SetBaseValues(oldModel, user);
                         user.IsAdmin = oldModel.IsAdmin;
                         user.IsApproved = oldModel.IsApproved;

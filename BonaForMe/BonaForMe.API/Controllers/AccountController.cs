@@ -1,7 +1,9 @@
 ﻿using BonaForMe.DomainCommonCore.Constants;
+using BonaForMe.DomainCommonCore.CustomClass;
 using BonaForMe.DomainCommonCore.Helper;
 using BonaForMe.DomainCore.DTO;
 using BonaForMe.ServiceCore.AccountService;
+using BonaForMe.ServiceCore.MailSenderService;
 using BonaForMe.ServiceCore.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,10 +23,12 @@ namespace BonaForMe.API.Controllers
     {
         private readonly IUserService _userService;
         private readonly IAccountService _accountService;
-        public AccountController(IUserService userService, IAccountService accountService)
+        private readonly IMailSenderService _mailSenderService;
+        public AccountController(IUserService userService, IAccountService accountService, IMailSenderService mailSenderService)
         {
             _userService = userService;
             _accountService = accountService;
+            _mailSenderService = mailSenderService;
         }
 
         [AllowAnonymous]
@@ -115,9 +119,27 @@ namespace BonaForMe.API.Controllers
 
                 string userNewPassword = PasswordHelper.GeneratePassword();
                 userData.Data.UserPassword = PasswordHelper.PasswordEncoder(userNewPassword);
-                var result = _userService.UpdateUser(userData.Data);
+                var result = _userService.UpdateUser(userData.Data, true);
 
-                EmailHelper.SendForgetPasswordMail(accountDto.UserMail, userNewPassword);
+                _mailSenderService.SendMail(accountDto.UserMail, userNewPassword);
+                return Json(new { success = result.Success, data = result.Data, message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message, data = "" });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult ResetPassword(ResetPasswordDto resetPasswordDto)
+        {
+            try
+            {
+                resetPasswordDto.OldPassword = PasswordHelper.PasswordEncoder(resetPasswordDto.OldPassword);
+                resetPasswordDto.NewPassword = PasswordHelper.PasswordEncoder(resetPasswordDto.NewPassword);
+                resetPasswordDto.VerificationNewPassword = PasswordHelper.PasswordEncoder(resetPasswordDto.VerificationNewPassword);
+
+                var result = _accountService.ResetPassword(resetPasswordDto);
                 return Json(new { success = result.Success, data = result.Data, message = result.Message });
             }
             catch (Exception ex)

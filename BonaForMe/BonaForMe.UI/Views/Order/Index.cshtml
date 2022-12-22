@@ -50,9 +50,9 @@
                                         <th>Id</th>
                                         <th>Order Code</th>
                                         <th>User</th>
+                                        <th>Pay Type</th>
                                         <th>Status</th>
                                         <th>Order Date</th>
-                                        <th>Pay Type</th>
                                         <th class="noExport">Actions</th>
                                     </tr>
                                 </thead>
@@ -237,8 +237,8 @@
             "columns": [
                 getCell("Id"),
                 getCell("OrderCode"),
-                getCell("PayType"),
                 getCell("UserName"),
+                getCell("PayType"),
                 getCell("OrderStatusName"),
                 {
                     "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
@@ -304,7 +304,7 @@
                 var cell4 = newRow.insertCell(3).appendChild(document.createTextNode(item.count));
                 var cell5 = newRow.insertCell(4).appendChild(document.createTextNode(item.product.price));
                 var cell5 = newRow.insertCell(5).appendChild(document.createTextNode(item.product.taxRate));
-                var cell6 = newRow.insertCell(6).appendChild(document.createTextNode(totalPrice));
+                var cell6 = newRow.insertCell(6).appendChild(document.createTextNode(parseFloat(totalPrice).toFixed(2)));
             })
         }
         $('#modalDetail').modal('show');

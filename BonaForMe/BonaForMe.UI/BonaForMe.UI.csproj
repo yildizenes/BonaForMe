@@ -35,4 +35,8 @@
     <Folder Include="wwwroot\images\Product\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\MailTemplates\EmailTemplate.html" />
+  </ItemGroup>
+
 </Project>

@@ -8,6 +8,7 @@
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="MessagingToolkit" Version="1.8.3" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.8.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
@@ -20,5 +21,7 @@
     <ProjectReference Include="..\BonaForMe.DomainCommonCore\BonaForMe.DomainCommonCore.csproj" />
     <ProjectReference Include="..\BonaForMe.DomainCore\BonaForMe.DomainCore.csproj" />
   </ItemGroup>
-
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
 </Project>

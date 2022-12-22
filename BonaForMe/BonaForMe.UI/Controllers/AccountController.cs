@@ -2,10 +2,12 @@
 using BonaForMe.DomainCommonCore.Helper;
 using BonaForMe.DomainCore.DTO;
 using BonaForMe.ServiceCore.AccountService;
+using BonaForMe.ServiceCore.MailSenderService;
 using BonaForMe.ServiceCore.UserService;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
@@ -24,10 +26,13 @@ namespace BonaForMe.UI.Controllers
     {
         private readonly IUserService _userService;
         private readonly IAccountService _accountService;
-        public AccountController(IUserService userService, IAccountService accountService)
+        private readonly IMailSenderService _mailSenderService;
+        public AccountController(IUserService userService, IAccountService accountService,
+            IMailSenderService mailSenderService)
         {
             _userService = userService;
             _accountService = accountService;
+            _mailSenderService = mailSenderService;
         }
 
         [AllowAnonymous]
@@ -173,9 +178,8 @@ namespace BonaForMe.UI.Controllers
 
                 string userNewPassword = PasswordHelper.GeneratePassword();
                 userData.Data.UserPassword = PasswordHelper.PasswordEncoder(userNewPassword);
-                _userService.UpdateUser(userData.Data);
-
-                EmailHelper.SendForgetPasswordMail(userMail, userNewPassword);
+                _userService.UpdateUser(userData.Data, true);
+                _mailSenderService.SendMail(userMail, userNewPassword);
 
                 TempData["Success"] = "Your new password has been sent to your e-mail address. Note: Mail may go to spam (junk) box!";
                 return RedirectToAction("Login", "Account");

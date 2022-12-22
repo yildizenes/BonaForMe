@@ -35,6 +35,9 @@ namespace BonaForMe.ServiceCore.ProductService
                     var oldModel = _context.Products.FirstOrDefault(x => x.Id == productDto.Id);
                     if (oldModel != null)
                     {
+                        if (productDto.FormFile == null)
+                            product.ImagePath = oldModel.ImagePath;
+
                         DBHelper.SetBaseValues(oldModel, product);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(product);
@@ -97,6 +100,9 @@ namespace BonaForMe.ServiceCore.ProductService
                     var oldModel = _context.Products.FirstOrDefault(x => x.Id == productDto.Id);
                     if (oldModel != null)
                     {
+                        if (productDto.FormFile == null)
+                            product.ImagePath = oldModel.ImagePath;
+
                         DBHelper.SetBaseValues(oldModel, product);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(product);

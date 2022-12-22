@@ -35,6 +35,9 @@ namespace BonaForMe.ServiceCore.AnnouncementService
                     var oldModel = _context.Announcements.FirstOrDefault(x => x.Id == announcementDto.Id);
                     if (oldModel != null)
                     {
+                        if (announcementDto.FormFile == null)
+                            announcement.ImagePath = oldModel.ImagePath;
+
                         DBHelper.SetBaseValues(oldModel, announcement);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(announcement);
@@ -97,6 +100,9 @@ namespace BonaForMe.ServiceCore.AnnouncementService
                     var oldModel = _context.Announcements.FirstOrDefault(x => x.Id == announcementDto.Id);
                     if (oldModel != null)
                     {
+                        if (announcementDto.FormFile == null)
+                            announcement.ImagePath = oldModel.ImagePath;
+
                         DBHelper.SetBaseValues(oldModel, announcement);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(announcement);

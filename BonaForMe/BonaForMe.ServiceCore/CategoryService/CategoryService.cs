@@ -35,6 +35,9 @@ namespace BonaForMe.ServiceCore.CategoryService
                     var oldModel = _context.Categories.FirstOrDefault(x => x.Id == categoryDto.Id);
                     if (oldModel != null)
                     {
+                        if (categoryDto.FormFile == null)
+                            category.ImagePath = oldModel.ImagePath;
+
                         DBHelper.SetBaseValues(oldModel, category);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(category);
@@ -98,6 +101,9 @@ namespace BonaForMe.ServiceCore.CategoryService
                     var oldModel = _context.Categories.FirstOrDefault(x => x.Id == categoryDto.Id);
                     if (oldModel != null)
                     {
+                        if (categoryDto.FormFile == null)
+                            category.ImagePath = oldModel.ImagePath;
+
                         DBHelper.SetBaseValues(oldModel, category);
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(category);

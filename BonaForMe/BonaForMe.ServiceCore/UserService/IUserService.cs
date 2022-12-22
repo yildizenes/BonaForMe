@@ -10,7 +10,7 @@ namespace BonaForMe.ServiceCore.UserService
     {
         Result<UserDto> AddUser(UserDto userDto);
         Result DeleteUser(Guid id);
-        Result<UserDto> UpdateUser(UserDto userDto);
+        Result<UserDto> UpdateUser(UserDto userDto, bool isResetPassword = false);
         Result<UserDto> GetUserById(Guid id);
         Result<List<UserDto>> GetAllUser();
         JsonResult FillDataTable(DataTableDto dataTable);

@@ -7,9 +7,9 @@ namespace BonaForMe.DomainCommonCore.Helper
 {
     public class EmailHelper
     {
-        public static void SendForgetPasswordMail(string Email, string newPassword)
+        public static void SendForgetPasswordMail(string Email, string newPassword, string mailTemplate)
         {
-            string bodyMessage = GetMailBody("Bona Me For Me Password Reset", "Bona Me For Me Your new temporary user password is given below.</br> For your security, please change your password! </br>", newPassword);
+            string bodyMessage = GetMailBody("Bona Me For Me Password Reset", "Bona Me For Me Your new temporary user password is given below.</br> For your security, please change your password! </br>", newPassword, mailTemplate);
 
             var message = new System.Net.Mail.MailMessage("info@bonameforme.com", Email)
             {
@@ -34,15 +34,15 @@ namespace BonaForMe.DomainCommonCore.Helper
             client.Send(message);
         }
 
-        public static string GetMailBody(string baslik, string icerik, string sifre) 
+        public static string GetMailBody(string baslik, string icerik, string sifre, string content) 
         {
-            var content = "";
-            var path = Path.Combine(Directory.GetCurrentDirectory()) + @"\";
-            var fullPath = path + "Views/Shared/EmailTemplate.html";
-            using (StreamReader streamReader = new StreamReader(fullPath, Encoding.UTF8))
-            {
-                content = streamReader.ReadToEnd();
-            }
+            //var content = "";
+            //var path = Path.Combine(Directory.GetCurrentDirectory()) + @"\";
+            //var fullPath = path + @"Views\Shared\EmailTemplate.html";
+            //using (StreamReader streamReader = new StreamReader(fullPath, Encoding.UTF8))
+            //{
+            //    content = streamReader.ReadToEnd();
+            //}
             content = content.Replace("|Baslik|", baslik);
             content = content.Replace("|Icerik|", icerik);
             content = content.Replace("|Sifre|", sifre);
