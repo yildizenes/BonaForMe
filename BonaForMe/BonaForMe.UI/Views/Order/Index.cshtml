@@ -130,7 +130,7 @@
 
             <div class="modal-footer">
                 <button type="button" data-content="remove" class="btn btn-default" data-dismiss="modal"> Cancel </button>
-                <button onclick="jsCreateInvoice();" class="btn btn-default" data-dismiss="modal"> Create Invoice </button>
+                <button onclick="jsShowInvoice();" class="btn btn-primary" data-dismiss="modal"> Show Invoice </button>
             </div>
         </div>
     </div>
@@ -393,8 +393,9 @@
         createTable();
     }
 
-    function jsCreateInvoice() {
-        var data = { orderId: $("#hdnOrderId").val() }
-        var result = ajaxRequest('POST', '@Url.Action("CreateInvoice", "Order")', data)
+    function jsShowInvoice() {
+        var orderCode = $("#detailOrderCode").text();
+        var address = "https://www.bonameforme.com/Invoice/" + orderCode + ".pdf";
+        window.open(address, '_blank');
     }
 </script>
