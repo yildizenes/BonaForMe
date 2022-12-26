@@ -1,9 +1,14 @@
 ﻿using BonaForMe.DomainCore.DTO;
+using BonaForMe.DomainCore.DTO.PDFModels;
 using BonaForMe.ServiceCore.OrderService;
+using BonaForMe.ServiceCore.PaymentInfoService;
+using BonaForMe.ServiceCore.PDFServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace BonaForMe.UI.Controllers
@@ -12,9 +17,11 @@ namespace BonaForMe.UI.Controllers
     public class OrderController : Controller
     {
         private readonly IOrderService _orderService;
-        public OrderController(IOrderService orderService)
+        private readonly IPaymentInfoService _paymentInfoService;
+        public OrderController(IOrderService orderService, IPaymentInfoService paymentInfoService)
         {
             _orderService = orderService;
+            _paymentInfoService = paymentInfoService;
         }
 
         public IActionResult Index()
@@ -130,6 +137,74 @@ namespace BonaForMe.UI.Controllers
                 return _orderService.FillDataTable(dataTable, orderStatusId);
             }
             catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        [HttpPost]
+        public JsonResult CreateInvoice(Guid orderId)
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory()) + @"\";
+            var order = _orderService.GetOrderById(orderId);
+            var itemList = new List<ItemRow>();
+            decimal subTotal = 0, totalVAT = 0;
+            var paymentInfos = _paymentInfoService.GetAllPaymentInfo().Data.OrderBy(x=> x.DateCreated).Select(x => x.Description).ToArray();
+
+            var billUser = order.Data.User;
+
+            foreach (var item in order.Data.ProductList)
+            {
+                var product = item.Product;
+                itemList.Add(ItemRow.Make(item.ProductId.ToString().Split('-').Last().ToUpper(), product.Name, product.Price, item.Count, product.Price, product.Price * item.Count, product.TaxRate)); ;
+                subTotal += product.Price * item.Count;
+                if (product.TaxRate != 0)
+                    totalVAT += (product.Price * item.Count * product.TaxRate) / 100;
+            }
+            try
+            {
+                new InvoicerApi(SizeOption.A4, OrientationOption.Portrait, "€", order.Data.OrderCode)
+                    .TextColor("#CC0000")
+                    .Image(path + @"wwwroot\images\bonaformelogo.jpg", 100, 100)
+                    .Company(Address.Make("FROM", new string[] {
+                        "Solmaz Packaging",
+                        "Unit 9-10, The New Sunbeam Ind",
+                        "Est. Blackpool. Cork.",
+                        "Phone: 087 353 33 35",
+                        "Email: info@bonameforme.com",
+                        "Website: bonameforme.com",
+                        "VAT No: 3933414LH"
+                    }))
+                    .Client(Address.Make("BILL TO", new string[]
+                    {
+                        billUser.FullName.ToUpper(),
+                        "Company : " + billUser.CompanyName,
+                        "Address : " + billUser.Address.ToUpper(),
+                        "Phone   : " + billUser.UserPhone,
+                        "Email   : " + billUser.UserMail
+                    }))
+                    .Items(itemList)
+                    .Totals(new List<TotalRow> {
+                    TotalRow.Make("Sub Total", subTotal),
+                    TotalRow.Make("Total VAT", totalVAT),
+                    TotalRow.Make("Total", subTotal + totalVAT, true),
+                    })
+                    .Details(new List<DetailRow> {
+                    DetailRow.Make("PAYMENT INFORMATION", new string[] {
+                    "Customer Signature : __________________________________",
+                    "Customer Name      : __________________________________",
+                    "Amount Paid        : __________________________________",
+                    "Payment Type       : □ Cash   □ Cheque   □ Credit Card   □ Not Paid ",
+                    "Driver  Name       : __________________________________",
+                    }),
+                    DetailRow.Make("BANK INFORMATION", paymentInfos)
+                    })
+                    .Footer("")
+                    .Save();
+
+                return new JsonResult("okey");
+            }
+            catch (Exception ex)
             {
                 return null;
             }

@@ -61,6 +61,7 @@ namespace BonaForMe.ServiceCore.AccountService
                     {
                         result.Success = false;
                         result.Message = "Old password wrong!";
+                        return result;
                     }
 
                     model.UserPassword = resetPasswordDto.NewPassword;

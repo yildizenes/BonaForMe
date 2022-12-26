@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BonaForMe.DomainCore.DBModel
 {
@@ -9,6 +10,9 @@ namespace BonaForMe.DomainCore.DBModel
 
         [Required]
         public string LastName { get; set; }
+
+        [NotMapped]
+        public string FullName { get { return this.FirstName + " " + this.LastName; } }
 
         [Required]
         [DataType(DataType.EmailAddress)]

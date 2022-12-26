@@ -130,6 +130,7 @@
 
             <div class="modal-footer">
                 <button type="button" data-content="remove" class="btn btn-default" data-dismiss="modal"> Cancel </button>
+                <button onclick="jsCreateInvoice();" class="btn btn-default" data-dismiss="modal"> Create Invoice </button>
             </div>
         </div>
     </div>
@@ -340,7 +341,6 @@
         };
 
         var result = ajaxRequest('POST', '@Url.Action("Save", "Order")', data)
-        debugger;
         if (result != null) {
             if (result.success) {
                 $('#modalSave').modal('hide');
@@ -391,5 +391,10 @@
 
     function filterFunc() {
         createTable();
+    }
+
+    function jsCreateInvoice() {
+        var data = { orderId: $("#hdnOrderId").val() }
+        var result = ajaxRequest('POST', '@Url.Action("CreateInvoice", "Order")', data)
     }
 </script>

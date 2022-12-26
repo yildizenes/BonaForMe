@@ -15,7 +15,7 @@ namespace BonaForMe.ServiceCore.MailSenderService
         public Result SendMail(string email, string newPassword)
         {
             Result result = new Result();
-            EmailHelper.SendForgetPasswordMail(email, newPassword, System.IO.File.ReadAllText($@"{_webHostEnvironment.WebRootPath}\MailTemplates\EmailTemplate.html"));
+            EmailHelper.SendForgetPasswordMail(email, newPassword);
 
             result.Success = true;
             return result;
