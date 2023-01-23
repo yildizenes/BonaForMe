@@ -2,7 +2,7 @@
 
 namespace BonaForMe.DomainCore.DBModel
 {
-    public class ApplicationSettings : BaseEntity
+    public class ApplicationSetting : BaseEntity
     {
         [MaxLength()]
         public string AboutUs { get; set; }

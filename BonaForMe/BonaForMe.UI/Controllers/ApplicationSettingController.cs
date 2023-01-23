@@ -1,5 +1,5 @@
 ﻿using BonaForMe.DomainCore.DTO;
-using BonaForMe.ServiceCore.CurrencyUnitService;
+using BonaForMe.ServiceCore.ApplicationSettingService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -8,12 +8,12 @@ using System.Linq;
 namespace BonaForMe.UI.Controllers
 {
     [Authorize]
-    public class CurrencyUnitController : Controller
+    public class ApplicationSettingController : Controller
     {
-        private readonly ICurrencyUnitService _currencyUnitService;
-        public CurrencyUnitController(ICurrencyUnitService currencyUnitService)
+        private readonly IApplicationSettingService _applicationSettingService;
+        public ApplicationSettingController(IApplicationSettingService applicationSettingService)
         {
-            _currencyUnitService = currencyUnitService;
+            _applicationSettingService = applicationSettingService;
         }
 
         public IActionResult Index()
@@ -23,11 +23,11 @@ namespace BonaForMe.UI.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Save(CurrencyUnitDto currencyUnitDto)
+        public IActionResult Save(ApplicationSettingDto applicationSettingDto)
         {
             try
             {
-                var result = _currencyUnitService.AddCurrencyUnit(currencyUnitDto);
+                var result = _applicationSettingService.AddApplicationSetting(applicationSettingDto);
                 return new JsonResult(result);
             }
             catch (Exception)
@@ -38,11 +38,11 @@ namespace BonaForMe.UI.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Update(CurrencyUnitDto currencyUnitDto)
+        public IActionResult Update(ApplicationSettingDto applicationSettingDto)
         {
             try
             {
-                var result = _currencyUnitService.UpdateCurrencyUnit(currencyUnitDto);
+                var result = _applicationSettingService.UpdateApplicationSetting(applicationSettingDto);
                 return new JsonResult(result);
             }
             catch (Exception)
@@ -52,11 +52,11 @@ namespace BonaForMe.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(Guid id)
         {
             try
             {
-                var result = _currencyUnitService.DeleteCurrencyUnit(id);
+                var result = _applicationSettingService.DeleteApplicationSetting(id);
                 return new JsonResult(result);
             }
             catch (Exception)
@@ -66,11 +66,11 @@ namespace BonaForMe.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetCurrencyUnitById(int id)
+        public IActionResult GetApplicationSettingById(Guid id)
         {
             try
             {
-                var result = _currencyUnitService.GetCurrencyUnitById(id);
+                var result = _applicationSettingService.GetApplicationSettingById(id);
                 if (result != null)
                 {
                     return new JsonResult(result.Data);
@@ -84,11 +84,11 @@ namespace BonaForMe.UI.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetAllCurrencyUnit()
+        public JsonResult GetAllApplicationSetting()
         {
             try
             {
-                var result = _currencyUnitService.GetAllCurrencyUnit();
+                var result = _applicationSettingService.GetAllApplicationSetting();
                 return new JsonResult(result.Data);
             }
             catch (Exception)
@@ -98,7 +98,7 @@ namespace BonaForMe.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult LoadCurrencyUnitData()
+        public IActionResult LoadApplicationSettingData()
         {
             try
             {
@@ -126,7 +126,7 @@ namespace BonaForMe.UI.Controllers
                     SortColumnDirection = sortColumnDirection,
                     SortColumn = sortColumn
                 };
-                return _currencyUnitService.FillDataTable(dataTable);
+                return _applicationSettingService.FillDataTable(dataTable);
             }
             catch (Exception)
             {

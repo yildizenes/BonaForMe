@@ -22,6 +22,9 @@ namespace BonaForMe.DataAccessCore
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductUnit> ProductUnits { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<ApplicationSetting> ApplicationSettings { get; set; }
+        public DbSet<CampaignProduct> CampaignProducts { get; set; }
+        public DbSet<CourierCoordinate> CourierCoordinates { get; set; }
 
 
         IHttpContextAccessor _httpContextAccessor;

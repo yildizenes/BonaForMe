@@ -1,6 +1,6 @@
 ﻿namespace BonaForMe.DomainCore.DTO
 {
-    public class ApplicationSettingsDto : DtoBaseEntity
+    public class ApplicationSettingDto : DtoBaseEntity
     {
         public string AboutUs { get; set; }
         public string Vision { get; set; }

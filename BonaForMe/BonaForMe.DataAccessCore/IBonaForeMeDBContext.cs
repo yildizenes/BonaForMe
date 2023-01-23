@@ -17,6 +17,9 @@ namespace BonaForMe.DataAccessCore
         DbSet<Product> Products { get; set; }
         DbSet<ProductUnit> ProductUnits { get; set; }
         DbSet<User> Users { get; set; }
+        DbSet<ApplicationSetting> ApplicationSettings { get; set; }
+        DbSet<CampaignProduct> CampaignProducts { get; set; }
+        DbSet<CourierCoordinate> CourierCoordinates { get; set; }
 
         int SaveChanges();
         EntityEntry Entry(object entity);
