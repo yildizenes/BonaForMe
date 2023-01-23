@@ -219,6 +219,7 @@ namespace BonaForMe.UI.Controllers
                 new Claim(ClaimTypes.Name, userDto.FullName),
                 new Claim(ClaimTypes.Email, userDto.UserMail),
                 new Claim("IsAdmin", userDto.IsAdmin.ToString(), ClaimValueTypes.Boolean),
+                new Claim("IsCourier", userDto.IsCourier.ToString(), ClaimValueTypes.Boolean),
             };
             await SetClaims(claims);
         }

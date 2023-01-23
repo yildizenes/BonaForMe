@@ -26,5 +26,7 @@ namespace BonaForMe.DomainCore.DBModel
 
         [ForeignKey(nameof(OrderStatusId))]
         public virtual OrderStatus OrderStatus { get; set; }
+
+        public byte[] Signature { get; set; }
     }
 }

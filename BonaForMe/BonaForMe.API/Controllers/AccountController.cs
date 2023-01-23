@@ -54,6 +54,7 @@ namespace BonaForMe.API.Controllers
                         new Claim(ClaimTypes.Name, result.Data.FullName),
                         new Claim(ClaimTypes.Email, result.Data.UserMail),
                         new Claim("IsAdmin", result.Data.IsAdmin.ToString(), ClaimValueTypes.Boolean),
+                        new Claim("IsCourier", result.Data.IsCourier.ToString(), ClaimValueTypes.Boolean),
                     };
 
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtSettings.SecretKey));

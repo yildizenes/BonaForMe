@@ -121,11 +121,18 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="CurrencyUnitId" class="control-label"><span style="color:red">* </span>Currency Unit</label>
                             <select id="CurrencyUnitId" class="custom-select" name="CurrencyUnitId" required>
                             </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Stock" class="control-label"><span style="color:red">* </span>Stock</label>
+                            <input name="Stock" id="Stock" class="form-control" required type="number" />
                         </div>
                     </div>
                 </div>
@@ -201,6 +208,7 @@
                 getCell("ProductUnitName"),
                 getCell("Price"),
                 getCell("TaxRate"),
+                getCell("Stock"),
                 getCell("CurrencyUnitName"),
                 getCell("CategoryName"),
                 {
@@ -227,6 +235,7 @@
         $("#Price").val("");
         $("#TaxRate").val("");
         $("#CurrencyUnitId").val("");
+        $("#Stock").val("");
         $("#CategoryId").val("");
 
         if (id != null && id !== "") {
@@ -240,6 +249,7 @@
             $("#Price").val(result.price);
             $("#TaxRate").val(result.taxRate);
             $("#CurrencyUnitId").val(result.currencyUnitId);
+            $("#Stock").val(result.stock);
             $("#CategoryId").val(result.categoryId);
 
         }
@@ -255,6 +265,7 @@
         formData.append('Price', $("#Price").val());
         formData.append('TaxRate', $("#TaxRate").val());
         formData.append('CurrencyUnitId', $("#CurrencyUnitId").val());
+        formData.append('Stock', $("#Stock").val());
         formData.append('CategoryId', $("#CategoryId").val());
         formData.append('FormFile', $('#FormFile')[0].files[0]);
 

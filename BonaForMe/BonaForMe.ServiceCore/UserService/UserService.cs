@@ -36,6 +36,7 @@ namespace BonaForMe.ServiceCore.UserService
                         user.UserPassword = oldModel.UserPassword; // Password güncellenmesin.
                         DBHelper.SetBaseValues(oldModel, user);
                         user.IsAdmin = oldModel.IsAdmin;
+                        user.IsCourier = oldModel.IsCourier;
                         user.IsApproved = oldModel.IsApproved;
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(user);
@@ -100,6 +101,7 @@ namespace BonaForMe.ServiceCore.UserService
 
                         DBHelper.SetBaseValues(oldModel, user);
                         user.IsAdmin = oldModel.IsAdmin;
+                        user.IsCourier = oldModel.IsCourier;
                         user.IsApproved = oldModel.IsApproved;
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(user);

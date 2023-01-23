@@ -130,7 +130,7 @@
 
             <div class="modal-footer">
                 <button type="button" data-content="remove" class="btn btn-default" data-dismiss="modal"> Cancel </button>
-                <button onclick="jsShowInvoice();" class="btn btn-primary" data-dismiss="modal"> Show Invoice </button>
+                <button id="showInvoiceButton" onclick="jsShowInvoice();" class="btn btn-primary" data-dismiss="modal"> Show Invoice </button>
             </div>
         </div>
     </div>
@@ -289,6 +289,9 @@
             $("#detailPhone").text(result.user.userPhone);
             $("#detailAddress").text(result.user.address);
 
+            if (result.orderStatusId != 9) {
+                $("#showInvoiceButton").hide();
+            }
             var tableRef = document.getElementById('productTable').getElementsByTagName('tbody')[0];
 
             var tb = document.getElementById('productTable');
