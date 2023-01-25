@@ -5,6 +5,6 @@ namespace BonaForMe.ServiceCore.MailSenderService
 {
     public interface IMailSenderService
     {
-        Result SendMail(string Email, string newPassword);
+        Result SendMail(string email, MailTypes mailTypes, string notification);
     }
 }

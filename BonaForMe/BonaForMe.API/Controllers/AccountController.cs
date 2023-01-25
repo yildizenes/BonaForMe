@@ -122,7 +122,7 @@ namespace BonaForMe.API.Controllers
                 userData.Data.UserPassword = PasswordHelper.PasswordEncoder(userNewPassword);
                 var result = _userService.UpdateUser(userData.Data, true);
 
-                _mailSenderService.SendMail(accountDto.UserMail, userNewPassword);
+                _mailSenderService.SendMail(accountDto.UserMail, MailTypes.ForgetPassword, userNewPassword);
                 return Json(new { success = result.Success, data = result.Data, message = result.Message });
             }
             catch (Exception ex)

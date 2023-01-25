@@ -12,10 +12,10 @@ namespace BonaForMe.ServiceCore.MailSenderService
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public Result SendMail(string email, string newPassword)
+        public Result SendMail(string email, MailTypes mailTypes, string notification)
         {
             Result result = new Result();
-            EmailHelper.SendForgetPasswordMail(email, newPassword);
+            EmailHelper.SendMail(email, mailTypes, notification);
 
             result.Success = true;
             return result;

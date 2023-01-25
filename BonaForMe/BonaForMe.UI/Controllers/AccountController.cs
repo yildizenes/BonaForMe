@@ -179,7 +179,7 @@ namespace BonaForMe.UI.Controllers
                 string userNewPassword = PasswordHelper.GeneratePassword();
                 userData.Data.UserPassword = PasswordHelper.PasswordEncoder(userNewPassword);
                 _userService.UpdateUser(userData.Data, true);
-                _mailSenderService.SendMail(userMail, userNewPassword);
+                _mailSenderService.SendMail(userMail, MailTypes.ForgetPassword, userNewPassword);
 
                 TempData["Success"] = "Your new password has been sent to your e-mail address. Note: Mail may go to spam (junk) box!";
                 return RedirectToAction("Login", "Account");
