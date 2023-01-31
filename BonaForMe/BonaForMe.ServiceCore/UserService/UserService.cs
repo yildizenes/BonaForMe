@@ -35,9 +35,9 @@ namespace BonaForMe.ServiceCore.UserService
                     {
                         user.UserPassword = oldModel.UserPassword; // Password güncellenmesin.
                         DBHelper.SetBaseValues(oldModel, user);
-                        user.IsAdmin = oldModel.IsAdmin;
-                        user.IsCourier = oldModel.IsCourier;
-                        user.IsApproved = oldModel.IsApproved;
+                        //user.IsAdmin = oldModel.IsAdmin;
+                        //user.IsCourier = oldModel.IsCourier;
+                        //user.IsApproved = oldModel.IsApproved;
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(user);
                     }
@@ -100,9 +100,9 @@ namespace BonaForMe.ServiceCore.UserService
                             user.UserPassword = oldModel.UserPassword; // Password güncellenmesin.
 
                         DBHelper.SetBaseValues(oldModel, user);
-                        user.IsAdmin = oldModel.IsAdmin;
-                        user.IsCourier = oldModel.IsCourier;
-                        user.IsApproved = oldModel.IsApproved;
+                        //user.IsAdmin = oldModel.IsAdmin;
+                        //user.IsCourier = oldModel.IsCourier;
+                        //user.IsApproved = oldModel.IsApproved;
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(user);
                     }
@@ -167,7 +167,7 @@ namespace BonaForMe.ServiceCore.UserService
                 //Search
                 if (!string.IsNullOrEmpty(dataTable.SearchValue))
                 {
-                    users = users.Where(m => m.FirstName.ToLower().Contains(dataTable.SearchValue.ToLower()));
+                    users = users.Where(m => m.UserPhone.ToLower().Contains(dataTable.SearchValue.ToLower()));
                 }
                 var data = users.Skip(dataTable.Skip).Take(dataTable.PageSize);
                 return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = users.Count(), recordsTotal = users.Count(), data = data });
@@ -209,6 +209,23 @@ namespace BonaForMe.ServiceCore.UserService
                     _context.Update(model);
                 }
                 _context.SaveChanges();
+                result.Success = true;
+                result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+        public Result<List<UserDto>> GetAllCustomer()
+        {
+            Result<List<UserDto>> result = new Result<List<UserDto>>();
+            try
+            {
+                var model = _context.Users.Where(x => !x.IsAdmin && !x.IsCourier && x.IsActive && !x.IsDeleted).ToList();
+                result.Data = _mapper.Map<List<User>, List<UserDto>>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
             }

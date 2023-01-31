@@ -48,6 +48,24 @@ namespace BonaForMe.DomainCore.DTO
 
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>();
+
+            CreateMap<ApplicationSetting, ApplicationSettingDto>();
+            CreateMap<ApplicationSettingDto, ApplicationSetting>();
+
+            CreateMap<CampaignProduct, CampaignProductDto>()
+                .ForMember(x => x.ProductName, opt => opt.MapFrom(x => x.Product != null ? x.Product.Name : ""));
+            CreateMap<CampaignProductDto, CampaignProduct>();
+
+            CreateMap<CourierCoordinate, CourierCoordinateDto>();
+            CreateMap<CourierCoordinateDto, CourierCoordinate>();
+
+            CreateMap<SpecialPrice, SpecialPriceDto>()
+                .ForMember(x => x.UserName, opt => opt.MapFrom(x => x.User != null ? x.User.FullName : ""))
+                .ForMember(x => x.ProductName, opt => opt.MapFrom(x => x.Product != null ? x.Product.Name : ""));
+            CreateMap<SpecialPriceDto, SpecialPrice>();
+
+            CreateMap<OrderLog, OrderLogDto>();
+            CreateMap<OrderLogDto, OrderLog>();
         }
     }
 }

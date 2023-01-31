@@ -144,6 +144,27 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <input type="checkbox" id="IsAdmin" style="margin-right:5px; transform: scale(1.5)">
+                            <label for="IsAdmin" class="control-label"><span style="color:red">* </span>Is Admin? </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <input type="checkbox" id="IsCourier" style="margin-right: 5px; transform: scale(1.5)">
+                            <label for="IsCourier" class="control-label"><span style="color:red">* </span>Is Courier? </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <input type="checkbox" id="IsApproved" style="margin-right: 5px; transform: scale(1.5)">
+                            <label for="IsApproved" class="control-label"><span style="color:red">* </span>Is Approved? </label>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="modal-footer">
@@ -230,6 +251,9 @@
         $("#District").val("");
         $("#Address").val("");
         $("#CompanyName").val("");
+        document.getElementById("IsAdmin").checked = false;
+        document.getElementById("IsCourier").checked = false;
+        document.getElementById("IsApproved").checked = false;
         $("#passwordPanel").show();
 
         if (id != null && id !== "") {
@@ -246,6 +270,9 @@
             $("#District").val(result.district);
             $("#Address").val(result.address);
             $("#CompanyName").val(result.companyName);
+            document.getElementById("IsAdmin").checked = result.isAdmin;
+            document.getElementById("IsCourier").checked = result.isCourier;
+            document.getElementById("IsApproved").checked = result.isApproved;
             $("#passwordPanel").hide();
         }
         $('#modalSave').modal('show');
@@ -264,6 +291,9 @@
             District: $("#District").val(),
             Address: $("#Address").val(),
             CompanyName: $("#CompanyName").val(),
+            IsAdmin: $("#IsAdmin").is(':checked'),
+            IsCourier: $("#IsCourier").is(':checked'),
+            IsApproved: $("#IsApproved").is(':checked'),
         };
 
         var result = ajaxRequest('POST', '@Url.Action("Save", "User")', data)

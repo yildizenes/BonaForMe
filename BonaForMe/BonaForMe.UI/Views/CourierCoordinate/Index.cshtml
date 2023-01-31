@@ -1,0 +1,92 @@
+﻿@model BonaForMe.DomainCore.DTO.CourierCoordinateDto
+@{
+    ViewData["Title"] = "Courier Coordinates";
+    ViewData["SingleName"] = "Courier Coordinate";
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>@ViewData["Title"]</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">@ViewData["Title"]</a></li>
+                        <li class="breadcrumb-item active">Index</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">@ViewData["Title"]</h3>
+                        </div>
+                        <div class="card-body" style="overflow-x:auto;">
+                            <table id="tblCourierCoordinateList" class="table table-bordered table-striped table-responsive-lg" style="width: 100% !important;">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>X Coordinate</th>
+                                        <th>Y Coordinate</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<input type="hidden" id="hdnCourierCoordinateId" value="" />
+<div class="spinnerAnimation" style="display:none;"></div>
+<link href="~/css/spinner.css" rel="stylesheet" />
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        createTable();
+    });
+
+    function createTable() {
+        var domString = getTableDom();
+        var buttons = getTableButtons("CourierCoordinates");
+        $('#tblCourierCoordinateList').DataTable
+        ({
+            "paging": true,
+            "ordering": true,
+            "pageLength": 25,
+            "processing": true,
+            "serverSide": true,
+            "filter": true,
+            "orderMulti": false,
+            "order": [[1, "desc"]],
+            dom: domString,
+            buttons: buttons,
+            "ajax": {
+                "url": "/CourierCoordinate/LoadCourierCoordinateData/",
+                "type": 'POST',
+                "dataType": "json"
+            },
+            "columnDefs": [{
+                "targets": [0],
+                "visible": false,
+                "searchable": false
+            }],
+            "columns": [
+                getCell("Id"),
+                getCell("XCoordinate"),
+                getCell("YCoordinate"),
+            ],
+            "bDestroy": true,
+        });
+    }
+</script>

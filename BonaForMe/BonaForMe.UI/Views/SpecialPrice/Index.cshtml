@@ -1,7 +1,7 @@
-﻿@model BonaForMe.DomainCore.DTO.ContactInformationDto
+﻿@model BonaForMe.DomainCore.DTO.SpecialPriceDto
 @{
-    ViewData["Title"] = "Contact Informations";
-    ViewData["SingleName"] = "Contact Information";
+    ViewData["Title"] = "Special Price";
+    ViewData["SingleName"] = "Special Price";
     Layout = "~/Views/Shared/_AdminLTE.cshtml";
 }
 
@@ -28,19 +28,19 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">@ViewData["Title"]</h3>
-                            <button class="btn-success" onclick="jsOpenSaveContactInformation();" style="padding: 10px; float:right;">
+                            <button class="btn-success" onclick="jsOpenSaveSpecialPrice();" style="padding: 10px; float:right;">
                                 <i class="fas fa-save"></i>
                                 New @ViewData["SingleName"]
                             </button>
                         </div>
                         <div class="card-body" style="overflow-x:auto;">
-                            <table id="tblContactInformationList" class="table table-bordered table-striped table-responsive-lg" style="width: 100% !important;">
+                            <table id="tblSpecialPriceList" class="table table-bordered table-striped table-responsive-lg" style="width: 100% !important;">
                                 <thead>
                                     <tr>
                                         <th>Id</th>
-                                        <th>Email Info</th>
-                                        <th>Whattsapp Phone</th>
-                                        <th>Customer Support Phone</th>
+                                        <th>User</th>
+                                        <th>Product</th>
+                                        <th>Price</th>
                                         <th class="noExport">Actions</th>
                                     </tr>
                                 </thead>
@@ -70,25 +70,29 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="EmailInfo" class="control-label"><span style="color:red">* </span>Email Info</label>
-                            <input name="EmailInfo" id="EmailInfo" class="form-control" required />
+                            <label for="UserId" class="control-label"><span style="color:red">* </span>User</label>
+                            <select id="UserId" class="form-control select2" name="UserId" required>
+                            </select>
                         </div>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="WhattsappPhone" class="control-label"><span style="color:red">* </span>WhattsappPhone</label>
-                            <input name="WhattsappPhone" id="WhattsappPhone" class="form-control" required />
+                            <label for="CategoryId" class="control-label"><span style="color:red">* </span>Category</label>
+                            <select id="CategoryId" class="custom-select" name="CategoryId" required onchange="FillProductSelect();">
+                            </select>
                         </div>
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="CustomerSupportPhone" class="control-label"><span style="color:red">* </span>CustomerSupportPhone</label>
-                            <input name="CustomerSupportPhone" id="CustomerSupportPhone" class="form-control" required />
+                            <label for="ProductId" class="control-label"><span style="color:red">* </span>Product</label>
+                            <select id="ProductId" class="form-control select2" name="ProductId" required>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="Price" class="control-label"><span style="color:red">* </span>Price</label>
+                            <input name="Price" id="Price" class="form-control" type="number" required />
                         </div>
                     </div>
                 </div>
@@ -96,27 +100,30 @@
 
             <div class="modal-footer">
                 <button type="button" data-content="remove" class="btn btn-default" data-dismiss="modal"> Cancel </button>
-                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="jsSaveContactInformation()"> Save </button>
+                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="jsSaveSpecialPrice()"> Save </button>
             </div>
         </div>
     </div>
 </div>
 
 @await Html.PartialAsync("_Delete")
-<input type="hidden" id="hdnContactInformationId" value="" />
+<input type="hidden" id="hdnSpecialPriceId" value="" />
 <div class="spinnerAnimation" style="display:none;"></div>
 <link href="~/css/spinner.css" rel="stylesheet" />
-
+<script src="~/adminLTE/plugins/select2/js/select2.full.min.js"></script>
 @await Html.PartialAsync("_datatableScripts")
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         createTable();
+        FillCategorySelect();
+        FillUserSelect();
+        $('.select2').select2()
     });
 
     function createTable() {
         var domString = getTableDom();
-        var buttons = getTableButtons("ContactInformations");
-        $('#tblContactInformationList').DataTable
+        var buttons = getTableButtons("SpecialPrices");
+        $('#tblSpecialPriceList').DataTable
         ({
             "paging": true,
             "ordering": true,
@@ -129,7 +136,7 @@
             dom: domString,
             buttons: buttons,
             "ajax": {
-                "url": "/ContactInformation/LoadContactInformationData/",
+                "url": "/SpecialPrice/LoadSpecialPriceData/",
                 "type": 'POST',
                 "dataType": "json"
             },
@@ -140,14 +147,14 @@
             }],
             "columns": [
                 getCell("Id"),
-                getCell("EmailInfo"),
-                getCell("WhattsappPhone"),
-                getCell("CustomerSupportPhone"),
+                getCell("UserName"),
+                getCell("ProductName"),
+                getCell("Price"),
                 {
                     "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
                     "render": function (data, type, full, meta) {
                         var buttonGroup = "<div class='btn-group role='group'>";
-                        buttonGroup += "<a href='#' class='btn btn-warning btn-sm' style='color:white; margin:0px 5px;' onclick=jsOpenSaveContactInformation('" + full.id + "');><i class='fas fa-edit'></i> Edit </a>"
+                        buttonGroup += "<a href='#' class='btn btn-warning btn-sm' style='color:white; margin:0px 5px;' onclick=jsOpenSaveSpecialPrice('" + full.id + "');><i class='fas fa-edit'></i> Edit </a>"
                         buttonGroup += "<a href='#' class='btn btn-danger btn-sm' style='color:white; margin:0px 5px;' onclick=DeleteData('" + full.id + "');> <i class='fas fa-trash'></i> Delete </a>";
                         buttonGroup += "</div>"
                         return buttonGroup;
@@ -158,36 +165,36 @@
         });
     }
 
-    function jsOpenSaveContactInformation(id) {
-        $("#hdnContactInformationId").val("");
-        $("#EmailInfo").val("");
-        $("#WhattsappPhone").val("");
-        $("#CustomerSupportPhone").val("");
+    function jsOpenSaveSpecialPrice(id) {
+        $("#hdnSpecialPriceId").val("");
+        $("#UserId").val("");
+        $("#ProductId").val("");
+        $("#Price").val("");
 
         if (id != null && id !== "") {
             var data = { id: id }
-            var result = ajaxRequest('POST', '@Url.Action("GetContactInformationById", "ContactInformation")', data)
-            $("#hdnContactInformationId").val(result.id);
-            $("#EmailInfo").val(result.emailInfo);
-            $("#WhattsappPhone").val(result.whattsappPhone);
-            $("#CustomerSupportPhone").val(result.customerSupportPhone);
+            var result = ajaxRequest('POST', '@Url.Action("GetSpecialPriceById", "SpecialPrice")', data)
+            $("#hdnSpecialPriceId").val(result.id);
+            $("#UserId").val(result.userId);
+            $("#ProductId").val(result.productId);
+            $("#Price").val(result.price);
         }
         $('#modalSave').modal('show');
     }
 
-    function jsSaveContactInformation() {
+    function jsSaveSpecialPrice() {
         var data = {
-            Id: $("#hdnContactInformationId").val(),
-            EmailInfo: $("#EmailInfo").val(),
-            WhattsappPhone: $("#WhattsappPhone").val(),
-            CustomerSupportPhone: $("#CustomerSupportPhone").val(),
+            Id: $("#hdnSpecialPriceId").val(),
+            UserId: $("#UserId").val(),
+            ProductId: $("#ProductId").val(),
+            Price: $("#Price").val(),
         };
 
-        var result = ajaxRequest('POST', '@Url.Action("Save", "ContactInformation")', data)
+        var result = ajaxRequest('POST', '@Url.Action("Save", "SpecialPrice")', data)
         if (result != null) {
             if (result.success) {
                 $('#modalSave').modal('hide');
-                thisTable = $('#tblContactInformationList').DataTable();
+                thisTable = $('#tblSpecialPriceList').DataTable();
                 thisTable.draw();
                 toastr.success('Transaction successful.');
             } else {
@@ -210,12 +217,30 @@
         var result = ajaxRequest('POST', '@Url.Action("Delete", ViewData["SingleName"])', data);
         if (result.success) {
             $('#delete').modal('hide');
-            thisTable = $('#tblContactInformationList').DataTable();
+            thisTable = $('#tblSpecialPriceList').DataTable();
             thisTable.draw();
             toastr.success('The deletion was successful.');
         } else {
             $('#delete').modal('hide');
             toastr.error('Error in deletion!');
         }
+    }
+
+    function FillUserSelect() {
+        var result = ajaxRequest('POST', '@Url.Action("GetAllCustomer", "User")')
+        fillOptions("UserId", result, "fullName");
+    }
+
+    function FillCategorySelect() {
+        var result = ajaxRequest('POST', '@Url.Action("GetAllCategory", "Category")')
+        fillOptions("CategoryId", result, "name");
+    }
+
+    function FillProductSelect() {
+        var data = {
+            id: $("#CategoryId").val()
+        };
+        var result = ajaxRequest('POST', '@Url.Action("GetAllProductByCategoryId", "Product")', data)
+        fillOptions("ProductId", result, "name");
     }
 </script>

@@ -99,6 +99,20 @@ namespace BonaForMe.UI.Controllers
         }
 
         [HttpPost]
+        public JsonResult GetAllProductByCategoryId(Guid id)
+        {
+            try
+            {
+                var result = _productService.GetAllProductByCategoryId(id);
+                return new JsonResult(result.Data);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        [HttpPost]
         public IActionResult LoadProductData()
         {
             try

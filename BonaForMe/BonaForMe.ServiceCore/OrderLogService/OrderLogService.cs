@@ -10,40 +10,40 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BonaForMe.ServiceCore.CampaignProductService
+namespace BonaForMe.ServiceCore.OrderLogService
 {
-    public class CampaignProductService : ICampaignProductService
+    public class OrderLogService : IOrderLogService
     {
         private readonly BonaForMeDBContext _context;
         IMapper _mapper;
 
-        public CampaignProductService(BonaForMeDBContext context, IMapper mapper)
+        public OrderLogService(BonaForMeDBContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
-        public Result<CampaignProductDto> AddCampaignProduct(CampaignProductDto campaignProductDto)
+        public Result<OrderLogDto> AddOrderLog(OrderLogDto orderLogDto)
         {
-            Result<CampaignProductDto> result = new Result<CampaignProductDto>();
+            Result<OrderLogDto> result = new Result<OrderLogDto>();
             try
             {
-                CampaignProduct campaignProduct = _mapper.Map<CampaignProduct>(campaignProductDto);
-                if (campaignProductDto.Id != Guid.Empty)
+                OrderLog orderLog = _mapper.Map<OrderLog>(orderLogDto);
+                if (orderLogDto.Id != Guid.Empty)
                 {
-                    var oldModel = _context.CampaignProducts.FirstOrDefault(x => x.Id == campaignProductDto.Id);
+                    var oldModel = _context.OrderLogs.FirstOrDefault(x => x.Id == orderLogDto.Id);
                     if (oldModel != null)
                     {
-                        DBHelper.SetBaseValues(oldModel, campaignProduct);
+                        DBHelper.SetBaseValues(oldModel, orderLog);
                         _context.Entry(oldModel).State = EntityState.Detached;
-                        _context.Update(campaignProduct);
+                        _context.Update(orderLog);
                     }
                     else
-                        _context.Add(campaignProduct);
+                        _context.Add(orderLog);
                 }
                 else
-                    _context.Add(campaignProduct);
+                    _context.Add(orderLog);
                 _context.SaveChanges();
-                result.Data = _mapper.Map<CampaignProductDto>(campaignProduct);
+                result.Data = _mapper.Map<OrderLogDto>(orderLog);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
             }
@@ -55,12 +55,12 @@ namespace BonaForMe.ServiceCore.CampaignProductService
             return result;
         }
 
-        public Result DeleteCampaignProduct(Guid id)
+        public Result DeleteOrderLog(Guid id)
         {
             Result result = new Result();
             try
             {
-                var model = _context.CampaignProducts.FirstOrDefault(d => d.Id == id);
+                var model = _context.OrderLogs.FirstOrDefault(d => d.Id == id);
                 if (model is null)
                 {
                     result.Success = false;
@@ -81,24 +81,24 @@ namespace BonaForMe.ServiceCore.CampaignProductService
             return result;
         }
 
-        public Result<CampaignProductDto> UpdateCampaignProduct(CampaignProductDto campaignProductDto)
+        public Result<OrderLogDto> UpdateOrderLog(OrderLogDto orderLogDto)
         {
-            Result<CampaignProductDto> result = new Result<CampaignProductDto>();
+            Result<OrderLogDto> result = new Result<OrderLogDto>();
             try
             {
-                CampaignProduct campaignProduct = _mapper.Map<CampaignProduct>(campaignProductDto);
-                if (campaignProductDto.Id != Guid.Empty)
+                OrderLog orderLog = _mapper.Map<OrderLog>(orderLogDto);
+                if (orderLogDto.Id != Guid.Empty)
                 {
-                    var oldModel = _context.CampaignProducts.FirstOrDefault(x => x.Id == campaignProductDto.Id);
+                    var oldModel = _context.OrderLogs.FirstOrDefault(x => x.Id == orderLogDto.Id);
                     if (oldModel != null)
                     {
-                        DBHelper.SetBaseValues(oldModel, campaignProduct);
+                        DBHelper.SetBaseValues(oldModel, orderLog);
                         _context.Entry(oldModel).State = EntityState.Detached;
-                        _context.Update(campaignProduct);
+                        _context.Update(orderLog);
                     }
                 }
                 _context.SaveChanges();
-                result.Data = _mapper.Map<CampaignProductDto>(campaignProduct);
+                result.Data = _mapper.Map<OrderLogDto>(orderLog);
                 result.Success = true;
             }
             catch (Exception ex)
@@ -109,13 +109,13 @@ namespace BonaForMe.ServiceCore.CampaignProductService
             return result;
         }
 
-        public Result<CampaignProductDto> GetCampaignProductById(Guid id)
+        public Result<OrderLogDto> GetOrderLogById(Guid id)
         {
-            Result<CampaignProductDto> result = new Result<CampaignProductDto>();
+            Result<OrderLogDto> result = new Result<OrderLogDto>();
             try
             {
-                var model = _context.CampaignProducts.Include(x => x.Product).Where(x => x.Id == id && x.IsActive && !x.IsDeleted).FirstOrDefault();
-                result.Data = _mapper.Map<CampaignProductDto>(model);
+                var model = _context.OrderLogs.Include(x => x.Product).Where(x => x.Id == id && x.IsActive && !x.IsDeleted).FirstOrDefault();
+                result.Data = _mapper.Map<OrderLogDto>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
             }
@@ -127,13 +127,13 @@ namespace BonaForMe.ServiceCore.CampaignProductService
             return result;
         }
 
-        public Result<List<CampaignProductDto>> GetAllCampaignProduct()
+        public Result<List<OrderLogDto>> GetAllOrderLog()
         {
-            Result<List<CampaignProductDto>> result = new Result<List<CampaignProductDto>>();
+            Result<List<OrderLogDto>> result = new Result<List<OrderLogDto>>();
             try
             {
-                var model = _context.CampaignProducts.Include(x=> x.Product).Where(x => x.IsActive && !x.IsDeleted).ToList();
-                result.Data = _mapper.Map<List<CampaignProduct>, List<CampaignProductDto>>(model);
+                var model = _context.OrderLogs.Include(x=> x.Product).Where(x => x.IsActive && !x.IsDeleted).ToList();
+                result.Data = _mapper.Map<List<OrderLog>, List<OrderLogDto>>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
             }
@@ -149,19 +149,19 @@ namespace BonaForMe.ServiceCore.CampaignProductService
         {
             try
             {
-                var campaignProducts = GetAllCampaignProduct().Data.AsQueryable();
+                var orderLogs = GetAllOrderLog().Data.AsQueryable();
                 //Sorting
                 if (!string.IsNullOrEmpty(dataTable.SortColumn) && !string.IsNullOrEmpty(dataTable.SortColumnDirection))
                 {
-                    campaignProducts = campaignProducts.OrderBy(dataTable.SortColumn + " " + dataTable.SortColumnDirection);
+                    orderLogs = orderLogs.OrderBy(dataTable.SortColumn + " " + dataTable.SortColumnDirection);
                 }
                 //Search
                 if (!string.IsNullOrEmpty(dataTable.SearchValue))
                 {
-                    //campaignProducts = campaignProducts.Where(m => m.Name.ToLower().Contains(dataTable.SearchValue.ToLower()));
+                    //orderLogs = orderLogs.Where(m => m.Name.ToLower().Contains(dataTable.SearchValue.ToLower()));
                 }
-                var data = campaignProducts.Skip(dataTable.Skip).Take(dataTable.PageSize);
-                return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = campaignProducts.Count(), recordsTotal = campaignProducts.Count(), data = data });
+                var data = orderLogs.Skip(dataTable.Skip).Take(dataTable.PageSize);
+                return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = orderLogs.Count(), recordsTotal = orderLogs.Count(), data = data });
             }
             catch (Exception ex)
             {

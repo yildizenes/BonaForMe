@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BonaForMe.DomainCore.DBModel
 {
-    public class LinkOrderProduct : BaseEntity
+    public class OrderLog : BaseEntity
     {
         [Required]
         public Guid OrderId { get; set; }
@@ -15,13 +15,12 @@ namespace BonaForMe.DomainCore.DBModel
         [Required]
         public Guid ProductId { get; set; }
 
-        [Required]
-        public int Count { get; set; }
-
-        [Required]
-        public bool IsCampaignProduct { get; set; }
-
         [ForeignKey(nameof(ProductId))]
         public virtual Product Product { get; set; }
+
+        [DataType(DataType.Currency)]
+        public decimal Price { get; set; }
+
+        public int Count { get; set; }
     }
 }

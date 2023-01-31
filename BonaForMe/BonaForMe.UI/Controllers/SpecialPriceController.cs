@@ -1,25 +1,19 @@
 ﻿using BonaForMe.DomainCore.DTO;
-using BonaForMe.DomainCore.DTO.PDFModels;
-using BonaForMe.ServiceCore.OrderService;
-using BonaForMe.ServiceCore.PaymentInfoService;
-using BonaForMe.ServiceCore.PDFServices;
+using BonaForMe.ServiceCore.SpecialPriceService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace BonaForMe.UI.Controllers
 {
     [Authorize]
-    public class OrderController : Controller
+    public class SpecialPriceController : Controller
     {
-        private readonly IOrderService _orderService;
-        public OrderController(IOrderService orderService)
+        private readonly ISpecialPriceService _specialPriceService;
+        public SpecialPriceController(ISpecialPriceService specialPriceService)
         {
-            _orderService = orderService;
+            _specialPriceService = specialPriceService;
         }
 
         public IActionResult Index()
@@ -29,11 +23,11 @@ namespace BonaForMe.UI.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Save(OrderDto orderDto)
+        public IActionResult Save(SpecialPriceDto specialPriceDto)
         {
             try
             {
-                var result = _orderService.AddOrder(orderDto);
+                var result = _specialPriceService.AddSpecialPrice(specialPriceDto);
                 return new JsonResult(result);
             }
             catch (Exception)
@@ -44,11 +38,11 @@ namespace BonaForMe.UI.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Update(OrderDto orderDto)
+        public IActionResult Update(SpecialPriceDto specialPriceDto)
         {
             try
             {
-                var result = _orderService.UpdateOrder(orderDto);
+                var result = _specialPriceService.UpdateSpecialPrice(specialPriceDto);
                 return new JsonResult(result);
             }
             catch (Exception)
@@ -62,7 +56,7 @@ namespace BonaForMe.UI.Controllers
         {
             try
             {
-                var result = _orderService.DeleteOrder(id);
+                var result = _specialPriceService.DeleteSpecialPrice(id);
                 return new JsonResult(result);
             }
             catch (Exception)
@@ -72,11 +66,11 @@ namespace BonaForMe.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetOrderById(Guid id)
+        public IActionResult GetSpecialPriceById(Guid id)
         {
             try
             {
-                var result = _orderService.GetOrderById(id);
+                var result = _specialPriceService.GetSpecialPriceById(id);
                 if (result != null)
                 {
                     return new JsonResult(result.Data);
@@ -90,11 +84,11 @@ namespace BonaForMe.UI.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetAllOrder()
+        public JsonResult GetAllSpecialPrice()
         {
             try
             {
-                var result = _orderService.GetAllOrder();
+                var result = _specialPriceService.GetAllSpecialPrice();
                 return new JsonResult(result.Data);
             }
             catch (Exception)
@@ -104,7 +98,7 @@ namespace BonaForMe.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult LoadOrderData(byte type, int orderStatusId)
+        public IActionResult LoadSpecialPriceData()
         {
             try
             {
@@ -132,7 +126,7 @@ namespace BonaForMe.UI.Controllers
                     SortColumnDirection = sortColumnDirection,
                     SortColumn = sortColumn
                 };
-                return _orderService.FillDataTable(dataTable, type, orderStatusId);
+                return _specialPriceService.FillDataTable(dataTable);
             }
             catch (Exception)
             {

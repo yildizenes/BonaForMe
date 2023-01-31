@@ -41,10 +41,7 @@
                                         <th>Name</th>
                                         <th>Description</th>
                                         <th>Image Path</th>
-                                        <th>Product Unit</th>
-                                        <th>Price</th>
-                                        <th>Tax Rate</th>
-                                        <th>Currency Unit</th>
+                                        <th>Stock</th>
                                         <th>Category</th>
                                         <th class="noExport">Actions</th>
                                     </tr>
@@ -198,22 +195,12 @@
                 getCell("Id"),
                 getCell("Name"),
                 getCell("Description"),
-                {
-                    "data": "", "ImagePath": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
-                    "render": function (data, type, full, meta) {
-                        var image = "<img src='" + full.imagePath + "' width='100' height='100'>";
-                        return image;
-                    }
-                },
                 getCell("ProductUnitName"),
-                getCell("Price"),
-                getCell("TaxRate"),
                 getCell("Stock"),
-                getCell("CurrencyUnitName"),
                 getCell("CategoryName"),
                 {
                     "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
-                    "render": function (data, type, full, meta) {
+                    "render": function (row, type, full, meta) {
                         var buttonGroup = "<div class='btn-group role='group'>";
                         buttonGroup += "<a href='#' class='btn btn-warning btn-sm' style='color:white; margin:0px 5px;' onclick=jsOpenSaveProduct('" + full.id + "');><i class='fas fa-edit'></i> Edit </a>"
                         buttonGroup += "<a href='#' class='btn btn-danger btn-sm' style='color:white; margin:0px 5px;' onclick=DeleteData('" + full.id + "');> <i class='fas fa-trash'></i> Delete </a>";
@@ -319,7 +306,6 @@
 
 
     function fillProductUnitSelect() {
-        debugger;
         var result = ajaxRequest('POST', '@Url.Action("GetAllProductUnit", "ProductUnit")')
         fillOptions("ProductUnitId", result, "name");
     }

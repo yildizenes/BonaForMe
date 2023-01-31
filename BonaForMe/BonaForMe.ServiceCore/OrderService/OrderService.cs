@@ -290,11 +290,23 @@ namespace BonaForMe.ServiceCore.OrderService
             return result;
         }
 
-        public JsonResult FillDataTable(DataTableDto dataTable, int orderStatusId)
+        public JsonResult FillDataTable(DataTableDto dataTable, byte type, int orderStatusId)
         {
             try
             {
-                var orders = GetAllOrder().Data.Where(x => x.OrderStatusId == orderStatusId).AsQueryable();
+                var orders = GetAllOrder().Data.AsQueryable();
+                if (type == 1)
+                    orders = orders.Where(x => x.OrderStatusId == orderStatusId).AsQueryable();
+                if (type == 2)
+                {
+                    var todaysDate = DateTime.Today;
+                    orders = orders.Where(x =>
+                        x.DateCreated.Value.Day == todaysDate.Day &&
+                        x.DateCreated.Value.Month == todaysDate.Month &&
+                        x.DateCreated.Value.Year == todaysDate.Year
+                    ).AsQueryable();
+                }
+
                 //Sorting
                 if (!string.IsNullOrEmpty(dataTable.SortColumn) && !string.IsNullOrEmpty(dataTable.SortColumnDirection))
                 {

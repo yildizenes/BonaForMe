@@ -171,7 +171,6 @@
         };
 
         var result = ajaxRequest('POST', '@Url.Action("Save", "OrderStatus")', data)
-        debugger;
         if (result != null) {
             if (result.success) {
                 $('#modalSave').modal('hide');

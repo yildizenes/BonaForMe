@@ -136,5 +136,19 @@ namespace BonaForMe.UI.Controllers
                 return null;
             }
         }
+
+        [HttpPost]
+        public JsonResult GetAllCustomer()
+        {
+            try
+            {
+                var result = _userService.GetAllCustomer();
+                return new JsonResult(result.Data);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
     }
 }

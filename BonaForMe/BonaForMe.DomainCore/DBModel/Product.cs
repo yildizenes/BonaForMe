@@ -24,6 +24,7 @@ namespace BonaForMe.DomainCore.DBModel
         public decimal Price { get; set; }
 
         public int TaxRate { get; set; }
+
         public int Stock { get; set; }
 
         [Required]

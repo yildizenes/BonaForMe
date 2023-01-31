@@ -10,40 +10,40 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BonaForMe.ServiceCore.CampaignProductService
+namespace BonaForMe.ServiceCore.SpecialPriceService
 {
-    public class CampaignProductService : ICampaignProductService
+    public class SpecialPriceService : ISpecialPriceService
     {
         private readonly BonaForMeDBContext _context;
         IMapper _mapper;
 
-        public CampaignProductService(BonaForMeDBContext context, IMapper mapper)
+        public SpecialPriceService(BonaForMeDBContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
-        public Result<CampaignProductDto> AddCampaignProduct(CampaignProductDto campaignProductDto)
+        public Result<SpecialPriceDto> AddSpecialPrice(SpecialPriceDto specialPriceDto)
         {
-            Result<CampaignProductDto> result = new Result<CampaignProductDto>();
+            Result<SpecialPriceDto> result = new Result<SpecialPriceDto>();
             try
             {
-                CampaignProduct campaignProduct = _mapper.Map<CampaignProduct>(campaignProductDto);
-                if (campaignProductDto.Id != Guid.Empty)
+                SpecialPrice specialPrice = _mapper.Map<SpecialPrice>(specialPriceDto);
+                if (specialPriceDto.Id != Guid.Empty)
                 {
-                    var oldModel = _context.CampaignProducts.FirstOrDefault(x => x.Id == campaignProductDto.Id);
+                    var oldModel = _context.SpecialPrices.FirstOrDefault(x => x.Id == specialPriceDto.Id);
                     if (oldModel != null)
                     {
-                        DBHelper.SetBaseValues(oldModel, campaignProduct);
+                        DBHelper.SetBaseValues(oldModel, specialPrice);
                         _context.Entry(oldModel).State = EntityState.Detached;
-                        _context.Update(campaignProduct);
+                        _context.Update(specialPrice);
                     }
                     else
-                        _context.Add(campaignProduct);
+                        _context.Add(specialPrice);
                 }
                 else
-                    _context.Add(campaignProduct);
+                    _context.Add(specialPrice);
                 _context.SaveChanges();
-                result.Data = _mapper.Map<CampaignProductDto>(campaignProduct);
+                result.Data = _mapper.Map<SpecialPriceDto>(specialPrice);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
             }
@@ -55,12 +55,12 @@ namespace BonaForMe.ServiceCore.CampaignProductService
             return result;
         }
 
-        public Result DeleteCampaignProduct(Guid id)
+        public Result DeleteSpecialPrice(Guid id)
         {
             Result result = new Result();
             try
             {
-                var model = _context.CampaignProducts.FirstOrDefault(d => d.Id == id);
+                var model = _context.SpecialPrices.FirstOrDefault(d => d.Id == id);
                 if (model is null)
                 {
                     result.Success = false;
@@ -81,24 +81,24 @@ namespace BonaForMe.ServiceCore.CampaignProductService
             return result;
         }
 
-        public Result<CampaignProductDto> UpdateCampaignProduct(CampaignProductDto campaignProductDto)
+        public Result<SpecialPriceDto> UpdateSpecialPrice(SpecialPriceDto specialPriceDto)
         {
-            Result<CampaignProductDto> result = new Result<CampaignProductDto>();
+            Result<SpecialPriceDto> result = new Result<SpecialPriceDto>();
             try
             {
-                CampaignProduct campaignProduct = _mapper.Map<CampaignProduct>(campaignProductDto);
-                if (campaignProductDto.Id != Guid.Empty)
+                SpecialPrice specialPrice = _mapper.Map<SpecialPrice>(specialPriceDto);
+                if (specialPriceDto.Id != Guid.Empty)
                 {
-                    var oldModel = _context.CampaignProducts.FirstOrDefault(x => x.Id == campaignProductDto.Id);
+                    var oldModel = _context.SpecialPrices.FirstOrDefault(x => x.Id == specialPriceDto.Id);
                     if (oldModel != null)
                     {
-                        DBHelper.SetBaseValues(oldModel, campaignProduct);
+                        DBHelper.SetBaseValues(oldModel, specialPrice);
                         _context.Entry(oldModel).State = EntityState.Detached;
-                        _context.Update(campaignProduct);
+                        _context.Update(specialPrice);
                     }
                 }
                 _context.SaveChanges();
-                result.Data = _mapper.Map<CampaignProductDto>(campaignProduct);
+                result.Data = _mapper.Map<SpecialPriceDto>(specialPrice);
                 result.Success = true;
             }
             catch (Exception ex)
@@ -109,13 +109,13 @@ namespace BonaForMe.ServiceCore.CampaignProductService
             return result;
         }
 
-        public Result<CampaignProductDto> GetCampaignProductById(Guid id)
+        public Result<SpecialPriceDto> GetSpecialPriceById(Guid id)
         {
-            Result<CampaignProductDto> result = new Result<CampaignProductDto>();
+            Result<SpecialPriceDto> result = new Result<SpecialPriceDto>();
             try
             {
-                var model = _context.CampaignProducts.Include(x => x.Product).Where(x => x.Id == id && x.IsActive && !x.IsDeleted).FirstOrDefault();
-                result.Data = _mapper.Map<CampaignProductDto>(model);
+                var model = _context.SpecialPrices.Include(x => x.Product).Where(x => x.Id == id && x.IsActive && !x.IsDeleted).FirstOrDefault();
+                result.Data = _mapper.Map<SpecialPriceDto>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
             }
@@ -127,13 +127,13 @@ namespace BonaForMe.ServiceCore.CampaignProductService
             return result;
         }
 
-        public Result<List<CampaignProductDto>> GetAllCampaignProduct()
+        public Result<List<SpecialPriceDto>> GetAllSpecialPrice()
         {
-            Result<List<CampaignProductDto>> result = new Result<List<CampaignProductDto>>();
+            Result<List<SpecialPriceDto>> result = new Result<List<SpecialPriceDto>>();
             try
             {
-                var model = _context.CampaignProducts.Include(x=> x.Product).Where(x => x.IsActive && !x.IsDeleted).ToList();
-                result.Data = _mapper.Map<List<CampaignProduct>, List<CampaignProductDto>>(model);
+                var model = _context.SpecialPrices.Include(x=> x.Product).Where(x => x.IsActive && !x.IsDeleted).ToList();
+                result.Data = _mapper.Map<List<SpecialPrice>, List<SpecialPriceDto>>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
             }
@@ -149,19 +149,19 @@ namespace BonaForMe.ServiceCore.CampaignProductService
         {
             try
             {
-                var campaignProducts = GetAllCampaignProduct().Data.AsQueryable();
+                var specialPrices = GetAllSpecialPrice().Data.AsQueryable();
                 //Sorting
                 if (!string.IsNullOrEmpty(dataTable.SortColumn) && !string.IsNullOrEmpty(dataTable.SortColumnDirection))
                 {
-                    campaignProducts = campaignProducts.OrderBy(dataTable.SortColumn + " " + dataTable.SortColumnDirection);
+                    specialPrices = specialPrices.OrderBy(dataTable.SortColumn + " " + dataTable.SortColumnDirection);
                 }
                 //Search
                 if (!string.IsNullOrEmpty(dataTable.SearchValue))
                 {
-                    //campaignProducts = campaignProducts.Where(m => m.Name.ToLower().Contains(dataTable.SearchValue.ToLower()));
+                    //specialPrices = specialPrices.Where(m => m.Name.ToLower().Contains(dataTable.SearchValue.ToLower()));
                 }
-                var data = campaignProducts.Skip(dataTable.Skip).Take(dataTable.PageSize);
-                return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = campaignProducts.Count(), recordsTotal = campaignProducts.Count(), data = data });
+                var data = specialPrices.Skip(dataTable.Skip).Take(dataTable.PageSize);
+                return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = specialPrices.Count(), recordsTotal = specialPrices.Count(), data = data });
             }
             catch (Exception ex)
             {

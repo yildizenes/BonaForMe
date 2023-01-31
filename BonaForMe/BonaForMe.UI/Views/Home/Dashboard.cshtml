@@ -58,11 +58,12 @@
                                 <div class="col-lg-3 col-6">
                                     <div class="small-box bg-warning">
                                         <div class="inner">
-                                            <h3>@Model.UserCount</h3>
-                                            <p>User Registrations</p>
+                                            <h3>@Model.PendingApprovalUserCount</h3>
+                                            <p>Pending Approval User Count</p>
                                         </div>
                                         <div class="icon">
                                             <i class="fas fa-user-plus"></i>
+                                            <i class="fas fa-user-"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -77,6 +78,18 @@
                                         </div>
                                     </div>
                                 </div>
+                                <table id="tblOrderList" class="table table-bordered table-striped table-responsive-lg" style="width: 100% !important;">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Order Code</th>
+                                            <th>User</th>
+                                            <th>Pay Type</th>
+                                            <th>Status</th>
+                                            <th>Order Date</th>
+                                        </tr>
+                                    </thead>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -90,15 +103,88 @@
 <input type="hidden" id="hdnUserId" value="" />
 <div class="spinnerAnimation" style="display:none;"></div>
 
-@section JsSection{
-    <link href="~/css/spinner.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/adminLTE/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="~/adminLTE/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-    <script src="~/adminLTE/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="~/adminLTE/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/adminLTE/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="~/adminLTE/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <script type="text/javascript">
-    </script>
+@await Html.PartialAsync("_datatableScripts")
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        createTable();
+    });
 
-}
+    function createTable() {
+        var domString = getTableDom();
+        var buttons = getTableButtons("Orders");
+        $('#tblOrderList').DataTable
+            ({
+                "paging": true,
+                "ordering": true,
+                "pageLength": 25,
+                "processing": true,
+                "serverSide": true,
+                "filter": true,
+                "orderMulti": false,
+                "order": [],
+                dom: "",
+                buttons: "",
+                "ajax": {
+                    "url": "/Order/LoadOrderData/",
+                    "type": 'POST',
+                    "dataType": "json",
+                    "data": { type: 2,  orderStatusId: null }
+                },
+                "columnDefs": [{
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false
+                }],
+                "columns": [
+                    getCell("Id"),
+                    getCell("OrderCode"),
+                    getCell("UserName"),
+                    getCell("PayType"),
+                    getCell("OrderStatusName"),
+                    {
+                        "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
+                        "render": function (data, type, full, meta) {
+                            var dateString = "";
+                            var timestamp = Date.parse(full.dateCreated);
+
+                            if (isNaN(timestamp) == true) {
+                                dateString = "";
+                            }
+
+                            dt = new Date(timestamp);
+                            dateString = dt.toLocaleString('tr-TR');
+                            return dateString;
+                        }
+                    },
+                ],
+                "rowCallback": function (row, data, index) {
+                    switch (data.orderStatusId) {
+                        case 1:
+                            $('td', row).css('background-color', 'White');
+                            break;
+                        case 2:
+                            $('td', row).css('background-color', '#6DBFD1');
+                            break;
+                        case 3:
+                            $('td', row).css('background-color', 'White');
+                            break;
+                        case 4:
+                            $('td', row).css('background-color', '#A8E3B3');
+                            break;
+                        case 5:
+                            $('td', row).css('background-color', '#D5D9D4');
+                            break;
+                        case 6:
+                            $('td', row).css('background-color', '#ED6572');
+                            break;
+                        case 7:
+                            $('td', row).css('background-color', '#A8E3B3');
+                            break;
+                        default:
+                    }
+
+                },
+                "bDestroy": true,
+            });
+    }
+</script>

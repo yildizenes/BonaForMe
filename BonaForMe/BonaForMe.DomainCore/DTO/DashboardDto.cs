@@ -4,7 +4,7 @@
     {
         public int NewOrdersCount { get; set; }
         public int OrdersCountOfThisMonth { get; set; }
-        public int UserCount { get; set; }
+        public int PendingApprovalUserCount { get; set; }
         public int TotalOrderCount { get; set; }
     }
 }

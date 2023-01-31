@@ -157,7 +157,6 @@
         };
 
         var result = ajaxRequest('POST', '@Url.Action("Save", "CurrencyUnit")', data)
-        debugger;
         if (result != null) {
             if (result.success) {
                 $('#modalSave').modal('hide');

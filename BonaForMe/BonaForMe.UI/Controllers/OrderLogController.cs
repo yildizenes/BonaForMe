@@ -1,25 +1,19 @@
 ﻿using BonaForMe.DomainCore.DTO;
-using BonaForMe.DomainCore.DTO.PDFModels;
-using BonaForMe.ServiceCore.OrderService;
-using BonaForMe.ServiceCore.PaymentInfoService;
-using BonaForMe.ServiceCore.PDFServices;
+using BonaForMe.ServiceCore.OrderLogService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace BonaForMe.UI.Controllers
 {
     [Authorize]
-    public class OrderController : Controller
+    public class OrderLogController : Controller
     {
-        private readonly IOrderService _orderService;
-        public OrderController(IOrderService orderService)
+        private readonly IOrderLogService _orderLogService;
+        public OrderLogController(IOrderLogService orderLogService)
         {
-            _orderService = orderService;
+            _orderLogService = orderLogService;
         }
 
         public IActionResult Index()
@@ -29,11 +23,11 @@ namespace BonaForMe.UI.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Save(OrderDto orderDto)
+        public IActionResult Save(OrderLogDto orderLogDto)
         {
             try
             {
-                var result = _orderService.AddOrder(orderDto);
+                var result = _orderLogService.AddOrderLog(orderLogDto);
                 return new JsonResult(result);
             }
             catch (Exception)
@@ -44,11 +38,11 @@ namespace BonaForMe.UI.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Update(OrderDto orderDto)
+        public IActionResult Update(OrderLogDto orderLogDto)
         {
             try
             {
-                var result = _orderService.UpdateOrder(orderDto);
+                var result = _orderLogService.UpdateOrderLog(orderLogDto);
                 return new JsonResult(result);
             }
             catch (Exception)
@@ -62,7 +56,7 @@ namespace BonaForMe.UI.Controllers
         {
             try
             {
-                var result = _orderService.DeleteOrder(id);
+                var result = _orderLogService.DeleteOrderLog(id);
                 return new JsonResult(result);
             }
             catch (Exception)
@@ -72,11 +66,11 @@ namespace BonaForMe.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetOrderById(Guid id)
+        public IActionResult GetOrderLogById(Guid id)
         {
             try
             {
-                var result = _orderService.GetOrderById(id);
+                var result = _orderLogService.GetOrderLogById(id);
                 if (result != null)
                 {
                     return new JsonResult(result.Data);
@@ -90,11 +84,11 @@ namespace BonaForMe.UI.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetAllOrder()
+        public JsonResult GetAllOrderLog()
         {
             try
             {
-                var result = _orderService.GetAllOrder();
+                var result = _orderLogService.GetAllOrderLog();
                 return new JsonResult(result.Data);
             }
             catch (Exception)
@@ -104,7 +98,7 @@ namespace BonaForMe.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult LoadOrderData(byte type, int orderStatusId)
+        public IActionResult LoadOrderLogData()
         {
             try
             {
@@ -132,7 +126,7 @@ namespace BonaForMe.UI.Controllers
                     SortColumnDirection = sortColumnDirection,
                     SortColumn = sortColumn
                 };
-                return _orderService.FillDataTable(dataTable, type, orderStatusId);
+                return _orderLogService.FillDataTable(dataTable);
             }
             catch (Exception)
             {
