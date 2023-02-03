@@ -203,6 +203,37 @@ namespace BonaForMe.ServiceCore.ProductService
             }
             return result;
         }
+
+        public Result UpdateProductStock(Guid Id, int newStock, int reducedStock)
+        {
+            Result result = new Result();
+            try
+            {
+                if (Id != Guid.Empty)
+                {
+                    var oldModel = _context.Products.FirstOrDefault(x => x.Id == Id);
+                    if (oldModel != null)
+                    {
+                        if (reducedStock != 0)
+                            oldModel.Stock -= reducedStock;
+                        else
+                            oldModel.Stock = newStock;
+
+                        _context.Entry(oldModel).State = EntityState.Detached;
+                        _context.Update(oldModel);
+                    }
+                }
+                _context.SaveChanges();
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
         private void SaveImage(IFormFile formFile, Product product)
         {
             var path = Path.Combine(Directory.GetCurrentDirectory()) + @"\";

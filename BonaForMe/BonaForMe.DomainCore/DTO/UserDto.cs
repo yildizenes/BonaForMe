@@ -27,6 +27,7 @@
         public bool IsApproved { get; set; }
 
         public bool IsAdmin { get; set; }
+
         public bool IsCourier { get; set; }
     }
 }

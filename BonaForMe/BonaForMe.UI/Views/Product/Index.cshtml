@@ -39,10 +39,9 @@
                                     <tr>
                                         <th>Id</th>
                                         <th>Name</th>
-                                        <th>Description</th>
-                                        <th>Image Path</th>
-                                        <th>Stock</th>
                                         <th>Category</th>
+                                        <th>Stock</th>
+                                        <th>Product Unit</th>
                                         <th class="noExport">Actions</th>
                                     </tr>
                                 </thead>
@@ -152,6 +151,39 @@
     </div>
 </div>
 
+<div class="modal fade" id="modalStockUpdate" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalCaption" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span id="modalCaption">Update Stock</span>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="StockToBeUpdated" class="control-label"><span style="color:red">* </span>Stock</label>
+                            <input name="StockToBeUpdated" id="StockToBeUpdated" class="form-control" required type="number" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" data-content="remove" class="btn btn-default" data-dismiss="modal"> Cancel </button>
+                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="jsUpdateStock()"> Update </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @await Html.PartialAsync("_Delete")
 <input type="hidden" id="hdnProductId" value="" />
 <div class="spinnerAnimation" style="display:none;"></div>
@@ -194,14 +226,14 @@
             "columns": [
                 getCell("Id"),
                 getCell("Name"),
-                getCell("Description"),
-                getCell("ProductUnitName"),
-                getCell("Stock"),
                 getCell("CategoryName"),
+                getCell("Stock"),
+                getCell("ProductUnitName"),
                 {
                     "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
                     "render": function (row, type, full, meta) {
                         var buttonGroup = "<div class='btn-group role='group'>";
+                        buttonGroup += "<a href='#' class='btn btn-info btn-sm' style='color:white; margin:0px 5px;' onclick=jsOpenUpdateStock('" + full.id + "');><i class='fas fa-sort-numeric-up'></i> Stock </a>"
                         buttonGroup += "<a href='#' class='btn btn-warning btn-sm' style='color:white; margin:0px 5px;' onclick=jsOpenSaveProduct('" + full.id + "');><i class='fas fa-edit'></i> Edit </a>"
                         buttonGroup += "<a href='#' class='btn btn-danger btn-sm' style='color:white; margin:0px 5px;' onclick=DeleteData('" + full.id + "');> <i class='fas fa-trash'></i> Delete </a>";
                         buttonGroup += "</div>"
@@ -241,6 +273,40 @@
 
         }
         $('#modalSave').modal('show');
+    }
+
+    function jsOpenUpdateStock(id, stock) {
+        $("#hdnProductId").val("");
+        $("#StockToBeUpdated").val("");
+
+        if (id != null && id !== "") {
+            var data = { id: id }
+            var result = ajaxRequest('POST', '@Url.Action("GetProductById", "Product")', data)
+            $("#hdnProductId").val(result.id);
+            $("#StockToBeUpdated").val(result.stock);
+        }
+        $('#modalStockUpdate').modal('show');
+    }
+
+    function jsUpdateStock() {
+        var data = {
+            Id: $("#hdnProductId").val(),
+            newStock: $("#StockToBeUpdated").val()
+        };
+        var result = ajaxRequest('POST', '@Url.Action("UpdateProductStock", "Product")', data);
+        if (result != null) {
+            if (result.success) {
+                $('#modalStockUpdate').modal('hide');
+                thisTable = $('#tblProductList').DataTable();
+                thisTable.draw();
+                toastr.success('Transaction successful.');
+            } else {
+                toastr.error(result.message);
+            }
+        } else {
+            $('#modalStockUpdate').modal('hide');
+            toastr.error('Error in updating!');
+        }
     }
 
     function jsSaveProduct() {

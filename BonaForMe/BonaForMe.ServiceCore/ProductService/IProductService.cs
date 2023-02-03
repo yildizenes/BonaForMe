@@ -13,7 +13,8 @@ namespace BonaForMe.ServiceCore.ProductService
         Result<ProductDto> UpdateProduct(ProductDto productDto);
         Result<ProductDto> GetProductById(Guid id);
         Result<List<ProductDto>> GetAllProduct();
-        JsonResult FillDataTable(DataTableDto dataTable);
         Result<List<ProductDto>> GetAllProductByCategoryId(Guid categoryId);
+        Result UpdateProductStock(Guid Id, int newStock, int reducedStock);
+        JsonResult FillDataTable(DataTableDto dataTable);
     }
 }

@@ -28,11 +28,11 @@ body.my-login-page {
 }
 
 .my-login-page .brand {
-	width: 100px;
+	width: 140px;
 	height: 100px;
 	overflow: hidden;
 	border-radius: 5%;
-	margin: 67px 73% -77% 35%;
+	margin: 67px 73% -77% 28%;
 	position: relative;
 	z-index: 1;
 }

@@ -14,6 +14,7 @@ using System.IO;
 using BonaForMe.DomainCore.DTO.PDFModels;
 using BonaForMe.ServiceCore.PDFServices;
 using BonaForMe.ServiceCore.PaymentInfoService;
+using BonaForMe.ServiceCore.ProductService;
 
 namespace BonaForMe.ServiceCore.OrderService
 {
@@ -23,14 +24,16 @@ namespace BonaForMe.ServiceCore.OrderService
         IMapper _mapper;
         private readonly ILinkOrderProductService _linkOrderProductService;
         private readonly IPaymentInfoService _paymentInfoService;
+        private readonly IProductService _productService;
 
         public OrderService(BonaForMeDBContext context, IMapper mapper,
-            ILinkOrderProductService linkOrderProductService, IPaymentInfoService paymentInfoService)
+            ILinkOrderProductService linkOrderProductService, IPaymentInfoService paymentInfoService, IProductService productService)
         {
             _context = context;
             _mapper = mapper;
             _linkOrderProductService = linkOrderProductService;
             _paymentInfoService = paymentInfoService;
+            _productService = productService;
         }
         public Result<OrderDto> AddOrder(OrderDto orderDto)
         {
@@ -278,6 +281,15 @@ namespace BonaForMe.ServiceCore.OrderService
                 _context.Update(model);
                 _context.SaveChanges();
 
+                if (updateOrderDto.OrderStatusId == 7)
+                {
+                    var linkOrderProductList = _context.LinkOrderProducts.Where(x => x.OrderId == updateOrderDto.OrderId && x.IsActive && !x.IsDeleted).ToList();
+                    foreach (var item in linkOrderProductList)
+                    {
+                        _productService.UpdateProductStock(item.ProductId, 0, item.Count);
+                    }
+                }
+
                 result.Data = _mapper.Map<OrderDto>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
@@ -347,7 +359,7 @@ namespace BonaForMe.ServiceCore.OrderService
             {
                 new InvoicerApi(SizeOption.A4, OrientationOption.Portrait, "€", order.Data.OrderCode)
                     .TextColor("#CC0000")
-                    .Image(path + @"wwwroot\images\bonaformelogo.jpg", 100, 100)
+                    .Image(path + @"wwwroot\images\bonameformelogo.jpg", 125, 100)
                     .Company(Address.Make("FROM", new string[] {
                         "Solmaz Packaging",
                         "Unit 9-10, The New Sunbeam Ind",

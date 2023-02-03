@@ -112,6 +112,21 @@ namespace BonaForMe.UI.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult UpdateProductStock(Guid Id, int newStock = 0, int reducedStock = 0)
+        {
+            try
+            {
+                var result = _productService.UpdateProductStock(Id, newStock, reducedStock);
+                return new JsonResult(result);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         [HttpPost]
         public IActionResult LoadProductData()
         {
