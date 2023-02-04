@@ -144,7 +144,51 @@ namespace BonaForMe.ServiceCore.CampaignProductService
             }
             return result;
         }
+        public Result<List<CampaignProductDto>> GetCampaignProductsByTopLimit(decimal topLimit)
+        {
+            Result<List<CampaignProductDto>> result = new Result<List<CampaignProductDto>>();
+            try
+            {
+                var model = _context.CampaignProducts.Include(x=> x.Product).Where(x => x.TopPriceLimit <= topLimit && x.IsActive && !x.IsDeleted).ToList();
+                result.Data = _mapper.Map<List<CampaignProduct>, List<CampaignProductDto>>(model);
+                result.Success = true;
+                result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
 
+        public Result UpdateProductStock(Guid Id, int reducedStock)
+        {
+            Result result = new Result();
+            try
+            {
+                if (Id != Guid.Empty)
+                {
+                    var oldModel = _context.CampaignProducts.FirstOrDefault(x => x.ProductId == Id);
+                    if (oldModel != null)
+                    {
+                        if (reducedStock != 0)
+                            oldModel.Amount -= reducedStock;
+
+                        _context.Entry(oldModel).State = EntityState.Detached;
+                        _context.Update(oldModel);
+                    }
+                }
+                _context.SaveChanges();
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
         public JsonResult FillDataTable(DataTableDto dataTable)
         {
             try

@@ -14,5 +14,7 @@ namespace BonaForMe.ServiceCore.CampaignProductService
         Result<CampaignProductDto> GetCampaignProductById(Guid id);
         Result<List<CampaignProductDto>> GetAllCampaignProduct();
         JsonResult FillDataTable(DataTableDto dataTable);
+        Result<List<CampaignProductDto>> GetCampaignProductsByTopLimit(decimal topLimit);
+        Result UpdateProductStock(Guid Id, int reducedStock);
     }
 }

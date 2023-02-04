@@ -92,5 +92,19 @@ namespace BonaForMe.API.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
+        [HttpGet]
+        public IActionResult GetCampaignProductsByTopLimit(decimal topLimit)
+        {
+            try
+            {
+                var result = _campaignProductService.GetCampaignProductsByTopLimit(topLimit);
+                return Json(new { success = result.Success, data = result.Data, message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, data = "", message = ex.Message });
+            }
+        }
     }
 }

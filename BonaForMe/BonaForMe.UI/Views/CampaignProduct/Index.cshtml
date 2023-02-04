@@ -40,7 +40,7 @@
                                         <th>Id</th>
                                         <th>Product</th>
                                         <th>Amount</th>
-                                        <th>Group</th>
+                                        <th>Top Price Limit</th>
                                         <th class="noExport">Actions</th>
                                     </tr>
                                 </thead>
@@ -71,7 +71,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="ProductId" class="control-label"><span style="color:red">* </span>Product</label>
-                            <select id="ProductId" class="custom-select" name="ProductId" required>
+                            <select id="ProductId" class="form-control select2" name="ProductId" required>
                             </select>
                         </div>
                     </div>
@@ -83,8 +83,8 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="GroupId" class="control-label"><span style="color:red">* </span>Group</label>
-                            <input name="GroupId" id="GroupId" class="form-control" type="number" required />
+                            <label for="TopPriceLimit" class="control-label"><span style="color:red">* </span>Top Price Limit</label>
+                            <input name="TopPriceLimit" id="TopPriceLimit" class="form-control" type="number" required />
                         </div>
                     </div>
                 </div>
@@ -102,12 +102,14 @@
 <input type="hidden" id="hdnCampaignProductId" value="" />
 <div class="spinnerAnimation" style="display:none;"></div>
 <link href="~/css/spinner.css" rel="stylesheet" />
+<script src="~/adminLTE/plugins/select2/js/select2.full.min.js"></script>
 
 @await Html.PartialAsync("_datatableScripts")
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         createTable();
         fillProductSelect();
+        $('.select2').select2()
     });
 
     function createTable() {
@@ -139,7 +141,7 @@
                 getCell("Id"),
                 getCell("ProductName"),
                 getCell("Amount"),
-                getCell("GroupId"),
+                getCell("TopPriceLimit"),
                 {
                     "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
                     "render": function (data, type, full, meta) {
@@ -159,7 +161,7 @@
         $("#hdnCampaignProductId").val("");
         $("#ProductId").val("");
         $("#Amount").val("");
-        $("#GroupId").val("");
+        $("#TopPriceLimit").val("");
 
         if (id != null && id !== "") {
             var data = { id: id }
@@ -167,7 +169,7 @@
             $("#hdnCampaignProductId").val(result.id);
             $("#ProductId").val(result.productId);
             $("#Amount").val(result.amount);
-            $("#GroupId").val(result.groupId);
+            $("#TopPriceLimit").val(result.topPriceLimit);
         }
         $('#modalSave').modal('show');
     }
@@ -177,7 +179,7 @@
             Id: $("#hdnCampaignProductId").val(),
             ProductId: $("#ProductId").val(),
             Amount: $("#Amount").val(),
-            GroupId: $("#GroupId").val(),
+            TopPriceLimit: $("#TopPriceLimit").val(),
         };
 
         var result = ajaxRequest('POST', '@Url.Action("Save", "CampaignProduct")', data)

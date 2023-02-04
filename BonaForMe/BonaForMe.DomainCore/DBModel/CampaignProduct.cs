@@ -13,6 +13,8 @@ namespace BonaForMe.DomainCore.DBModel
         public virtual Product Product { get; set; }
 
         public int Amount { get; set; }
-        public int? GroupId { get; set; }
+
+        [DataType(DataType.Currency)]
+        public decimal TopPriceLimit { get; set; }
     }
 }

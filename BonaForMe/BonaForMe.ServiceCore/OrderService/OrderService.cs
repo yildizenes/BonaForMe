@@ -15,6 +15,7 @@ using BonaForMe.DomainCore.DTO.PDFModels;
 using BonaForMe.ServiceCore.PDFServices;
 using BonaForMe.ServiceCore.PaymentInfoService;
 using BonaForMe.ServiceCore.ProductService;
+using BonaForMe.ServiceCore.CampaignProductService;
 
 namespace BonaForMe.ServiceCore.OrderService
 {
@@ -25,15 +26,18 @@ namespace BonaForMe.ServiceCore.OrderService
         private readonly ILinkOrderProductService _linkOrderProductService;
         private readonly IPaymentInfoService _paymentInfoService;
         private readonly IProductService _productService;
+        private readonly ICampaignProductService _campaignProductService;
 
         public OrderService(BonaForMeDBContext context, IMapper mapper,
-            ILinkOrderProductService linkOrderProductService, IPaymentInfoService paymentInfoService, IProductService productService)
+            ILinkOrderProductService linkOrderProductService, IPaymentInfoService paymentInfoService,
+            IProductService productService, ICampaignProductService campaignProductService)
         {
             _context = context;
             _mapper = mapper;
             _linkOrderProductService = linkOrderProductService;
             _paymentInfoService = paymentInfoService;
             _productService = productService;
+            _campaignProductService = campaignProductService;
         }
         public Result<OrderDto> AddOrder(OrderDto orderDto)
         {
@@ -281,18 +285,62 @@ namespace BonaForMe.ServiceCore.OrderService
                 _context.Update(model);
                 _context.SaveChanges();
 
-                if (updateOrderDto.OrderStatusId == 7)
+                if (updateOrderDto.OrderStatusId == 7) // 7 - Order complete status
                 {
-                    var linkOrderProductList = _context.LinkOrderProducts.Where(x => x.OrderId == updateOrderDto.OrderId && x.IsActive && !x.IsDeleted).ToList();
-                    foreach (var item in linkOrderProductList)
+                    var orderCompleteResult = CompleteTheOrder(updateOrderDto.OrderId);
+                    if (!orderCompleteResult.Success)
                     {
-                        _productService.UpdateProductStock(item.ProductId, 0, item.Count);
+                        result.Success = true;
+                        result.Message = "Order complete unsuccessful.";
+                        return result;
                     }
+                    CreateInvoice(updateOrderDto.OrderId); // orderId null? price ,00 geldi
                 }
 
                 result.Data = _mapper.Map<OrderDto>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
+        public Result CompleteTheOrder(Guid orderId)
+        {
+            Result result = new Result();
+            try
+            {
+                var orderProductResult = _linkOrderProductService.GetAllLinkOrderProductByOrderId(orderId);
+                var orderProducts = new List<LinkOrderProductDto>();
+
+                if (orderProductResult.Success)
+                {
+                    orderProducts = orderProductResult.Data;
+                    foreach (var item in orderProducts) // Add OrderLog
+                    {
+                        var price = item.IsCampaignProduct == true ? 0.00M : item.Product.Price;
+                        var order = new OrderLog
+                        {
+                            OrderId = orderId,
+                            ProductId = item.ProductId,
+                            Price = price,
+                            Count = item.Count,
+                        };
+                        _context.Add(order);
+                        _productService.UpdateProductStock(item.ProductId, 0, item.Count);
+                        if (item.IsCampaignProduct)
+                            _campaignProductService.UpdateProductStock(item.ProductId, item.Count);
+                    }
+
+                    _context.SaveChanges();
+                    result.Success = true;
+                    return result;
+                }
+                result.Success = false;
             }
             catch (Exception ex)
             {
@@ -350,16 +398,17 @@ namespace BonaForMe.ServiceCore.OrderService
             foreach (var item in order.Data.ProductList)
             {
                 var product = item.Product;
-                itemList.Add(ItemRow.Make(item.ProductId.ToString().Split('-').Last().ToUpper(), product.Name, product.Price, item.Count, product.Price, product.Price * item.Count, product.TaxRate)); ;
-                subTotal += product.Price * item.Count;
+                var price = item.IsCampaignProduct == true ? 0.00M : product.Price;
+                itemList.Add(ItemRow.Make(item.ProductId.ToString().Split('-').Last().ToUpper(), product.Name, price, item.Count, price, price * item.Count, product.TaxRate)); ;
+                subTotal += price * item.Count;
                 if (product.TaxRate != 0)
-                    totalVAT += (product.Price * item.Count * product.TaxRate) / 100;
+                    totalVAT += (price * item.Count * product.TaxRate) / 100;
             }
             try
             {
                 new InvoicerApi(SizeOption.A4, OrientationOption.Portrait, "€", order.Data.OrderCode)
                     .TextColor("#CC0000")
-                    .Image(path + @"wwwroot\images\bonameformelogo.jpg", 125, 100)
+                    .Image(path + @"wwwroot\images\bonameformelogo.jpg", 140, 100)
                     .Company(Address.Make("FROM", new string[] {
                         "Solmaz Packaging",
                         "Unit 9-10, The New Sunbeam Ind",

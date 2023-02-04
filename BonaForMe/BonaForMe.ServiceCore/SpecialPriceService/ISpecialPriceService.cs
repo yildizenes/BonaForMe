@@ -12,6 +12,7 @@ namespace BonaForMe.ServiceCore.SpecialPriceService
         Result DeleteSpecialPrice(Guid id);
         Result<SpecialPriceDto> UpdateSpecialPrice(SpecialPriceDto specialPriceDto);
         Result<SpecialPriceDto> GetSpecialPriceById(Guid id);
+        Result<SpecialPriceDto> GetSpecialPriceByUserId(Guid id);
         Result<List<SpecialPriceDto>> GetAllSpecialPrice();
         JsonResult FillDataTable(DataTableDto dataTable);
     }
