@@ -167,16 +167,18 @@
 
     function jsOpenSaveSpecialPrice(id) {
         $("#hdnSpecialPriceId").val("");
-        $("#UserId").val("");
-        $("#ProductId").val("");
+        $("#UserId").val("").trigger("change");
+        $("#CategoryId").val("");
+        $("#ProductId").val("").trigger("change");
         $("#Price").val("");
 
         if (id != null && id !== "") {
             var data = { id: id }
             var result = ajaxRequest('POST', '@Url.Action("GetSpecialPriceById", "SpecialPrice")', data)
             $("#hdnSpecialPriceId").val(result.id);
-            $("#UserId").val(result.userId);
-            $("#ProductId").val(result.productId);
+            $("#UserId").val(result.userId).trigger("change");;
+            $("#CategoryId").val(result.product.categoryId).trigger("change");;
+            $("#ProductId").val(result.productId).trigger("change");;
             $("#Price").val(result.price);
         }
         $('#modalSave').modal('show');
