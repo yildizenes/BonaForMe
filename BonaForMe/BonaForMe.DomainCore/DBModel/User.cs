@@ -38,6 +38,8 @@ namespace BonaForMe.DomainCore.DBModel
         [MaxLength(100)]
         public string CompanyName { get; set; }
 
+        public string AirCode { get; set; }
+
         public bool IsApproved { get; set; }
 
         public bool IsAdmin { get; set; }

@@ -322,12 +322,11 @@ namespace BonaForMe.ServiceCore.OrderService
                     orderProducts = orderProductResult.Data;
                     foreach (var item in orderProducts) // Add OrderLog
                     {
-                        var price = item.IsCampaignProduct == true ? 0.00M : item.Product.Price;
                         var order = new OrderLog
                         {
                             OrderId = orderId,
                             ProductId = item.ProductId,
-                            Price = price,
+                            Price = item.Price,
                             Count = item.Count,
                         };
                         _context.Add(order);
@@ -398,11 +397,10 @@ namespace BonaForMe.ServiceCore.OrderService
             foreach (var item in order.Data.ProductList)
             {
                 var product = item.Product;
-                var price = item.IsCampaignProduct == true ? 0.00M : product.Price;
-                itemList.Add(ItemRow.Make(item.ProductId.ToString().Split('-').Last().ToUpper(), product.Name, price, item.Count, price, price * item.Count, product.TaxRate)); ;
-                subTotal += price * item.Count;
+                itemList.Add(ItemRow.Make(item.ProductId.ToString().Split('-').Last().ToUpper(), product.Name, item.Price, item.Count, item.Price, item.Price * item.Count, product.TaxRate)); ;
+                subTotal += item.Price * item.Count;
                 if (product.TaxRate != 0)
-                    totalVAT += (price * item.Count * product.TaxRate) / 100;
+                    totalVAT += (item.Price * item.Count * product.TaxRate) / 100;
             }
             try
             {

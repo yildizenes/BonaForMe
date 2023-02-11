@@ -149,7 +149,10 @@ namespace BonaForMe.ServiceCore.CampaignProductService
             Result<List<CampaignProductDto>> result = new Result<List<CampaignProductDto>>();
             try
             {
-                var model = _context.CampaignProducts.Include(x=> x.Product).Where(x => x.TopPriceLimit <= topLimit && x.IsActive && !x.IsDeleted).ToList();
+                var model = _context.CampaignProducts
+                    .Include(x=> x.Product).ThenInclude(x=> x.ProductUnit)
+                    .Include(x=> x.Product).ThenInclude(x=> x.CurrencyUnit)
+                    .Where(x => x.TopPriceLimit <= topLimit && x.IsActive && !x.IsDeleted).ToList();
                 result.Data = _mapper.Map<List<CampaignProduct>, List<CampaignProductDto>>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;

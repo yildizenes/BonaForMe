@@ -82,30 +82,40 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="FormFile" class="control-label">Order Code : </label>
                                     <label id="detailOrderCode" class="control-label"></label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="CategoryId" class="control-label">Orderer : </label>
                                     <label id="detailOrderer" class="control-label"></label>
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="Signature" class="control-label">Signature</label>
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="Phone" class="control-label">Phone : </label>
                                     <label id="detailPhone" class="control-label"></label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="Address" class="control-label">Address : </label>
                                     <label id="detailAddress" class="control-label"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <img id="Signature" width="200" height="75" src="" alt="Signature" />
                                 </div>
                             </div>
                         </div>
@@ -288,8 +298,9 @@
             $("#detailOrderer").text(result.userName);
             $("#detailPhone").text(result.user.userPhone);
             $("#detailAddress").text(result.user.address);
+            $("#Signature").attr("src", "data:image/png;base64," + result.signature);
 
-            if (result.orderStatusId != 9) {
+            if (result.orderStatusId != 7) {
                 $("#showInvoiceButton").hide();
             }
             var tableRef = document.getElementById('productTable').getElementsByTagName('tbody')[0];
@@ -300,20 +311,19 @@
             }
 
             result.productList.forEach((item, index) => {
-                var totalPrice = item.count * item.product.price;
+                var totalPrice = item.count * item.price;
                 var newRow = tableRef.insertRow(tableRef.rows.length);
                 var cell1 = newRow.insertCell(0).appendChild(document.createTextNode(index + 1));
                 var cell2 = newRow.insertCell(1).appendChild(document.createTextNode(item.product.name));
                 var cell3 = newRow.insertCell(2).appendChild(document.createTextNode(item.product.productUnit.name));
                 var cell4 = newRow.insertCell(3).appendChild(document.createTextNode(item.count));
-                var cell5 = newRow.insertCell(4).appendChild(document.createTextNode(item.product.price));
+                var cell5 = newRow.insertCell(4).appendChild(document.createTextNode(item.price));
                 var cell5 = newRow.insertCell(5).appendChild(document.createTextNode(item.product.taxRate));
                 var cell6 = newRow.insertCell(6).appendChild(document.createTextNode(parseFloat(totalPrice).toFixed(2)));
             })
         }
         $('#modalDetail').modal('show');
     }
-
 
     function jsOpenSaveOrder(id) {
         $("#hdnOrderId").val("");

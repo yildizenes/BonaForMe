@@ -315,7 +315,7 @@
         formData.append('Name', $("#Name").val());
         formData.append('Description', $("#Description").val());
         formData.append('ProductUnitId', $("#ProductUnitId").val());
-        formData.append('Price', $("#Price").val());
+        formData.append('Price', $("#Price").val().toString().replace('.', ','));
         formData.append('TaxRate', $("#TaxRate").val());
         formData.append('CurrencyUnitId', $("#CurrencyUnitId").val());
         formData.append('Stock', $("#Stock").val());

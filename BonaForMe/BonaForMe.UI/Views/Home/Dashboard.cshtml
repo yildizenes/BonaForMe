@@ -3,7 +3,7 @@
     ViewData["Title"] = "Dashboard";
     Layout = "~/Views/Shared/_AdminLTE.cshtml";
 }
-
+<link href="~/adminLTE/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
 <div class="content-wrapper">
 
     <!-- Content Header (Page header) -->
@@ -78,6 +78,27 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="card card-info card-outline col-6">
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+                                            <i class="fas fa-download"></i>
+                                            Download Excel Report  
+                                            <i class="fas fa-file-excel"></i>
+                                        </h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-9">
+                                                <input type="text" class="form-control float-right" id="reservation">
+                                            </div>
+                                            <div class="col-3">
+                                                <button type="submit" class="btn btn-block btn-outline-info" onclick="jsReport()"> Create Report </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <table id="tblOrderList" class="table table-bordered table-striped table-responsive-lg" style="width: 100% !important;">
                                     <thead>
                                         <tr>
@@ -102,11 +123,17 @@
 <!-- /.modal-delete -->
 <input type="hidden" id="hdnUserId" value="" />
 <div class="spinnerAnimation" style="display:none;"></div>
-
 @await Html.PartialAsync("_datatableScripts")
+<script src="~/adminLTE/plugins/daterangepicker/moment.min.js"></script>
+<script src="~/adminLTE/plugins/daterangepicker/daterangepicker.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         createTable();
+        $('#reservation').daterangepicker({
+            locale: {
+                format: 'DD/MM/YYYY hh:mm A'
+            }
+        });
     });
 
     function createTable() {
@@ -186,5 +213,25 @@
                 },
                 "bDestroy": true,
             });
+    }
+
+    function jsReport() {
+        var dateArray = $("#reservation").val().split(" - ");
+        var data = {
+            StartDate: dateArray[0],
+            EndDate: dateArray[1],
+        };
+
+        var result = ajaxRequest('POST', '@Url.Action("GetSalesValue", "Home")', data)
+        if (result != null) {
+            if (result.success) {
+                toastr.success('Transaction successful.');
+            } else {
+                toastr.error(result.message);
+            }
+        } else {
+            $('#modalSave').modal('hide');
+            toastr.error('Error in saving!');
+        }
     }
 </script>

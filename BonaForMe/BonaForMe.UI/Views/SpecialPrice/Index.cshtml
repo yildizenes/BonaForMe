@@ -92,7 +92,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="Price" class="control-label"><span style="color:red">* </span>Price</label>
-                            <input name="Price" id="Price" class="form-control" type="number" required />
+                            <input name="Price" id="Price" class="form-control" type="number" min="0.00" max="10000.00" step="0.01" required/>
                         </div>
                     </div>
                 </div>
@@ -189,7 +189,7 @@
             Id: $("#hdnSpecialPriceId").val(),
             UserId: $("#UserId").val(),
             ProductId: $("#ProductId").val(),
-            Price: $("#Price").val(),
+            Price: $("#Price").val().toString().replace('.', ','),
         };
 
         var result = ajaxRequest('POST', '@Url.Action("Save", "SpecialPrice")', data)

@@ -18,6 +18,9 @@ namespace BonaForMe.DomainCore.DBModel
         [Required]
         public int Count { get; set; }
 
+        [DataType(DataType.Currency)]
+        public decimal Price { get; set; }
+
         [Required]
         public bool IsCampaignProduct { get; set; }
 

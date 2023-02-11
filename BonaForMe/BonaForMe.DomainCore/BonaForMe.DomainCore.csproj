@@ -9,7 +9,6 @@
     <PackageReference Include="MessagingToolkit" Version="1.8.3" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.32.4334" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
   </ItemGroup>
 
 </Project>

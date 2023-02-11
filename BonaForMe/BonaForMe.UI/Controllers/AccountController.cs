@@ -11,8 +11,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -250,29 +248,29 @@ namespace BonaForMe.UI.Controllers
         }
 
         #region Image Process
-        [AllowAnonymous]
-        [HttpPost]
-        public IActionResult CustomCrop(string filename, IFormFile blob)
-        {
-            try
-            {
-                using (var image = SixLabors.ImageSharp.Image.Load(blob.OpenReadStream()))
-                {
-                    string systemFileExtenstion = filename.Substring(filename.LastIndexOf('.'));
+        //[AllowAnonymous]
+        //[HttpPost]
+        //public IActionResult CustomCrop(string filename, IFormFile blob)
+        //{
+        //    try
+        //    {
+        //        using (var image = SixLabors.ImageSharp.Image.Load(blob.OpenReadStream()))
+        //        {
+        //            string systemFileExtenstion = filename.Substring(filename.LastIndexOf('.'));
 
-                    var newfileName200 = GenerateFileName("Photo_200_200_", systemFileExtenstion);
-                    var filepath200 = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images")).Root + $@"\{newfileName200}";
-                    image.Mutate(x => x.Resize(200, 200));
-                    image.Save(filepath200);
-                }
+        //            var newfileName200 = GenerateFileName("Photo_200_200_", systemFileExtenstion);
+        //            var filepath200 = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images")).Root + $@"\{newfileName200}";
+        //            image.Mutate(x => x.Resize(200, 200));
+        //            image.Save(filepath200);
+        //        }
 
-                return Json(new { Message = "OK" });
-            }
-            catch (Exception)
-            {
-                return Json(new { Message = "ERROR" });
-            }
-        }
+        //        return Json(new { Message = "OK" });
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return Json(new { Message = "ERROR" });
+        //    }
+        //}
 
         public string GenerateFileName(string fileTypeName, string fileextenstion)
         {

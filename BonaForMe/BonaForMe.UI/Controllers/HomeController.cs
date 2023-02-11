@@ -1,8 +1,11 @@
-﻿using BonaForMe.ServiceCore.HomeService;
+﻿using BonaForMe.DomainCore.DTO;
+using BonaForMe.ServiceCore.HomeService;
+using BonaForMe.ServiceCore.ReportService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Diagnostics;
 
 namespace BonaForMe.UI.Controllers
@@ -10,9 +13,11 @@ namespace BonaForMe.UI.Controllers
     public class HomeController : Controller
     {
         private readonly IHomeService _homeService;
-        public HomeController(IHomeService homeService)
+        private readonly IReportService _reportService;
+        public HomeController(IHomeService homeService, IReportService reportService)
         {
             _homeService = homeService;
+            _reportService = reportService;
         }
         public IActionResult Index()
         {
@@ -29,6 +34,21 @@ namespace BonaForMe.UI.Controllers
                 ViewBag.Success = successInfo;
             }
             return View(result.Data);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult GetSalesValue(ReportDateDto reportDateDto)
+        {
+            try
+            {
+                var result = _reportService.GetSalesValue(reportDateDto);
+                return new JsonResult(result);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
     }
 }
