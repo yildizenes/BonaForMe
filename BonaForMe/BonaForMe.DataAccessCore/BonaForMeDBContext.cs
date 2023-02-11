@@ -27,6 +27,7 @@ namespace BonaForMe.DataAccessCore
         public DbSet<CourierCoordinate> CourierCoordinates { get; set; }
         public DbSet<SpecialPrice> SpecialPrices { get; set; }
         public DbSet<OrderLog> OrderLogs { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
 
 
         IHttpContextAccessor _httpContextAccessor;
