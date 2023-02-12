@@ -13,8 +13,9 @@ namespace BonaForMe.ServiceCore.OrderService
         Result<OrderDto> UpdateOrder(OrderDto orderDto);
         Result<OrderDto> GetOrderById(Guid id);
         Result<List<OrderDto>> GetAllOrder();
-        Result<List<OrderDto>> GetUserNowOrderDetail();
-        Result<List<OrderDto>> GetUserLastOrderDetail();
+        //Result<List<OrderDto>> GetUserNowOrderDetail();
+        //Result<List<OrderDto>> GetUserLastOrderDetail();
+        Result<List<OrderDto>> GetAllOrderByStatusId(List<int> orderStatuses);
         Result<List<OrderDto>> GetUserOrderDetail(Guid userId);
         Result<OrderDto> UpdateOrderStatus(UpdateOrderDto updateOrderDto);
         JsonResult FillDataTable(DataTableDto dataTable, byte type, int orderStatusId);

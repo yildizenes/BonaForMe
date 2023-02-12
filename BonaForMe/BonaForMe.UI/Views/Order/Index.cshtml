@@ -94,28 +94,18 @@
                                     <label id="detailOrderer" class="control-label"></label>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="Signature" class="control-label">Signature</label>
-                                </div>
-                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="Phone" class="control-label">Phone : </label>
-                                    <label id="detailPhone" class="control-label"></label>
+                                    <label id="detailCustomerPhone" class="control-label"></label>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="Address" class="control-label">Address : </label>
                                     <label id="detailAddress" class="control-label"></label>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <img id="Signature" width="200" height="75" src="" alt="Signature" />
                                 </div>
                             </div>
                         </div>
@@ -136,8 +126,77 @@
                         </table>
                     </div>
                 </div>
-            </div>
 
+                <div class="card direct-chat direct-chat-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Order Detail</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="container" id="orderDetailPanel" style="display:none">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="CourierId" class="control-label">Courier : </label>
+                                        <label id="detailCourierName" class="control-label"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="DateCreated" class="control-label">Date : </label>
+                                        <label id="detailDateCreated" class="control-label"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="PayType" class="control-label">Pay Type : </label>
+                                        <label id="detailPayType" class="control-label"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="Price" class="control-label">Price : </label>
+                                        <label id="detailPrice" class="control-label"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="Signature" class="control-label">Signature</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="DeliveredName" class="control-label">Delivered Name : </label>
+                                        <label id="detailDeliveredName" class="control-label"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="Price" class="control-label">Phone : </label>
+                                        <label id="detailPhone" class="control-label"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <img id="Signature" width="200" height="75" src="" alt="Signature" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="modal-footer">
                 <button type="button" data-content="remove" class="btn btn-default" data-dismiss="modal"> Cancel </button>
                 <button id="showInvoiceButton" onclick="jsShowInvoice();" class="btn btn-primary" data-dismiss="modal"> Show Invoice </button>
@@ -296,9 +355,23 @@
             $("#hdnOrderId").val(result.id);
             $("#detailOrderCode").text(result.orderCode);
             $("#detailOrderer").text(result.userName);
-            $("#detailPhone").text(result.user.userPhone);
+            $("#detailCustomerPhone").text(result.user.userPhone);
             $("#detailAddress").text(result.user.address);
-            $("#Signature").attr("src", "data:image/png;base64," + result.signature);
+
+            if (result.orderDetail != null) {
+
+                dt = new Date(Date.parse(result.orderDetail.dateCreated));
+                dateString = dt.toLocaleString('tr-TR');
+                $("#orderDetailPanel").show();
+                $("#detailCourierName").text(result.orderDetail.courier.fullName);
+                $("#detailDateCreated").text(dt.toLocaleString('en-US'));
+                $("#detailPayType").text(result.orderDetail.payType);
+                $("#detailPrice").text(result.orderDetail.price);
+                $("#detailDeliveredName").text(result.orderDetail.deliveredName);
+                $("#detailPhone").text(result.orderDetail.phone);
+
+                $("#Signature").attr("src", "data:image/png;base64," + result.orderDetail.signature);
+            }
 
             if (result.orderStatusId != 7) {
                 $("#showInvoiceButton").hide();

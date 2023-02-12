@@ -3,6 +3,7 @@ using BonaForMe.ServiceCore.OrderService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 
 namespace BonaForMe.API.Controllers
 {
@@ -64,11 +65,25 @@ namespace BonaForMe.API.Controllers
         }
 
         [HttpGet]
+        public IActionResult GetAllOrderByStatusId(int statusId)
+        {
+            try
+            {
+                var result = _orderService.GetAllOrderByStatusId(new List<int> { statusId });
+                return Json(new { success = result.Success, data = result.Data, message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, data = "", message = ex.Message });
+            }
+        }
+
+        [HttpGet]
         public IActionResult GetUserNowOrderDetail()
         {
             try
             {
-                var result = _orderService.GetUserNowOrderDetail();
+                var result = _orderService.GetAllOrderByStatusId(new List<int> { 1, 2, 3 });
                 return Json(new { success = result.Success, data = result.Data, message = result.Message });
             }
             catch (Exception ex)
@@ -82,7 +97,7 @@ namespace BonaForMe.API.Controllers
         {
             try
             {
-                var result = _orderService.GetUserLastOrderDetail();
+                var result = _orderService.GetAllOrderByStatusId(new List<int> { 4, 5, 6, 7});
                 return Json(new { success = result.Success, data = result.Data, message = result.Message });
             }
             catch (Exception ex)

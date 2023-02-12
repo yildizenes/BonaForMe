@@ -23,5 +23,7 @@ namespace BonaForMe.DomainCore.DTO
 
         [NotMapped]
         public virtual List<LinkOrderProductDto> ProductList { get; set; }
+
+        public virtual OrderDetail OrderDetail { get; set; }
     }
 }
