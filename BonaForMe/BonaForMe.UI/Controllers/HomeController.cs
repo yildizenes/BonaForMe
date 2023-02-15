@@ -50,5 +50,13 @@ namespace BonaForMe.UI.Controllers
                 return null;
             }
         }
+
+        public FileResult CreateReport(string param)
+        {
+            var dates = Array.ConvertAll(param.Split(" - "), item => DateTime.Parse(item));
+            var result = _reportService.CreateReport(new ReportDateDto { StartDate = dates[0], EndDate = dates[1] });
+
+            return File(result.Data, "application/octet-stream", param + ".xlsx");
+        }
     }
 }

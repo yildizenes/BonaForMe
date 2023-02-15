@@ -6,6 +6,6 @@ namespace BonaForMe.ServiceCore.ReportService
     public interface IReportService
     {
         Result<ReportDto> GetSalesValue(ReportDateDto reportDateDto);
-        Result CreateExcel(ReportDateDto reportDateDto);
+        Result<byte[]> CreateReport(ReportDateDto reportDateDto);
     }
 }

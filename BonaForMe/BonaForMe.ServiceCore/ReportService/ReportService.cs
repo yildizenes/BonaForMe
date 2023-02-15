@@ -48,29 +48,63 @@ namespace BonaForMe.ServiceCore.ReportService
             }
             return result;
         }
-        public Result CreateExcel(ReportDateDto reportDateDto)
+        public Result<byte[]> CreateReport(ReportDateDto reportDateDto)
         {
-            Result result = new Result();
+            Result<byte[]> result = new Result<byte[]>();
             try
             {
-
                 WorkBook workbook = WorkBook.Create(ExcelFileFormat.XLSX);
-                var sheet = workbook.CreateWorkSheet("Result Sheet"); 
+                var sheet = workbook.CreateWorkSheet("Result Sheet");
 
-                // Set Titles Manually
-                sheet["A1"].Value = "Object Oriented Programming";
-                sheet["B1"].Value = "Data Structure";
-                sheet["C1"].Value = "Database Management System";
+                // Set titles manually
+                sheet["A1"].Value = "Account";
+                sheet["B1"].Value = "Date";
+                sheet["C1"].Value = "Time";
+                sheet["D1"].Value = "Type";
+                sheet["E1"].Value = "Order Code";
+                sheet["F1"].Value = "Payment Method";
+                sheet["G1"].Value = "Quantity";
+                sheet["H1"].Value = "Description";
+                sheet["I1"].Value = "Currency";
+                sheet["J1"].Value = "Price(Gross)";
+                sheet["K1"].Value = "Price(Net)";
+                sheet["L1"].Value = "Tax";
+                sheet["M1"].Value = "Tax Rate";
 
-                for (int i = 2; i <= 4; i++)    // Set Cell Values
+                // Get Values
+                var values = _context.OrderLogs
+                    .Include(x => x.Order)
+                    .Include(x => x.Product).ThenInclude(x=> x.CurrencyUnit)
+                    .Where(x => x.DateCreated >= reportDateDto.StartDate && x.DateCreated <= reportDateDto.EndDate 
+                                && x.IsActive && !x.IsDeleted).ToList();
+
+                int index = 2;
+                foreach (var item in values)    // Set cell values
                 {
-                    sheet["A" + i].Value = "Test - " + i;
-                    sheet["B" + i].Value = "Test - " + i;
-                    sheet["C" + i].Value = "Test - " + i;
+                    var taxPrice = (item.Price * item.Count * item.Product.TaxRate) / 100;
+
+                    sheet["A" + index].Value = "solmazpackaging@gmail.com";
+                    sheet["B" + index].Value = item.DateCreated.Value.ToShortDateString();
+                    sheet["C" + index].StringValue = item.DateCreated.Value.ToShortTimeString();
+                    sheet["D" + index].Value = "Sales";
+                    sheet["E" + index].Value = item.Order.OrderCode;
+                    sheet["F" + index].Value = item.Order.PayType;
+                    sheet["G" + index].Value = item.Count;
+                    sheet["H" + index].Value = item.Product.Name;
+                    sheet["I" + index].Value = item.Product.CurrencyUnit.Name;
+                    sheet["J" + index].Value = item.Price + taxPrice;
+                    sheet["K" + index].Value = item.Price;
+                    sheet["L" + index].Value = taxPrice;
+                    sheet["M" + index].Value = item.Product.TaxRate;
+
+                    index++;
                 }
 
-                workbook.SaveAs("ResultSheet.xlsx");    // Save Workbook
+                sheet.Rows[0].Style.Font.Bold = true;
+                foreach (var item in sheet.Columns)
+                    item.Width = 4000;
 
+                result.Data = workbook.ToByteArray();
                 result.Success = true;
                 result.Message = ResultMessages.Success;
             }

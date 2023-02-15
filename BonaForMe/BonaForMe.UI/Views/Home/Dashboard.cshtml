@@ -83,19 +83,21 @@
                                     <div class="card-header">
                                         <h3 class="card-title">
                                             <i class="fas fa-download"></i>
-                                            Download Excel Report  
+                                            Download Excel Report
                                             <i class="fas fa-file-excel"></i>
                                         </h3>
                                     </div>
                                     <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-9">
-                                                <input type="text" class="form-control float-right" id="reservation">
+                                        <form action="CreateReport" method="post">
+                                            <div class="row">
+                                                <div class="col-9">
+                                                    <input type="text" name="param" class="form-control float-right" id="reservation">
+                                                </div>
+                                                <div class="col-3">
+                                                    <button type="submit" class="btn btn-block btn-outline-info"> Create Report </button>
+                                                </div>
                                             </div>
-                                            <div class="col-3">
-                                                <button type="submit" class="btn btn-block btn-outline-info" onclick="jsReport()"> Create Report </button>
-                                            </div>
-                                        </div>
+                                        </form>
                                     </div>
                                 </div>
 
@@ -213,25 +215,5 @@
                 },
                 "bDestroy": true,
             });
-    }
-
-    function jsReport() {
-        var dateArray = $("#reservation").val().split(" - ");
-        var data = {
-            StartDate: dateArray[0],
-            EndDate: dateArray[1],
-        };
-
-        var result = ajaxRequest('POST', '@Url.Action("GetSalesValue", "Home")', data)
-        if (result != null) {
-            if (result.success) {
-                toastr.success('Transaction successful.');
-            } else {
-                toastr.error(result.message);
-            }
-        } else {
-            $('#modalSave').modal('hide');
-            toastr.error('Error in saving!');
-        }
     }
 </script>
