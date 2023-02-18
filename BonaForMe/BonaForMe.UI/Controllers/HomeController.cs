@@ -1,22 +1,19 @@
 ﻿using BonaForMe.DomainCore.DTO;
-using BonaForMe.ServiceCore.HomeService;
+using BonaForMe.ServiceCore.AdminService;
 using BonaForMe.ServiceCore.ReportService;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Diagnostics;
 
 namespace BonaForMe.UI.Controllers
 {
-    public class HomeController : Controller
+    public class AdminController : Controller
     {
-        private readonly IHomeService _homeService;
+        private readonly IAdminService _adminService;
         private readonly IReportService _reportService;
-        public HomeController(IHomeService homeService, IReportService reportService)
+        public AdminController(IAdminService adminService, IReportService reportService)
         {
-            _homeService = homeService;
+            _adminService = adminService;
             _reportService = reportService;
         }
         public IActionResult Index()
@@ -27,7 +24,7 @@ namespace BonaForMe.UI.Controllers
         [AllowAnonymous]
         public IActionResult Dashboard()
         {
-            var result = _homeService.GetDashboardData();
+            var result = _adminService.GetDashboardData();
             var successInfo = TempData["Success"];
             if (successInfo != null)
             {
@@ -45,7 +42,7 @@ namespace BonaForMe.UI.Controllers
                 var result = _reportService.GetSalesValue(reportDateDto);
                 return new JsonResult(result);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }

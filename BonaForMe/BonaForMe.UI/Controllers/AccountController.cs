@@ -78,7 +78,7 @@ namespace BonaForMe.UI.Controllers
                         return RedirectToAction("Login", "Account");
                     }
                     await CreateClaims(result.Data);
-                    returnTo = "/Home/Dashboard";
+                    returnTo = "/Admin/Dashboard";
                 }
                 else
                 {

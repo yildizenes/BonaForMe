@@ -2,11 +2,14 @@
 using BonaForMe.DataAccessCore;
 using BonaForMe.DomainCommonCore.Result;
 using BonaForMe.DomainCore.DTO;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using IronXL;
 
 namespace BonaForMe.ServiceCore.ReportService
 {
@@ -53,58 +56,80 @@ namespace BonaForMe.ServiceCore.ReportService
             Result<byte[]> result = new Result<byte[]>();
             try
             {
-                WorkBook workbook = WorkBook.Create(ExcelFileFormat.XLSX);
-                var sheet = workbook.CreateWorkSheet("Result Sheet");
-
-                // Set titles manually
-                sheet["A1"].Value = "Account";
-                sheet["B1"].Value = "Date";
-                sheet["C1"].Value = "Time";
-                sheet["D1"].Value = "Type";
-                sheet["E1"].Value = "Order Code";
-                sheet["F1"].Value = "Payment Method";
-                sheet["G1"].Value = "Quantity";
-                sheet["H1"].Value = "Description";
-                sheet["I1"].Value = "Currency";
-                sheet["J1"].Value = "Price(Gross)";
-                sheet["K1"].Value = "Price(Net)";
-                sheet["L1"].Value = "Tax";
-                sheet["M1"].Value = "Tax Rate";
-
-                // Get Values
-                var values = _context.OrderLogs
-                    .Include(x => x.Order)
-                    .Include(x => x.Product).ThenInclude(x=> x.CurrencyUnit)
-                    .Where(x => x.DateCreated >= reportDateDto.StartDate && x.DateCreated <= reportDateDto.EndDate 
-                                && x.IsActive && !x.IsDeleted).ToList();
-
-                int index = 2;
-                foreach (var item in values)    // Set cell values
+                using (MemoryStream ms = new MemoryStream())
                 {
-                    var taxPrice = (item.Price * item.Count * item.Product.TaxRate) / 100;
+                    SpreadsheetDocument document = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook);
 
-                    sheet["A" + index].Value = "solmazpackaging@gmail.com";
-                    sheet["B" + index].Value = item.DateCreated.Value.ToShortDateString();
-                    sheet["C" + index].StringValue = item.DateCreated.Value.ToShortTimeString();
-                    sheet["D" + index].Value = "Sales";
-                    sheet["E" + index].Value = item.Order.OrderCode;
-                    sheet["F" + index].Value = item.Order.PayType;
-                    sheet["G" + index].Value = item.Count;
-                    sheet["H" + index].Value = item.Product.Name;
-                    sheet["I" + index].Value = item.Product.CurrencyUnit.Name;
-                    sheet["J" + index].Value = item.Price + taxPrice;
-                    sheet["K" + index].Value = item.Price;
-                    sheet["L" + index].Value = taxPrice;
-                    sheet["M" + index].Value = item.Product.TaxRate;
+                    WorkbookPart workbookPart = document.AddWorkbookPart();
+                    workbookPart.Workbook = new Workbook();
 
-                    index++;
+                    WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                    worksheetPart.Worksheet = new Worksheet(new SheetData());
+
+                    Sheets sheets = new Sheets();
+                    sheets.Append(new Sheet { Id = document.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Report Value" });
+                    workbookPart.Workbook.Append(sheets);
+
+                    SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+
+                    #region Title
+
+                    Row row1 = new Row() { RowIndex = 1 };
+                    sheetData.Append(row1);
+
+                    row1.Append(new Cell() { CellReference = "A1", DataType = CellValues.String, CellValue = new CellValue("Account") });
+                    row1.Append(new Cell() { CellReference = "B1", DataType = CellValues.String, CellValue = new CellValue("Date") });
+                    row1.Append(new Cell() { CellReference = "C1", DataType = CellValues.String, CellValue = new CellValue("Time") });
+                    row1.Append(new Cell() { CellReference = "D1", DataType = CellValues.String, CellValue = new CellValue("Type") });
+                    row1.Append(new Cell() { CellReference = "E1", DataType = CellValues.String, CellValue = new CellValue("Order Code") });
+                    row1.Append(new Cell() { CellReference = "F1", DataType = CellValues.String, CellValue = new CellValue("Payment Method") });
+                    row1.Append(new Cell() { CellReference = "G1", DataType = CellValues.String, CellValue = new CellValue("Quantity") });
+                    row1.Append(new Cell() { CellReference = "H1", DataType = CellValues.String, CellValue = new CellValue("Description") });
+                    row1.Append(new Cell() { CellReference = "I1", DataType = CellValues.String, CellValue = new CellValue("Currency") });
+                    row1.Append(new Cell() { CellReference = "J1", DataType = CellValues.String, CellValue = new CellValue("Price(Gross)") });
+                    row1.Append(new Cell() { CellReference = "K1", DataType = CellValues.String, CellValue = new CellValue("Price(Net)") });
+                    row1.Append(new Cell() { CellReference = "L1", DataType = CellValues.String, CellValue = new CellValue("Tax") });
+                    row1.Append(new Cell() { CellReference = "M1", DataType = CellValues.String, CellValue = new CellValue("Tax Rate") });
+
+                    #endregion
+
+                    #region Items
+
+                    var values = _context.OrderLogs
+                        .Include(x => x.Order)
+                        .Include(x => x.Product).ThenInclude(x => x.CurrencyUnit)
+                        .Where(x => x.DateCreated >= reportDateDto.StartDate && x.DateCreated <= reportDateDto.EndDate
+                                    && x.IsActive && !x.IsDeleted).ToList();
+
+                    int index = 2;
+                    foreach (var item in values)
+                    {
+                        Row row = new Row() { RowIndex = Convert.ToUInt32(index) };
+                        sheetData.Append(row);
+
+                        var taxPrice = (item.Price * item.Count * item.Product.TaxRate) / 100;
+                        row.Append(new Cell() { CellReference = "A" + index, DataType = CellValues.String, CellValue = new CellValue("solmazpackaging@gmail.com") });
+                        row.Append(new Cell() { CellReference = "B" + index, DataType = CellValues.String, CellValue = new CellValue(item.DateCreated.Value.ToShortDateString()) });
+                        row.Append(new Cell() { CellReference = "C" + index, DataType = CellValues.String, CellValue = new CellValue(item.DateCreated.Value.ToShortTimeString()) });
+                        row.Append(new Cell() { CellReference = "D" + index, DataType = CellValues.String, CellValue = new CellValue("Sales") });
+                        row.Append(new Cell() { CellReference = "E" + index, DataType = CellValues.String, CellValue = new CellValue(item.Order.OrderCode) });
+                        row.Append(new Cell() { CellReference = "F" + index, DataType = CellValues.String, CellValue = new CellValue(item.Order.PayType) });
+                        row.Append(new Cell() { CellReference = "G" + index, DataType = CellValues.String, CellValue = new CellValue(item.Count) });
+                        row.Append(new Cell() { CellReference = "H" + index, DataType = CellValues.String, CellValue = new CellValue(item.Product.Name) });
+                        row.Append(new Cell() { CellReference = "I" + index, DataType = CellValues.String, CellValue = new CellValue(item.Product.CurrencyUnit.Name) });
+                        row.Append(new Cell() { CellReference = "J" + index, DataType = CellValues.String, CellValue = new CellValue(item.Price + taxPrice) });
+                        row.Append(new Cell() { CellReference = "K" + index, DataType = CellValues.String, CellValue = new CellValue(item.Price) });
+                        row.Append(new Cell() { CellReference = "L" + index, DataType = CellValues.String, CellValue = new CellValue(taxPrice) });
+                        row.Append(new Cell() { CellReference = "M" + index, DataType = CellValues.String, CellValue = new CellValue(item.Product.TaxRate) });
+                        index++;
+                    }
+
+                    #endregion
+
+                    document.Close();
+                    result.Data = ms.ToArray();
                 }
 
-                sheet.Rows[0].Style.Font.Bold = true;
-                foreach (var item in sheet.Columns)
-                    item.Width = 4000;
-
-                result.Data = workbook.ToByteArray();
                 result.Success = true;
                 result.Message = ResultMessages.Success;
             }
