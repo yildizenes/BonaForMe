@@ -66,11 +66,11 @@ namespace BonaForMe.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetApplicationSettingById(Guid id)
+        public IActionResult GetApplicationSetting()
         {
             try
             {
-                var result = _applicationSettingService.GetApplicationSettingById(id);
+                var result = _applicationSettingService.GetApplicationSetting();
                 if (result != null)
                 {
                     return new JsonResult(result.Data);

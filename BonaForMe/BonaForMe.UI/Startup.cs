@@ -60,7 +60,7 @@ namespace BonaForMe.UI
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme   /*JwtBearerDefaults.AuthenticationScheme*/).AddCookie(
                 options =>
                 {
-                    options.LoginPath = new PathString("/Account/Login/");
+                    options.LoginPath = new PathString("/Home/Index/");
                 })
                .AddJwtBearer(options =>
                {
@@ -127,7 +127,7 @@ namespace BonaForMe.UI
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Account}/{action=Login}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
             SeedDB.Initialize(dbcontext);

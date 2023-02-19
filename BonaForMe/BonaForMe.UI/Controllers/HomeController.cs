@@ -1,59 +1,76 @@
 ﻿using BonaForMe.DomainCore.DTO;
-using BonaForMe.ServiceCore.AdminService;
-using BonaForMe.ServiceCore.ReportService;
-using Microsoft.AspNetCore.Authorization;
+using BonaForMe.ServiceCore.ApplicationSettingService;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace BonaForMe.UI.Controllers
 {
-    public class AdminController : Controller
+    public class HomeController : Controller
     {
-        private readonly IAdminService _adminService;
-        private readonly IReportService _reportService;
-        public AdminController(IAdminService adminService, IReportService reportService)
+        private readonly IApplicationSettingService _applicationSettingService;
+        public HomeController(IApplicationSettingService applicationSettingService)
         {
-            _adminService = adminService;
-            _reportService = reportService;
+            _applicationSettingService = applicationSettingService;
         }
         public IActionResult Index()
+        {
+            var settings = _applicationSettingService.GetApplicationSetting();
+            var model = new ApplicationSettingDto
+            {
+                InfoMail = settings.Data?.InfoMail,
+                Telephone = settings.Data?.Telephone,
+                Facebook = settings.Data?.Facebook,
+                LinkedIn = settings.Data?.LinkedIn,
+                Twitter = settings.Data?.Twitter,
+                Instagram = settings.Data?.Instagram,
+                PlayStoreAddress = settings.Data?.PlayStoreAddress,
+                AppleStoreAddress = settings.Data?.AppleStoreAddress,
+                HuaweiStoreAddress = settings.Data?.HuaweiStoreAddress
+            };
+
+            return View(model);
+        }
+
+        public IActionResult Shop()
         {
             return View();
         }
 
-        [AllowAnonymous]
-        public IActionResult Dashboard()
+        public IActionResult About()
         {
-            var result = _adminService.GetDashboardData();
-            var successInfo = TempData["Success"];
-            if (successInfo != null)
+            var settings = _applicationSettingService.GetApplicationSetting();
+            var model = new ApplicationSettingDto
             {
-                ViewBag.Success = successInfo;
-            }
-            return View(result.Data);
+                AboutUs = settings.Data?.AboutUs
+            };
+
+            return View(model);
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        public IActionResult GetSalesValue(ReportDateDto reportDateDto)
+        public IActionResult Presentation()
         {
-            try
+            var settings = _applicationSettingService.GetApplicationSetting();
+            var model = new ApplicationSettingDto
             {
-                var result = _reportService.GetSalesValue(reportDateDto);
-                return new JsonResult(result);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+                Vision = settings.Data?.Mission,
+                Mission = settings.Data?.Vision,
+            };
+
+            return View(model);
         }
 
-        public FileResult CreateReport(string param)
+        public IActionResult Contact()
         {
-            var dates = Array.ConvertAll(param.Split(" - "), item => DateTime.Parse(item));
-            var result = _reportService.CreateReport(new ReportDateDto { StartDate = dates[0], EndDate = dates[1] });
+            var settings = _applicationSettingService.GetApplicationSetting();
+            var model = new ApplicationSettingDto
+            {
+                Address = settings.Data?.Address,
+                InfoMail = settings.Data?.InfoMail,
+                Telephone = settings.Data?.Telephone,
+                GoogleMaps = settings.Data?.GoogleMaps,
+                OpenCloseTime = settings.Data?.OpenCloseTime,
+            };
 
-            return File(result.Data, "application/octet-stream", param + ".xlsx");
+            return View(model);
         }
     }
 }

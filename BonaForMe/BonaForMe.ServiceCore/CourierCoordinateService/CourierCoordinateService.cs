@@ -28,9 +28,9 @@ namespace BonaForMe.ServiceCore.CourierCoordinateService
             try
             {
                 CourierCoordinate courierCoordinate = _mapper.Map<CourierCoordinate>(courierCoordinateDto);
-                if (courierCoordinateDto.Id != Guid.Empty)
+                if (courierCoordinateDto.UserId != Guid.Empty)
                 {
-                    var oldModel = _context.CourierCoordinates.FirstOrDefault(x => x.Id == courierCoordinateDto.Id);
+                    var oldModel = _context.CourierCoordinates.FirstOrDefault(x => x.UserId == courierCoordinateDto.UserId);
                     if (oldModel != null)
                     {
                         DBHelper.SetBaseValues(oldModel, courierCoordinate);

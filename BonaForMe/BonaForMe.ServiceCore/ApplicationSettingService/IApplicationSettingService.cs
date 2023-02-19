@@ -11,7 +11,7 @@ namespace BonaForMe.ServiceCore.ApplicationSettingService
         Result<ApplicationSettingDto> AddApplicationSetting(ApplicationSettingDto applicationSettingDto);
         Result DeleteApplicationSetting(Guid id);
         Result<ApplicationSettingDto> UpdateApplicationSetting(ApplicationSettingDto applicationSettingDto);
-        Result<ApplicationSettingDto> GetApplicationSettingById(Guid id);
+        Result<ApplicationSettingDto> GetApplicationSetting();
         Result<List<ApplicationSettingDto>> GetAllApplicationSetting();
         JsonResult FillDataTable(DataTableDto dataTable);
     }

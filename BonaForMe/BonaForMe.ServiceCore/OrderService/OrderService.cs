@@ -206,7 +206,8 @@ namespace BonaForMe.ServiceCore.OrderService
                 var orderDtos = _mapper.Map<List<Order>, List<OrderDto>>(model);
                 foreach (var item in orderDtos)
                 {
-                    var linkOrderProducts = _context.LinkOrderProducts.Where(x => x.OrderId == item.Id).Include(x => x.Product).ToList();
+                    var linkOrderProducts = _context.LinkOrderProducts.Where(x => x.OrderId == item.Id)
+                        .Include(x => x.Product).ThenInclude(x => x.CurrencyUnit).ToList();
                     item.ProductList = _mapper.Map<List<LinkOrderProduct>, List<LinkOrderProductDto>>(linkOrderProducts);
                 }
 

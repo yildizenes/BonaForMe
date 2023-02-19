@@ -32,14 +32,11 @@ namespace BonaForMe.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetApplicationSettingById(Guid id)
+        public IActionResult GetApplicationSetting()
         {
             try
             {
-                if (id == Guid.Empty)
-                    return Json(new { Success = false, Data = "", Message = "Request parameter is not found." });
-
-                var result = _applicationSettingService.GetApplicationSettingById(id);
+                var result = _applicationSettingService.GetApplicationSetting();
                 return Json(new { success = result.Success, data = result.Data, message = result.Message });
             }
             catch (Exception ex)

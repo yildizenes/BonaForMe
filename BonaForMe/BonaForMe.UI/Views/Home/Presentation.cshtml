@@ -1,0 +1,23 @@
+﻿@model BonaForMe.DomainCore.DTO.ApplicationSettingDto
+@{
+    ViewData["Title"] = "Presentation";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+
+<section class="contact spad">
+    <div class="container" style="border-top: 2px solid gray; padding-top: 30px">
+        <div class="row">
+            <div class="col-12 order-1">
+                <div class="blog__details__text">
+                    <h3>Mission</h3>
+                    @Html.Raw(Model.Mission)
+
+                    <br /><br /><br />
+
+                    <h3>Vision</h3>
+                    @Html.Raw(Model.Vision)
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -17,10 +17,16 @@ namespace BonaForMe.DomainCore.DBModel
         public string Address { get; set; }
 
         [MaxLength()]
+        public string GoogleMaps { get; set; }
+
+        [MaxLength()]
         public string InfoMail { get; set; }
 
         [MaxLength()]
         public string Telephone { get; set; }
+
+        [MaxLength()]
+        public string OpenCloseTime { get; set; }
         
         [MaxLength()]
         public string LinkedIn { get; set; }

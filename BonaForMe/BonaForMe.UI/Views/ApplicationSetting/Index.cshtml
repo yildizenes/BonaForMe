@@ -34,10 +34,10 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">@ViewData["Title"]</h3>
-                            @*<button class="btn-success" onclick="jsOpenSaveApplicationSetting();" style="padding: 10px; float:right;">
+                            <button class="btn-success" onclick="jsOpenSaveApplicationSetting();" style="padding: 10px; float:right;">
                                 <i class="fas fa-save"></i>
                                 New @ViewData["SingleName"]
-                            </button>*@
+                            </button>
                         </div>
                         <div class="card-body" style="overflow-x:auto;">
                             <table id="tblApplicationSettingList" class="table table-bordered table-striped table-responsive-lg" style="width: 100% !important;">
@@ -125,6 +125,12 @@
                                     <input name="Address" id="Address" class="form-control" required />
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="GoogleMaps" class="control-label"><span style="color:red">* </span>GoogleMaps</label>
+                                    <input name="GoogleMaps" id="GoogleMaps" class="form-control" required />
+                                </div>
+                            </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="InfoMail" class="control-label"><span style="color:red">* </span>Info Mail</label>
@@ -135,6 +141,12 @@
                                 <div class="form-group">
                                     <label for="Telephone" class="control-label"><span style="color:red">* </span>Telephone</label>
                                     <input name="Telephone" id="Telephone" class="form-control" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="OpenCloseTime" class="control-label"><span style="color:red">* </span>OpenCloseTime</label>
+                                    <input name="OpenCloseTime" id="OpenCloseTime" class="form-control" required />
                                 </div>
                             </div>
                         </div>
@@ -267,8 +279,10 @@
         $("#Vision").val("");
         $("#Mission").val("");
         $("#Address").val("");
+        $("#GoogleMaps").val("");
         $("#InfoMail").val("");
         $("#Telephone").val("");
+        $("#OpenCloseTime").val("");
         $("#Facebook").val("");
         $("#LinkedIn").val("");
         $("#Twitter").val("");
@@ -278,15 +292,16 @@
         $("#HuaweiStoreAddress").val("");
 
         if (id != null && id !== "") {
-            var data = { id: id }
-            var result = ajaxRequest('POST', '@Url.Action("GetApplicationSettingById", "ApplicationSetting")', data)
+            var result = ajaxRequest('POST', '@Url.Action("GetApplicationSetting", "ApplicationSetting")')
             $("#hdnApplicationSettingId").val(result.id);
             $("#AboutUs").val(result.aboutUs);
             $("#Vision").val(result.vision);
             $("#Mission").val(result.mission);
             $("#Address").val(result.address);
+            $("#GoogleMaps").val(result.googleMaps);
             $("#InfoMail").val(result.infoMail);
             $("#Telephone").val(result.telephone);
+            $("#OpenCloseTime").val(result.openCloseTime);
             $("#Facebook").val(result.facebook);
             $("#LinkedIn").val(result.linkedIn);
             $("#Twitter").val(result.twitter);
@@ -305,8 +320,10 @@
             Vision: $("#Vision").val(),
             Mission: $("#Mission").val(),
             Address: $("#Address").val(),
+            GoogleMaps: $("#GoogleMaps").val(),
             InfoMail: $("#InfoMail").val(),
             Telephone: $("#Telephone").val(),
+            OpenCloseTime: $("#OpenCloseTime").val(),
             Facebook: $("#Facebook").val(),
             LinkedIn: $("#LinkedIn").val(),
             Twitter: $("#Twitter").val(),

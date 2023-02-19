@@ -109,12 +109,12 @@ namespace BonaForMe.ServiceCore.ApplicationSettingService
             return result;
         }
 
-        public Result<ApplicationSettingDto> GetApplicationSettingById(Guid id)
+        public Result<ApplicationSettingDto> GetApplicationSetting()
         {
             Result<ApplicationSettingDto> result = new Result<ApplicationSettingDto>();
             try
             {
-                var model = _context.ApplicationSettings.Where(x => x.Id == id && x.IsActive && !x.IsDeleted).FirstOrDefault();
+                var model = _context.ApplicationSettings.Where(x => x.IsActive && !x.IsDeleted).FirstOrDefault();
                 result.Data = _mapper.Map<ApplicationSettingDto>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;

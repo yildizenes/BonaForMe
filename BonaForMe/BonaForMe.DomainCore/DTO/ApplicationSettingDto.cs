@@ -6,8 +6,10 @@
         public string Vision { get; set; }
         public string Mission { get; set; }
         public string Address { get; set; }
+        public string GoogleMaps { get; set; }
         public string InfoMail { get; set; }
         public string Telephone { get; set; }
+        public string OpenCloseTime { get; set; }
         public string LinkedIn { get; set; }
         public string Twitter { get; set; }
         public string Instagram { get; set; }
