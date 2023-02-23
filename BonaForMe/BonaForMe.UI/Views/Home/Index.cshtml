@@ -1,12 +1,137 @@
-﻿@{
+﻿@model BonaForMe.DomainCore.DTO.ApplicationSettingDto
+@{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_UILayout.cshtml";
 }
 
-<section class="contact spad">
-    <div class="container" style="border-top: 2px solid gray; padding-top: 30px">
-        <div class="row">
+@*<section class="contact spad">
+        <div class="container" style="border-top: 2px solid gray; padding-top: 30px">
+            <div class="row">
 
+            </div>
+        </div>
+    </section>*@
+
+<section class="hero">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="hero__categories">
+                    <div class="hero__categories__all">
+                        <i class="fa fa-bars"></i>
+                        <span>All departments</span>
+                    </div>
+                    <ul>
+                        @foreach (var category in ViewBag.Categories)
+                        {
+                            <li><a href="~/shop/categories/@category.Id">@category.Name</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="hero__search">
+                    <div class="hero__search__form">
+                        <form action="Shop">
+                            <div class="hero__search__categories">
+                                <select name="categoryId" style="margin: -10px; width: 160px; border: 0;">
+                                    <option id="_@Guid.Empty" value="@Guid.Empty">All Categories</option>
+                                    @foreach (var category in ViewBag.Categories)
+                                    {
+                                        <option id="_@category.Id" value="@category.Id">@category.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            <input name="searchValue" type="text" placeholder="What do you need?">
+                            <button type="submit" class="site-btn">SEARCH</button>
+                        </form>
+                    </div>
+                    <div class="hero__search__phone">
+                        <div class="hero__search__phone__icon">
+                            <i class="fa fa-phone"></i>
+                        </div>
+                        <div class="hero__search__phone__text">
+                            <h5>@Model.Telephone</h5>
+                            <span>@Model.OpenCloseTime</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero__item set-bg" data-setbg="img/hero/banner.jpg">
+                    <div class="hero__text">
+                        <span>FRUIT FRESH</span>
+                        <h2>Vegetable <br />100% Organic</h2>
+                        <p>Free Pickup and Delivery Available</p>
+                        <a href="#" class="primary-btn">SHOP NOW</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section Begin -->
+<section class="categories">
+    <div class="container">
+        <div class="row">
+            <div class="categories__slider owl-carousel">
+                @foreach (var category in ViewBag.Categories)
+                {
+                    <div class="col-lg-3">
+                        <div class="categories__item set-bg">
+                            <img src="@category.ImagePath" width="270" height="270" />
+                            <h5><a href="~/shop/categories/@category.Id">@category.Name</a></h5>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="featured spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <h2>New Products</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row featured__filter">
+            @foreach (var product in ViewBag.Products)
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="featured__item">
+                        <div class="featured__item__pic set-bg">
+                            <img src="@product.ImagePath" />
+                        </div>
+                        <div class="featured__item__text">
+                            <h6><a href="#">@product.Name</a></h6>
+                            <h5>@product.CurrencyUnit.Name@product.Price</h5>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div class="section-title">
+                <h2>Work Partners</h2>
+            </div>
+            <div class="categories__slider owl-carousel work_partners">
+                @for (int i = 0; i < 24; i++)
+                {
+                    <div class="col-lg-3">
+                        <div class="categories__item set-bg" style=" height: 120px;">
+                            <img src="~/images/bonaformelogo.jpg" width="120" height="120" />
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </section>

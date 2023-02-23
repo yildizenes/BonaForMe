@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Shop";
     Layout = "~/Views/Shared/_UILayout.cshtml";
 }
@@ -10,21 +9,16 @@
             <div class="col-lg-3 col-md-5">
                 <div class="sidebar">
                     <div class="sidebar__item">
-                        <h4>Department</h4>
+                        <h4>Category</h4>
                         <ul>
-                            <li><a href="#">Fresh Meat</a></li>
-                            <li><a href="#">Vegetables</a></li>
-                            <li><a href="#">Fruit &amp; Nut Gifts</a></li>
-                            <li><a href="#">Fresh Berries</a></li>
-                            <li><a href="#">Ocean Foods</a></li>
-                            <li><a href="#">Butter &amp; Eggs</a></li>
-                            <li><a href="#">Fastfood</a></li>
-                            <li><a href="#">Fresh Onion</a></li>
-                            <li><a href="#">Papayaya &amp; Crisps</a></li>
-                            <li><a href="#">Oatmeal</a></li>
+                            <li><a href="~/shop">All &amp; Products</a></li>
+                            @foreach (var category in ViewBag.Categories)
+                            {
+                                <li><a href="~/shop/categories/@category.Id">@category.Name</a></li>
+                            }
                         </ul>
                     </div>
-                    <div class="sidebar__item">
+                    @*<div class="sidebar__item">
                         <h4>Price</h4>
                         <div class="price-range-wrap">
                             <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" data-min="10" data-max="540">
@@ -40,54 +34,54 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>*@
                 </div>
             </div>
             <div class="col-lg-9 col-md-7">
                 <div class="filter__item">
                     <div class="row">
-                        <div class="col-lg-4 col-md-5">
+                        @*<div class="col-lg-4 col-md-5">
                             <div class="filter__sort">
                                 <span>Sort By</span>
                                 <select style="display: none;">
                                     <option value="0">Default</option>
-                                    <option value="0">Default</option>
+                                    <option value="1">Default</option>
                                 </select><div class="nice-select" tabindex="0"><span class="current">Default</span><ul class="list"><li data-value="0" class="option selected">Default</li><li data-value="0" class="option">Default</li></ul></div>
                             </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4">
-                            <div class="filter__found">
-                                <h6><span>16</span> Products found</h6>
+                        </div>*@
+                        <div class="col-lg-12 col-md-12">
+                            <div class="filter__found" style="margin:0;">
+                                <h6><span>@ViewBag.Products.Count</span> Products found</h6>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-3">
-                            <div class="filter__option">
-                                <span class="icon_grid-2x2"></span>
-                                <span class="icon_ul"></span>
-                            </div>
-                        </div>
+                        @*<div class="col-lg-4 col-md-3">
+                                <div class="filter__option">
+                                    <span class="icon_grid-2x2"></span>
+                                    <span class="icon_ul"></span>
+                                </div>
+                            </div>*@
                     </div>
                 </div>
                 <div class="row">
-                    @for (int i = 0; i < 20; i++)
+                    @foreach (var product in ViewBag.Products)
                     {
                         <div class="col-lg-4 col-md-6 col-sm-6">
                             <div class="product__item">
-                                <img src="~/images/background3.jpg" width="250" height="275" />
+                                <img src="@product.ImagePath" width="250" height="275" />
                                 <div class="product__item__text">
-                                    <h6><a href="#">Crab Pool Security</a></h6>
-                                    <h5>$30.00</h5>
+                                    <h6><a href="#">@product.Name</a></h6>
+                                    <h5>@product.CurrencyUnit.Name@product.Price</h5>
                                 </div>
                             </div>
                         </div>
                     }
                 </div>
-                <div class="product__pagination">
-                    <a href="#">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#"><i class="fa fa-long-arrow-right"></i></a>
-                </div>
+                @*<div class="product__pagination">
+                        <a href="#">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+                    </div>*@
             </div>
         </div>
     </div>

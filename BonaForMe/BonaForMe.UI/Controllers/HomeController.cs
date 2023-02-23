@@ -1,37 +1,58 @@
 ﻿using BonaForMe.DomainCore.DTO;
 using BonaForMe.ServiceCore.ApplicationSettingService;
+using BonaForMe.ServiceCore.CategoryService;
+using BonaForMe.ServiceCore.ProductService;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BonaForMe.UI.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IApplicationSettingService _applicationSettingService;
-        public HomeController(IApplicationSettingService applicationSettingService)
+        private readonly ICategoryService _categoryService;
+        private readonly IProductService _productService;
+        public HomeController(IApplicationSettingService applicationSettingService, ICategoryService categoryService, IProductService productService)
         {
             _applicationSettingService = applicationSettingService;
+            _categoryService = categoryService;
+            _productService = productService;
         }
         public IActionResult Index()
         {
             var settings = _applicationSettingService.GetApplicationSetting();
             var model = new ApplicationSettingDto
             {
-                InfoMail = settings.Data?.InfoMail,
                 Telephone = settings.Data?.Telephone,
-                Facebook = settings.Data?.Facebook,
-                LinkedIn = settings.Data?.LinkedIn,
-                Twitter = settings.Data?.Twitter,
-                Instagram = settings.Data?.Instagram,
-                PlayStoreAddress = settings.Data?.PlayStoreAddress,
-                AppleStoreAddress = settings.Data?.AppleStoreAddress,
-                HuaweiStoreAddress = settings.Data?.HuaweiStoreAddress
+                OpenCloseTime = settings.Data?.OpenCloseTime,
             };
 
+            var allProducts = _productService.GetAllProduct()?.Data;
+            ViewBag.Products = allProducts.OrderByDescending(p => p.DateCreated).Take(12);
+            ViewBag.Categories = _categoryService.GetAllCategory()?.Data;
+            
             return View(model);
         }
 
-        public IActionResult Shop()
+        [HttpGet("Shop/")]
+        [HttpGet("Shop/categories/{categoryId}")]
+        [HttpGet("Shop/categories/{categoryId}/{searchValue}")]
+        public IActionResult Shop(Guid? categoryId, string searchValue)
         {
+            ViewBag.Categories = _categoryService.GetAllCategory()?.Data;
+            List<ProductDto> products = new List<ProductDto>();
+            if (categoryId == null || categoryId == Guid.Empty)
+                products = _productService.GetAllProduct()?.Data;
+            else
+                products = _productService.GetAllProductByCategoryId((Guid)categoryId)?.Data;
+
+            if (searchValue != null)
+                products = products.Where(m => m.Name.ToLower().Contains(searchValue.ToLower()) || m.Description.ToLower().Contains(searchValue.ToLower())).ToList();
+
+            ViewBag.Products = products;
+
             return View();
         }
 
