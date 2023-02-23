@@ -123,11 +123,11 @@
                 <h2>Work Partners</h2>
             </div>
             <div class="categories__slider owl-carousel work_partners">
-                @for (int i = 0; i < 24; i++)
+                @foreach (var workPartner in ViewBag.WorkPartners)
                 {
                     <div class="col-lg-3">
-                        <div class="categories__item set-bg" style=" height: 120px;">
-                            <img src="~/images/bonaformelogo.jpg" width="120" height="120" />
+                        <div class="categories__item set-bg" style=" height: 90px;">
+                            <img src="@workPartner.ImagePath" width="120" height="90" />
                         </div>
                     </div>
                 }

@@ -69,6 +69,12 @@ namespace BonaForMe.DomainCore.DTO
 
             CreateMap<OrderDetail, OrderDetailDto>();
             CreateMap<OrderDetailDto, OrderDetail>();
+
+            CreateMap<WorkPartner, WorkPartnerDto>();
+            CreateMap<WorkPartnerDto, WorkPartner>();
+
+            CreateMap<OrderHour, OrderHourDto>();
+            CreateMap<OrderHourDto, OrderHour>();
         }
     }
 }

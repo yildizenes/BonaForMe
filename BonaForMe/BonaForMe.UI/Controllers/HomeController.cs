@@ -2,6 +2,7 @@
 using BonaForMe.ServiceCore.ApplicationSettingService;
 using BonaForMe.ServiceCore.CategoryService;
 using BonaForMe.ServiceCore.ProductService;
+using BonaForMe.ServiceCore.WorkPartnerService;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,13 @@ namespace BonaForMe.UI.Controllers
         private readonly IApplicationSettingService _applicationSettingService;
         private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
-        public HomeController(IApplicationSettingService applicationSettingService, ICategoryService categoryService, IProductService productService)
+        private readonly IWorkPartnerService _workPartnerService;
+        public HomeController(IApplicationSettingService applicationSettingService, ICategoryService categoryService, IProductService productService, IWorkPartnerService workPartnerService)
         {
             _applicationSettingService = applicationSettingService;
             _categoryService = categoryService;
             _productService = productService;
+            _workPartnerService = workPartnerService;
         }
         public IActionResult Index()
         {
@@ -32,6 +35,7 @@ namespace BonaForMe.UI.Controllers
             var allProducts = _productService.GetAllProduct()?.Data;
             ViewBag.Products = allProducts.OrderByDescending(p => p.DateCreated).Take(12);
             ViewBag.Categories = _categoryService.GetAllCategory()?.Data;
+            ViewBag.WorkPartners = _workPartnerService.GetAllWorkPartner()?.Data;
             
             return View(model);
         }
