@@ -23,6 +23,8 @@ namespace BonaForMe.DataAccessCore
         DbSet<SpecialPrice> SpecialPrices { get; set; }
         DbSet<OrderLog> OrderLogs { get; set; }
         DbSet<OrderDetail> OrderDetails { get; set; }
+        DbSet<WorkPartner> WorkPartners { get; set; }
+        DbSet<OrderHour> OrderHours { get; set; }
 
         int SaveChanges();
         EntityEntry Entry(object entity);

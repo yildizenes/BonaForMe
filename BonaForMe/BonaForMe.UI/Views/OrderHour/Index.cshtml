@@ -1,0 +1,207 @@
+﻿@model BonaForMe.DomainCore.DTO.OrderHourDto
+@{
+    ViewData["Title"] = "OrderHours";
+    ViewData["SingleName"] = "Order Hour";
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>@ViewData["Title"]</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">@ViewData["Title"]</a></li>
+                        <li class="breadcrumb-item active">Index</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">@ViewData["Title"]</h3>
+                            <button class="btn-success" onclick="jsOpenSaveOrderHour();" style="padding: 10px; float:right;">
+                                <i class="fas fa-save"></i>
+                                New @ViewData["SingleName"]
+                            </button>
+                        </div>
+                        <div class="card-body" style="overflow-x:auto;">
+                            <table id="tblOrderHourList" class="table table-bordered table-striped table-responsive-lg" style="width: 100% !important;">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Text</th>
+                                        <th>Description</th>
+                                        <th class="noExport">Actions</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="modal fade" id="modalSave" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalCaption" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span id="modalCaption">New @ViewData["SingleName"]</span>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="Text" class="control-label"><span style="color:red">* </span>Text</label>
+                            <input name="Text" id="Text" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="Description" class="control-label"><span style="color:red">* </span>Description</label>
+                            <input name="Description" id="Description" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" data-content="remove" class="btn btn-default" data-dismiss="modal"> Cancel </button>
+                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="jsSaveOrderHour()"> Save </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("_Delete")
+<input type="hidden" id="hdnOrderHourId" value="" />
+<div class="spinnerAnimation" style="display:none;"></div>
+<link href="~/css/spinner.css" rel="stylesheet" />
+
+@await Html.PartialAsync("_datatableScripts")
+<script>
+     document.addEventListener("DOMContentLoaded", function () {
+        createTable();
+    });
+
+    function createTable() {
+        var domString = getTableDom();
+        var buttons = getTableButtons("OrderHours");
+        $('#tblOrderHourList').DataTable
+        ({
+            "paging": true,
+            "ordering": true,
+            "pageLength": 25,
+            "processing": true,
+            "serverSide": true,
+            "filter": true,
+            "orderMulti": false,
+            "order": [[1, "desc"]],
+            dom: domString,
+            buttons: buttons,
+            "ajax": {
+                "url": "/OrderHour/LoadOrderHourData/",
+                "type": 'POST',
+                "dataType": "json"
+            },
+            "columnDefs": [{
+                "targets": [0],
+                "visible": false,
+                "searchable": false
+            }],
+            "columns": [
+                getCell("Id"),
+                getCell("Text"),
+                getCell("Description"),
+                {
+                    "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
+                    "render": function (data, type, full, meta) {
+                        var buttonGroup = "<div class='btn-group role='group'>";
+                        buttonGroup += "<a href='#' class='btn btn-warning btn-sm' style='color:white; margin:0px 5px;' onclick=jsOpenSaveOrderHour('" + full.id + "');><i class='fas fa-edit'></i> Edit </a>"
+                        buttonGroup += "<a href='#' class='btn btn-danger btn-sm' style='color:white; margin:0px 5px;' onclick=DeleteData('" + full.id + "');> <i class='fas fa-trash'></i> Delete </a>";
+                        buttonGroup += "</div>"
+                        return buttonGroup;
+                    }
+                },
+            ],
+            "bDestroy": true,
+        });
+    }
+
+    function jsOpenSaveOrderHour(id) {
+        $("#hdnOrderHourId").val("");
+        $("#Text").val("");
+        $("#Description").val("");
+
+        if (id != null && id !== "") {
+            var data = { id: id }
+            var result = ajaxRequest('POST', '@Url.Action("GetOrderHourById", "OrderHour")', data)
+            $("#hdnOrderHourId").val(result.id);
+            $("#Text").val(result.text);
+            $("#Description").val(result.description);
+        }
+        $('#modalSave').modal('show');
+    }
+
+    function jsSaveOrderHour() {
+        var data = {
+            Id: $("#hdnOrderHourId").val(),
+            Text: $("#Text").val(),
+            Description: $("#Description").val(),
+        };
+
+        var result = ajaxRequest('POST', '@Url.Action("Save", "OrderHour")', data)
+        if (result != null) {
+            if (result.success) {
+                $('#modalSave').modal('hide');
+                thisTable = $('#tblOrderHourList').DataTable();
+                thisTable.draw();
+                toastr.success('Transaction successful.');
+            } else {
+                toastr.error(result.message);
+            }
+        } else {
+            $('#modalSave').modal('hide');
+            toastr.error('Error in saving!');
+        }
+    }
+
+    function DeleteData(id) {
+        $('#delete').data('argument', id);
+        $('#delete').modal('show');
+    }
+
+    function Delete() {
+        var id = $('#delete').data('argument');
+        var data = { id: id }
+        var result = ajaxRequest('POST', '@Url.Action("Delete", ViewData["SingleName"])', data);
+        if (result.success) {
+            $('#delete').modal('hide');
+            thisTable = $('#tblOrderHourList').DataTable();
+            thisTable.draw();
+            toastr.success('The deletion was successful.');
+        } else {
+            $('#delete').modal('hide');
+            toastr.error('Error in deletion!');
+        }
+    }
+</script>

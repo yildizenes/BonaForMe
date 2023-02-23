@@ -28,6 +28,8 @@ namespace BonaForMe.DataAccessCore
         public DbSet<SpecialPrice> SpecialPrices { get; set; }
         public DbSet<OrderLog> OrderLogs { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<WorkPartner> WorkPartners { get; set; }
+        public DbSet<OrderHour> OrderHours { get; set; }
 
 
         IHttpContextAccessor _httpContextAccessor;
