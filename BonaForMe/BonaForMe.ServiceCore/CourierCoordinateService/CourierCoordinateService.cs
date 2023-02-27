@@ -127,6 +127,24 @@ namespace BonaForMe.ServiceCore.CourierCoordinateService
             return result;
         }
 
+        public Result<CourierCoordinateDto> GetCourierCoordinateByCourierId(Guid id)
+        {
+            Result<CourierCoordinateDto> result = new Result<CourierCoordinateDto>();
+            try
+            {
+                var model = _context.CourierCoordinates.Where(x => x.UserId == id && x.IsActive && !x.IsDeleted).FirstOrDefault();
+                result.Data = _mapper.Map<CourierCoordinateDto>(model);
+                result.Success = true;
+                result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
         public Result<List<CourierCoordinateDto>> GetAllCourierCoordinate()
         {
             Result<List<CourierCoordinateDto>> result = new Result<List<CourierCoordinateDto>>();

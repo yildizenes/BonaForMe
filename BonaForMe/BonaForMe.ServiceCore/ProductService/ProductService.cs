@@ -160,6 +160,29 @@ namespace BonaForMe.ServiceCore.ProductService
             return result;
         }
 
+        public Result<List<ProductDto>> GetRandomProduct(int count = 5)
+        {
+            Result<List<ProductDto>> result = new Result<List<ProductDto>>();
+            try
+            {
+                Random rand = new Random();
+                int toSkip = rand.Next(0, _context.Products.Where(x => x.IsActive && !x.IsDeleted).Count() - count);
+
+                var model = _context.Products.Where(x => x.IsActive && !x.IsDeleted)
+                    .Include(x => x.ProductUnit).Include(x => x.CurrencyUnit).Include(x => x.Category).Skip(toSkip).Take(count)
+                    .ToList();
+                result.Data = _mapper.Map<List<Product>, List<ProductDto>>(model);
+                result.Success = true;
+                result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
         public JsonResult FillDataTable(DataTableDto dataTable)
         {
             try

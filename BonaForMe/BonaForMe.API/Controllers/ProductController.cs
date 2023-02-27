@@ -32,6 +32,20 @@ namespace BonaForMe.API.Controllers
         }
 
         [HttpGet]
+        public IActionResult GetRandomProduct(int count)
+        {
+            try
+            {
+                var result = _productService.GetRandomProduct(count);
+                return Json(new { success = result.Success, data = result.Data, message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, data = "", message = ex.Message });
+            }
+        }
+
+        [HttpGet]
         public IActionResult GetProductById(Guid id)
         {
             try

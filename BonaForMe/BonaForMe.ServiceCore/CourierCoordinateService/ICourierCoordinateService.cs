@@ -12,6 +12,7 @@ namespace BonaForMe.ServiceCore.CourierCoordinateService
         Result DeleteCourierCoordinate(Guid id);
         Result<CourierCoordinateDto> UpdateCourierCoordinate(CourierCoordinateDto courierCoordinateDto);
         Result<CourierCoordinateDto> GetCourierCoordinateById(Guid id);
+        Result<CourierCoordinateDto> GetCourierCoordinateByCourierId(Guid id);
         Result<List<CourierCoordinateDto>> GetAllCourierCoordinate();
         JsonResult FillDataTable(DataTableDto dataTable);
     }

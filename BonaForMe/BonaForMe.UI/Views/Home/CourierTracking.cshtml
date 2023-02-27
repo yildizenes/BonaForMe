@@ -1,0 +1,88 @@
+﻿@{
+    ViewData["Title"] = "CourierTracking";
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+}
+<script src="https://api-maps.yandex.ru/2.1/?apikey=Your API key&lang=en_US" type="text/javascript"></script>
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Courier Tracking</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Courier Tracking</a></li>
+                        <li class="breadcrumb-item active">Index</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Courier Tracking</h3>
+                        </div>
+                        <div class="card-body" style="overflow-x:auto;">
+                            <div id="map" style="width: 1200px; height: 800px"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<script type="text/javascript">
+    var result = null;
+    var myMap = null;
+    $(document).ready(function () {
+        createMap();
+    });
+
+    function get_fb() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetCourierCoordinateByCourierId", "CourierCoordinate")',
+            async: false,
+            data: { id: "28196AF4-07CA-410D-98EF-D7308500B00A" }
+        }).done(function (data) {
+            result = data;
+        }).fail(function (jqXHR, textStatus) {
+
+        });
+    }
+
+    function createMap() {
+        ymaps.ready(function () {
+            myMap = new ymaps.Map("map", {
+                center: [55.76, 37.64],
+                zoom: 7
+            })
+        });
+        setInterval(get_fb, 10000);
+    }
+
+    $(document).ajaxComplete(function () {
+        var glyphIcon1 = new ymaps.Placemark([result.xCoordinate, result.yCoordinate], {}, {
+            preset: 'islands#redGlyphIcon',
+            iconGlyph: 'music',
+            iconGlyphColor: 'red',
+        });
+        var glyphIcon2 = new ymaps.Placemark([55.684, 37.7383], {}, {
+            preset: 'islands#blueGlyphCircleIcon',
+            iconGlyph: 'glass',
+        });
+
+        myMap.geoObjects
+            .add(glyphIcon1)
+            .add(glyphIcon2);
+        setTimeout(function () { get_fb(); }, 10000);
+    });
+</script>

@@ -32,8 +32,7 @@ namespace BonaForMe.UI.Controllers
                 OpenCloseTime = settings.Data?.OpenCloseTime,
             };
 
-            var allProducts = _productService.GetAllProduct()?.Data;
-            ViewBag.Products = allProducts.OrderByDescending(p => p.DateCreated).Take(12);
+            ViewBag.Products = _productService.GetRandomProduct(8)?.Data;
             ViewBag.Categories = _categoryService.GetAllCategory()?.Data;
             ViewBag.WorkPartners = _workPartnerService.GetAllWorkPartner()?.Data;
             
@@ -96,6 +95,11 @@ namespace BonaForMe.UI.Controllers
             };
 
             return View(model);
+        }
+
+        public IActionResult CourierTracking()
+        {
+            return View();
         }
     }
 }

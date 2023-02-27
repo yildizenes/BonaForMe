@@ -84,6 +84,24 @@ namespace BonaForMe.UI.Controllers
         }
 
         [HttpPost]
+        public IActionResult GetCourierCoordinateByCourierId(Guid id)
+        {
+            try
+            {
+                var result = _courierCoordinateService.GetCourierCoordinateByCourierId(id);
+                if (result != null)
+                {
+                    return new JsonResult(result.Data);
+                }
+                return Json(new { success = false });
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        [HttpPost]
         public JsonResult GetAllCourierCoordinate()
         {
             try
