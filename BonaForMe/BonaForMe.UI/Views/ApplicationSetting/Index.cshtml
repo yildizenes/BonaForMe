@@ -275,9 +275,9 @@
 
     function jsOpenSaveApplicationSetting(id) {
         $("#hdnApplicationSettingId").val("");
-        $("#AboutUs").val("");
-        $("#Vision").val("");
-        $("#Mission").val("");
+        $("#AboutUs").summernote("code", "");
+        $("#Vision").summernote("code", "");
+        $("#Mission").summernote("code", "");
         $("#Address").val("");
         $("#GoogleMaps").val("");
         $("#InfoMail").val("");
@@ -294,9 +294,9 @@
         if (id != null && id !== "") {
             var result = ajaxRequest('POST', '@Url.Action("GetApplicationSetting", "ApplicationSetting")')
             $("#hdnApplicationSettingId").val(result.id);
-            $("#AboutUs").val(result.aboutUs);
-            $("#Vision").val(result.vision);
-            $("#Mission").val(result.mission);
+            $("#AboutUs").summernote("code", result.aboutUs);
+            $("#Vision").summernote("code", result.vision);
+            $("#Mission").summernote("code", result.mission);
             $("#Address").val(result.address);
             $("#GoogleMaps").val(result.googleMaps);
             $("#InfoMail").val(result.infoMail);
@@ -316,9 +316,9 @@
     function jsSaveApplicationSetting() {
         var data = {
             Id: $("#hdnApplicationSettingId").val(),
-            AboutUs: $("#AboutUs").val(),
-            Vision: $("#Vision").val(),
-            Mission: $("#Mission").val(),
+            AboutUs: $("#AboutUs").summernote('code'),
+            Vision: $("#Vision").summernote('code'),
+            Mission: $("#Mission").summernote('code'),
             Address: $("#Address").val(),
             GoogleMaps: $("#GoogleMaps").val(),
             InfoMail: $("#InfoMail").val(),

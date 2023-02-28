@@ -40,49 +40,40 @@
 
 
 <script type="text/javascript">
-    var result = null;
-    var myMap = null;
+    var mymap = null;
     $(document).ready(function () {
-        createMap();
-    });
-
-    function get_fb() {
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("GetCourierCoordinateByCourierId", "CourierCoordinate")',
-            async: false,
-            data: { id: "28196AF4-07CA-410D-98EF-D7308500B00A" }
-        }).done(function (data) {
-            result = data;
-        }).fail(function (jqXHR, textStatus) {
-
-        });
-    }
-
-    function createMap() {
         ymaps.ready(function () {
             myMap = new ymaps.Map("map", {
                 center: [55.76, 37.64],
                 zoom: 7
-            })
+            });
+            getCourierCoordinate();
         });
-        setInterval(get_fb, 10000);
+    });
+
+    function getCourierCoordinate() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetAllCourierCoordinate", "CourierCoordinate")',
+            async: false,
+        }).done(function (data) {
+            myMap.geoObjects.removeAll();
+            createPlacemarks(data);
+            setTimeout(function () { getCourierCoordinate(); }, 10000);
+        }).fail(function (jqXHR, textStatus) {
+            alert("Map error!");
+        });
     }
 
-    $(document).ajaxComplete(function () {
-        var glyphIcon1 = new ymaps.Placemark([result.xCoordinate, result.yCoordinate], {}, {
-            preset: 'islands#redGlyphIcon',
-            iconGlyph: 'music',
-            iconGlyphColor: 'red',
-        });
-        var glyphIcon2 = new ymaps.Placemark([55.684, 37.7383], {}, {
-            preset: 'islands#blueGlyphCircleIcon',
-            iconGlyph: 'glass',
-        });
-
-        myMap.geoObjects
-            .add(glyphIcon1)
-            .add(glyphIcon2);
-        setTimeout(function () { get_fb(); }, 10000);
-    });
+    function createPlacemarks(coordinates) {
+        coordinates.forEach((item, index) => {
+            var text = "xCoordinate : " + item.xCoordinate + " / " + "yCoordinate : " + item.yCoordinate;
+            var placemark = new ymaps.Placemark([item.xCoordinate, item.yCoordinate], { balloonContent: text }, {
+                iconLayout: 'default#image',
+                iconImageHref: '~/../../images/mapIcon.png',
+                iconImageSize: [32, 39],
+            });
+            myMap.geoObjects.add(placemark);
+        })
+    }
 </script>
