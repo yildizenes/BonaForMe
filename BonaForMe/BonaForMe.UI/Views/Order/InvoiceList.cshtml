@@ -1,0 +1,147 @@
+﻿@model BonaForMe.DomainCore.DTO.OrderDto
+@{
+    ViewData["Title"] = "Invoices";
+    ViewData["SingleName"] = "Invoice";
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+}
+
+<link href="~/adminLTE/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>@ViewData["Title"]</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">@ViewData["Title"]</a></li>
+                        <li class="breadcrumb-item active">Index</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <div class="col-9">
+                                    <input type="text" name="param" class="form-control float-right" id="InvoiceDates">
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-block btn-outline-info" onclick="filterFunc();"> Get Invoices </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body" style="overflow-x:auto;">
+                            <table id="tblOrderList" class="table table-bordered table-striped table-responsive-lg" style="width: 100% !important;">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Order Code</th>
+                                        <th>User</th>
+                                        <th>Pay Type</th>
+                                        <th>Order Date</th>
+                                        <th class="noExport"> </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<input type="hidden" id="hdnOrderId" value="" />
+<div class="spinnerAnimation" style="display:none;"></div>
+<link href="~/css/spinner.css" rel="stylesheet" />
+<script src="~/adminLTE/plugins/daterangepicker/moment.min.js"></script>
+<script src="~/adminLTE/plugins/daterangepicker/daterangepicker.js"></script>
+
+@await Html.PartialAsync("_datatableScripts")
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        $('#InvoiceDates').daterangepicker({
+            locale: {
+                format: 'DD/MM/YYYY hh:mm A'
+            }
+        });
+    });
+
+    function createTable() {
+        var domString = getTableDom();
+        var buttons = getTableButtons("Orders");
+        $('#tblOrderList').DataTable
+            ({
+                "paging": true,
+                "ordering": true,
+                "pageLength": 25,
+                "processing": true,
+                "serverSide": true,
+                "filter": true,
+                "orderMulti": false,
+                "order": [],
+                dom: domString,
+                buttons: buttons,
+                "ajax": {
+                    "url": "/Order/LoadInvoices/",
+                    "type": 'POST',
+                    "dataType": "json",
+                    "data": { param: $('#InvoiceDates').val() }
+                },
+                "columnDefs": [{
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false
+                }],
+                "columns": [
+                    getCell("Id"),
+                    getCell("OrderCode"),
+                    getCell("UserName"),
+                    getCell("PayType"),
+                    {
+                        "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
+                        "render": function (data, type, full, meta) {
+                            var dt = full.dateCreated;
+                            var dateString = "";
+                            var timestamp = Date.parse(dt);
+
+                            if (isNaN(timestamp) == true) {
+                                dateString = "";
+                            }
+
+                            dt = new Date(timestamp);
+                            dateString = dt.toLocaleString('tr-TR');
+                            return dateString;
+                        }
+                    },
+                    {
+                        "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
+                        "render": function (data, type, full, meta) {
+                            var buttonGroup = "<div class='btn-group role='group'>";
+                            buttonGroup += "<a href='#' class='btn btn-block btn-info btn-sm' style='color:white; margin:0px 5px;' onclick=jsShowInvoice('" + full.orderCode + "');> <i class='fas fa-file'></i> Invoice </a>";
+                            buttonGroup += "</div>"
+                            return buttonGroup;
+                        }
+                    },
+                ],
+                "bDestroy": true,
+            });
+    }
+
+    function filterFunc() {
+        createTable();
+    }
+
+    function jsShowInvoice(orderCode) {
+        var address = "https://www.bonameforme.com/Invoice/" + orderCode + ".pdf";
+        window.open(address, '_blank');
+    }
+</script>

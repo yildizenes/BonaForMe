@@ -109,8 +109,8 @@ namespace BonaForMe.ServiceCore.ReportService
 
                         var taxPrice = (item.Price * item.Count * item.Product.TaxRate) / 100;
                         row.Append(new Cell() { CellReference = "A" + index, DataType = CellValues.String, CellValue = new CellValue("solmazpackaging@gmail.com") });
-                        row.Append(new Cell() { CellReference = "B" + index, DataType = CellValues.String, CellValue = new CellValue(item.DateCreated.Value.ToShortDateString()) });
-                        row.Append(new Cell() { CellReference = "C" + index, DataType = CellValues.String, CellValue = new CellValue(item.DateCreated.Value.ToShortTimeString()) });
+                        row.Append(new Cell() { CellReference = "B" + index, DataType = CellValues.String, CellValue = new CellValue(item.DateCreated.ToShortDateString()) });
+                        row.Append(new Cell() { CellReference = "C" + index, DataType = CellValues.String, CellValue = new CellValue(item.DateCreated.ToShortTimeString()) });
                         row.Append(new Cell() { CellReference = "D" + index, DataType = CellValues.String, CellValue = new CellValue("Sales") });
                         row.Append(new Cell() { CellReference = "E" + index, DataType = CellValues.String, CellValue = new CellValue(item.Order.OrderCode) });
                         row.Append(new Cell() { CellReference = "F" + index, DataType = CellValues.String, CellValue = new CellValue(item.Order.PayType) });

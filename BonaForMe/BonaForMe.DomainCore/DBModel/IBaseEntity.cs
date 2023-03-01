@@ -9,7 +9,7 @@ namespace BonaForMe.DomainCore.DBModel
     public interface IBaseEntity
     {
         Guid Id { get; set; }
-        DateTime? DateCreated { get; set; }
+        DateTime DateCreated { get; set; }
         Guid UserCreated { get; set; }
         DateTime? DateModified { get; set; }
         Guid UserModified { get; set; }

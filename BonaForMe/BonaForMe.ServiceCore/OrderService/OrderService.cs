@@ -160,7 +160,7 @@ namespace BonaForMe.ServiceCore.OrderService
                     .FirstOrDefault();
 
                 result.Data = _mapper.Map<OrderDto>(model);
-                result.Data.OrderDetail = _context.OrderDetails.Include(x => x.Courier).FirstOrDefault(x=> x.OrderId == id);
+                result.Data.OrderDetail = _context.OrderDetails.Include(x => x.Courier).FirstOrDefault(x => x.OrderId == id);
                 if (result.Data != null)
                 {
                     result.Data.ProductList = _linkOrderProductService.GetAllLinkOrderProductByOrderId(id).Data;
@@ -407,6 +407,35 @@ namespace BonaForMe.ServiceCore.OrderService
                     ).AsQueryable();
                 }
 
+                //Sorting
+                if (!string.IsNullOrEmpty(dataTable.SortColumn) && !string.IsNullOrEmpty(dataTable.SortColumnDirection))
+                {
+                    orders = orders.OrderBy(dataTable.SortColumn + " " + dataTable.SortColumnDirection);
+                }
+                //Search
+                if (!string.IsNullOrEmpty(dataTable.SearchValue))
+                {
+                    orders = orders.Where(m => m.OrderCode.ToLower().Contains(dataTable.SearchValue.ToLower()));
+                }
+                var data = orders.Skip(dataTable.Skip).Take(dataTable.PageSize);
+                return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = orders.Count(), recordsTotal = orders.Count(), data = data });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = ex });
+            }
+        }
+
+        public JsonResult FillInvoiceDataTable(DataTableDto dataTable, ReportDateDto reportDateDto)
+        {
+            try
+            {
+                var result = _context.Orders.Where(x => x.OrderStatusId == 7 &&
+                    x.DateCreated >= (DateTime)reportDateDto.StartDate &&
+                    x.DateCreated <= (DateTime)reportDateDto.EndDate &&
+                    x.IsActive && !x.IsDeleted).Include(x => x.User).ToList();
+
+                var orders = _mapper.Map<List<Order>, List<OrderDto>>(result).AsQueryable();
                 //Sorting
                 if (!string.IsNullOrEmpty(dataTable.SortColumn) && !string.IsNullOrEmpty(dataTable.SortColumnDirection))
                 {

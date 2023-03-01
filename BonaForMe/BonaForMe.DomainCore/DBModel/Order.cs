@@ -26,5 +26,11 @@ namespace BonaForMe.DomainCore.DBModel
 
         [ForeignKey(nameof(OrderStatusId))]
         public virtual OrderStatus OrderStatus { get; set; }
+
+        [Required]
+        public Guid OrderHourId { get; set; }
+
+        [ForeignKey(nameof(OrderHourId))]
+        public virtual OrderHour OrderHour { get; set; }
     }
 }

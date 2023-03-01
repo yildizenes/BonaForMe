@@ -18,8 +18,10 @@ namespace BonaForMe.DomainCore.DTO
 
         public int OrderStatusId { get; set; }
         public string OrderStatusName { get; set; }
+        public Guid OrderHourId { get; set; }
 
         public virtual OrderStatus OrderStatus { get; set; }
+        public virtual OrderHour OrderHour { get; set; }
 
         [NotMapped]
         public virtual List<LinkOrderProductDto> ProductList { get; set; }

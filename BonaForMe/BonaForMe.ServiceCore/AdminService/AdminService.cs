@@ -24,7 +24,7 @@ namespace BonaForMe.ServiceCore.AdminService
             {
                 model.PendingApprovalUserCount = _context.Users.Count(x => !x.IsApproved && x.IsActive && !x.IsDeleted);
                 model.NewOrdersCount = _context.Orders.Count(x => x.OrderStatusId == 1 && x.IsActive && !x.IsDeleted);
-                model.OrdersCountOfThisMonth = _context.Orders.Count(x => x.DateCreated.Value.Month == thisMonth && x.OrderStatusId > 4 && x.IsActive && !x.IsDeleted);
+                model.OrdersCountOfThisMonth = _context.Orders.Count(x => x.DateCreated.Month == thisMonth && x.OrderStatusId > 4 && x.IsActive && !x.IsDeleted);
                 model.TotalOrderCount = _context.Orders.Count(x => x.IsActive && !x.IsDeleted);
 
                 result.Data = model;

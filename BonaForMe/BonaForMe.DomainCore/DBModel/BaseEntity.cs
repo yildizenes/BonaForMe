@@ -13,7 +13,7 @@ namespace BonaForMe.DomainCore.DBModel
         public Guid Id { get; set; }
         [Required]
         [Column("DateCreated")]
-        public DateTime? DateCreated { get; set; }
+        public DateTime DateCreated { get; set; }
         [Required]
         [MaxLength(64)]
         [Column("UserCreated")]

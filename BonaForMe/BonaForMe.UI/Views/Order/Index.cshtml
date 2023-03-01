@@ -252,6 +252,16 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="OrderHourId" class="control-label"><span style="color:red">* </span>Delivery Time</label>
+                            <select id="OrderHourId" class="custom-select" name="OrderHourId" required>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="modal-footer">
@@ -272,6 +282,7 @@
     document.addEventListener("DOMContentLoaded", function () {
         fillUserSelect();
         fillOrderStatusSelect();
+        fillOrderHourSelect();
         createTable();
     });
 
@@ -401,6 +412,7 @@
         $("#PayType").val("");
         $("#UserId").val("");
         $("#OrderStatusId").val("");
+        $("#OrderHourId").val("");
 
         if (id != null && id !== "") {
             var data = { id: id }
@@ -410,6 +422,7 @@
             $("#PayType").val(result.payType);
             $("#UserId").val(result.userId);
             $("#OrderStatusId").val(result.orderStatusId);
+            $("#OrderHourId").val(result.orderHourId);
         }
         $('#modalSave').modal('show');
     }
@@ -421,6 +434,7 @@
             PayType: $("#PayType").val(),
             UserId: $("#UserId").val(),
             OrderStatusId: $("#OrderStatusId").val(),
+            OrderHourId: $("#OrderHourId").val(),
         };
 
         var result = ajaxRequest('POST', '@Url.Action("Save", "Order")', data)
@@ -470,6 +484,11 @@
         $('#OrderStatues').val('1');
         $('#OrderStatues').trigger('change');
         fillOptions("OrderStatusId", result, "name");
+    }
+
+    function fillOrderHourSelect() {
+        var result = ajaxRequest('POST', '@Url.Action("GetAllOrderHour", "OrderHour")')
+        fillOptions("OrderHourId", result, "text");
     }
 
     function filterFunc() {
