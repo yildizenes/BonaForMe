@@ -16,6 +16,7 @@ using BonaForMe.ServiceCore.PDFServices;
 using BonaForMe.ServiceCore.PaymentInfoService;
 using BonaForMe.ServiceCore.ProductService;
 using BonaForMe.ServiceCore.CampaignProductService;
+using BonaForMe.ServiceCore.MailSenderService;
 
 namespace BonaForMe.ServiceCore.OrderService
 {
@@ -27,10 +28,11 @@ namespace BonaForMe.ServiceCore.OrderService
         private readonly IPaymentInfoService _paymentInfoService;
         private readonly IProductService _productService;
         private readonly ICampaignProductService _campaignProductService;
+        private readonly IMailSenderService _mailSenderService;
 
         public OrderService(BonaForMeDBContext context, IMapper mapper,
             ILinkOrderProductService linkOrderProductService, IPaymentInfoService paymentInfoService,
-            IProductService productService, ICampaignProductService campaignProductService)
+            IProductService productService, ICampaignProductService campaignProductService, IMailSenderService mailSenderService)
         {
             _context = context;
             _mapper = mapper;
@@ -38,6 +40,7 @@ namespace BonaForMe.ServiceCore.OrderService
             _paymentInfoService = paymentInfoService;
             _productService = productService;
             _campaignProductService = campaignProductService;
+            _mailSenderService = mailSenderService;
         }
         public Result<OrderDto> AddOrder(OrderDto orderDto)
         {
@@ -331,11 +334,19 @@ namespace BonaForMe.ServiceCore.OrderService
                     var orderCompleteResult = CompleteTheOrder(updateOrderDto.OrderId);
                     if (!orderCompleteResult.Success)
                     {
-                        result.Success = true;
+                        result.Success = false;
                         result.Message = "Order complete unsuccessful.";
                         return result;
                     }
-                    CreateInvoice(updateOrderDto.OrderId);
+                    var createInvoiceResult = CreateInvoice(updateOrderDto.OrderId);
+                    if (!createInvoiceResult.Success)
+                    {
+                        result.Success = false;
+                        result.Message = "Create invoice unsuccessful.";
+                        return result;
+                    }
+                    var order = GetOrderById(updateOrderDto.OrderId).Data;
+                    _mailSenderService.SendMail(order.User.UserMail, MailTypes.InvoiceDelivery, order.OrderCode);
                 }
 
                 result.Data = _mapper.Map<OrderDto>(model);
@@ -455,8 +466,9 @@ namespace BonaForMe.ServiceCore.OrderService
             }
         }
 
-        public JsonResult CreateInvoice(Guid orderId)
+        public Result CreateInvoice(Guid orderId)
         {
+            Result result = new Result();
             var path = Path.Combine(Directory.GetCurrentDirectory()) + @"\";
             var order = GetOrderById(orderId);
             var itemList = new List<ItemRow>();
@@ -513,11 +525,15 @@ namespace BonaForMe.ServiceCore.OrderService
                     .Footer("")
                     .Save();
 
-                return new JsonResult(new { success = true, message = "Process successfully." });
+                result.Success = true;
+                result.Message = "Process successfully.";
+                return result;
             }
             catch (Exception ex)
             {
-                return new JsonResult(new { success = false, message = ex.Message });
+                result.Success = false;
+                result.Message = ex.Message;
+                return result;
             }
         }
 

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Mvc;
+using BonaForMe.ServiceCore.MailSenderService;
 
 namespace BonaForMe.ServiceCore.UserService
 {
@@ -16,11 +17,13 @@ namespace BonaForMe.ServiceCore.UserService
     {
         private readonly BonaForMeDBContext _context;
         IMapper _mapper;
+        private readonly IMailSenderService _mailSenderService;
 
-        public UserService(BonaForMeDBContext context, IMapper mapper)
+        public UserService(BonaForMeDBContext context, IMapper mapper, IMailSenderService mailSenderService)
         {
             _context = context;
             _mapper = mapper;
+            _mailSenderService = mailSenderService;
         }
         public Result<UserDto> AddUser(UserDto userDto)
         {
@@ -211,6 +214,9 @@ namespace BonaForMe.ServiceCore.UserService
                 _context.SaveChanges();
                 result.Success = true;
                 result.Message = ResultMessages.Success;
+
+                var user = GetUserById(userId).Data;
+                _mailSenderService.SendMail(user.UserMail, MailTypes.Welcome, "");
             }
             catch (Exception ex)
             {

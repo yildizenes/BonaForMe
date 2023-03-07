@@ -6,8 +6,10 @@ namespace BonaForMe.DomainCommonCore.Helper
 {
     public class EmailHelper
     {
-        public static void SendMail(string email, MailTypes mailTypes, string notification)
+        public static Result.Result SendMail(string email, MailTypes mailTypes, string notification)
         {
+            Result.Result result = new Result.Result();
+
             string bodyMessage = EmailHelperBase.GetEmailTemplates(mailTypes, notification);
             var message = new MailMessage("info@bonameforme.com", email)
             {
@@ -29,7 +31,18 @@ namespace BonaForMe.DomainCommonCore.Helper
                 UseDefaultCredentials = false,
             };
 
-            client.Send(message);
+            try
+            {
+                client.Send(message);
+                result.Message = "Email sent successfully.";
+                result.Success = false;
+            }
+            catch (System.Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
         }
     }
 }

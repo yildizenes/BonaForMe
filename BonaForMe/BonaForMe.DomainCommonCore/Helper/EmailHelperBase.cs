@@ -9,16 +9,27 @@ namespace BonaForMe.DomainCommonCore.Helper
             switch (mailTypes)
             {
                 case MailTypes.Welcome:
-                    return GetMailBody("", "", notification);
+                    return GetMailBody(
+                        "Welcome to Bona Me For Me!",
+                        "Welcome to Bona Me For Me. Thank you for choosing us for your shopping. </br> Good shopping.",
+                        notification);
                 case MailTypes.ForgetPassword:
                     return GetMailBody(
-                        "Bona Me For Me Password Reset",
+                        "Password Reset",
                         "Bona Me For Me Your new temporary user password is given below.</br> For your security, please change your password! </br>",
                         notification);
                 case MailTypes.MobileApprove:
-                    return GetMailBody("", "", notification);
+                    return GetMailBody(
+                        "Mobile Approve",
+                        "Hello, welcome aboard.</br> You can use the confirmation code given below to activate your account. Good shopping.",
+                        notification);
                 case MailTypes.InvoiceDelivery:
-                    return GetMailBody("", "", notification);
+                    var address = "https://www.bonameforme.com/Invoice/" + notification + ".pdf";
+                    var link = "<a href='" + address + "#'>View Invoice</a>";
+                    return GetMailBody(
+                        "Shopping Invoice",
+                        "An invoice for your products supplied by Bona Me For Me has been created.</br> You can access your invoice from the link below.",
+                        link);
                 default:
                     return "";
             }

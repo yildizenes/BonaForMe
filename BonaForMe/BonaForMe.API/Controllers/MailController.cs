@@ -18,7 +18,7 @@ namespace BonaForMe.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddPaymentInfo(MailSenderDto mailSenderDto)
+        public IActionResult SendMail(MailSenderDto mailSenderDto)
         {
             try
             {

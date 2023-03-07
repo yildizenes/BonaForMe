@@ -14,10 +14,7 @@ namespace BonaForMe.ServiceCore.MailSenderService
 
         public Result SendMail(string email, MailTypes mailTypes, string notification)
         {
-            Result result = new Result();
-            EmailHelper.SendMail(email, mailTypes, notification);
-
-            result.Success = true;
+            var result = EmailHelper.SendMail(email, mailTypes, notification);
             return result;
         }
     }
