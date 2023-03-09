@@ -174,8 +174,9 @@ namespace BonaForMe.ServiceCore.LinkOrderProductService
             Result<List<LinkOrderProductDto>> result = new Result<List<LinkOrderProductDto>>();
             try
             {
-                var model = _context.LinkOrderProducts
-                    .Include(x => x.Order).Include(x => x.Product).ThenInclude(x=> x.ProductUnit)
+                var model = _context.LinkOrderProducts.Include(x => x.Order)
+                    .Include(x => x.Product).ThenInclude(x=> x.ProductUnit)
+                    .Include(x => x.Product).ThenInclude(x=> x.CurrencyUnit)
                     .Where(x => x.OrderId == id && x.IsActive && !x.IsDeleted).ToList();
                 result.Data = _mapper.Map<List<LinkOrderProduct>, List<LinkOrderProductDto>>(model);
                 result.Success = true;

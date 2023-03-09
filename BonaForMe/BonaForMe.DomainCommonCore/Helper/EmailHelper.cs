@@ -35,7 +35,7 @@ namespace BonaForMe.DomainCommonCore.Helper
             {
                 client.Send(message);
                 result.Message = "Email sent successfully.";
-                result.Success = false;
+                result.Success = true;
             }
             catch (System.Exception ex)
             {

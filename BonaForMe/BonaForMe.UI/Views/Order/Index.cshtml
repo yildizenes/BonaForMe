@@ -108,6 +108,12 @@
                                     <label id="detailAddress" class="control-label"></label>
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="OrderHour" class="control-label">Delivery Hour : </label>
+                                    <label id="detailHour" class="control-label"></label>
+                                </div>
+                            </div>
                         </div>
                         <table class="table" id="productTable">
                             <thead>
@@ -356,6 +362,7 @@
         $("#detailOrderer").text("");
         $("#detailPhone").text("");
         $("#detailAddress").text("");
+        $("#detailHour").text("");
 
         if (id != null && id !== "") {
             var data = { id: id }
@@ -365,6 +372,7 @@
             $("#detailOrderer").text(result.userName);
             $("#detailCustomerPhone").text(result.user.userPhone);
             $("#detailAddress").text(result.user.address);
+            $("#detailHour").text(result.orderHour.text);
 
             if (result.orderDetail != null) {
 

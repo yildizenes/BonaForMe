@@ -79,11 +79,11 @@ namespace BonaForMe.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetUserNowOrderDetail()
+        public IActionResult GetUserNowOrderDetail(Guid userId)
         {
             try
             {
-                var result = _orderService.GetAllOrderByStatusId(new List<int> { 1, 2, 3 });
+                var result = _orderService.GetAllOrderByStatusId(new List<int> { 1, 2, 3 }, userId);
                 return Json(new { success = result.Success, data = result.Data, message = result.Message });
             }
             catch (Exception ex)
@@ -93,11 +93,11 @@ namespace BonaForMe.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetUserLastOrderDetail()
+        public IActionResult GetUserLastOrderDetail(Guid userId)
         {
             try
             {
-                var result = _orderService.GetAllOrderByStatusId(new List<int> { 4, 5, 6, 7});
+                var result = _orderService.GetAllOrderByStatusId(new List<int> { 4, 5, 6, 7}, userId);
                 return Json(new { success = result.Success, data = result.Data, message = result.Message });
             }
             catch (Exception ex)

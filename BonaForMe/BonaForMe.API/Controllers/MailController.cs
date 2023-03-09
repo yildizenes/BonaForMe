@@ -7,7 +7,6 @@ using System;
 namespace BonaForMe.API.Controllers
 {
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("[controller]/[action]")]
     public class MailController : Controller
     {
@@ -17,6 +16,7 @@ namespace BonaForMe.API.Controllers
             _mailSenderService = mailSenderService;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public IActionResult SendMail(MailSenderDto mailSenderDto)
         {

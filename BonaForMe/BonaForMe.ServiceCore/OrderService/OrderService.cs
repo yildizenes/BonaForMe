@@ -159,7 +159,7 @@ namespace BonaForMe.ServiceCore.OrderService
             try
             {
                 var model = _context.Orders.Where(x => x.Id == id && x.IsActive && !x.IsDeleted)
-                    .Include(x => x.User).Include(x => x.OrderStatus)
+                    .Include(x => x.User).Include(x => x.OrderStatus).Include(x => x.OrderHour)
                     .FirstOrDefault();
 
                 result.Data = _mapper.Map<OrderDto>(model);
@@ -184,7 +184,9 @@ namespace BonaForMe.ServiceCore.OrderService
             Result<List<OrderDto>> result = new Result<List<OrderDto>>();
             try
             {
-                var model = _context.Orders.Where(x => x.IsActive && !x.IsDeleted).Include(x => x.User).Include(x => x.OrderStatus).OrderByDescending(x => x.DateCreated).ToList();
+                var model = _context.Orders.Where(x => x.IsActive && !x.IsDeleted)
+                    .Include(x => x.User).Include(x => x.OrderStatus).Include(x => x.OrderHour)
+                    .OrderByDescending(x => x.DateCreated).ToList();
                 result.Data = _mapper.Map<List<Order>, List<OrderDto>>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
@@ -196,23 +198,30 @@ namespace BonaForMe.ServiceCore.OrderService
             }
             return result;
         }
-        public Result<List<OrderDto>> GetAllOrderByStatusId(List<int> orderStatuses)
+        public Result<List<OrderDto>> GetAllOrderByStatusId(List<int> orderStatuses, Guid userId)
         {
             Result<List<OrderDto>> result = new Result<List<OrderDto>>();
             try
             {
-                var model = _context.Orders.Where(x => orderStatuses.Contains(x.OrderStatusId) && x.IsActive && !x.IsDeleted)
-                    .Include(x => x.User).Include(x => x.OrderStatus)
-                    .OrderByDescending(x => x.DateCreated)
-                    .ToList();
+                var model = new List<Order>();
+                if (userId != Guid.Empty)
+                {
+                    model = _context.Orders.Where(x => userId == x.UserId && orderStatuses.Contains(x.OrderStatusId) && x.IsActive && !x.IsDeleted)
+                        .Include(x => x.User).Include(x => x.OrderStatus).Include(x => x.OrderHour)
+                        .OrderByDescending(x => x.DateCreated)
+                        .ToList();
+                }
+                else
+                {
+                    model = _context.Orders.Where(x => orderStatuses.Contains(x.OrderStatusId) && x.IsActive && !x.IsDeleted)
+                        .Include(x => x.User).Include(x => x.OrderStatus).Include(x => x.OrderHour)
+                        .OrderByDescending(x => x.DateCreated)
+                        .ToList();
+                }
 
                 var orderDtos = _mapper.Map<List<Order>, List<OrderDto>>(model);
                 foreach (var item in orderDtos)
-                {
-                    var linkOrderProducts = _context.LinkOrderProducts.Where(x => x.OrderId == item.Id)
-                        .Include(x => x.Product).ThenInclude(x => x.CurrencyUnit).ToList();
-                    item.ProductList = _mapper.Map<List<LinkOrderProduct>, List<LinkOrderProductDto>>(linkOrderProducts);
-                }
+                    item.ProductList = _linkOrderProductService.GetAllLinkOrderProductByOrderId(item.Id).Data;
 
                 result.Data = orderDtos;
                 result.Success = true;
@@ -291,13 +300,12 @@ namespace BonaForMe.ServiceCore.OrderService
             try
             {
                 var model = _context.Orders.Where(x => x.UserId == userId && x.IsActive && !x.IsDeleted)
-                    .Include(x => x.User).Include(x => x.OrderStatus)
+                    .Include(x => x.User).Include(x => x.OrderStatus).Include(x => x.OrderHour)
                     .ToList();
                 var orderDtos = _mapper.Map<List<Order>, List<OrderDto>>(model);
                 foreach (var item in orderDtos)
                 {
-                    var linkOrderProducts = _context.LinkOrderProducts.Where(x => x.OrderId == item.Id).Include(x => x.Product).ToList();
-                    item.ProductList = _mapper.Map<List<LinkOrderProduct>, List<LinkOrderProductDto>>(linkOrderProducts);
+                    item.ProductList = _linkOrderProductService.GetAllLinkOrderProductByOrderId(item.Id).Data;
                 }
                 result.Data = orderDtos;
                 result.Success = true;
@@ -512,16 +520,16 @@ namespace BonaForMe.ServiceCore.OrderService
                     TotalRow.Make("Total VAT", totalVAT),
                     TotalRow.Make("Total", subTotal + totalVAT, true),
                     })
-                    .Details(new List<DetailRow> {
-                    DetailRow.Make("PAYMENT INFORMATION", new string[] {
-                    "Customer Signature : __________________________________",
-                    "Customer Name      : __________________________________",
-                    "Amount Paid        : __________________________________",
-                    "Payment Type       : □ Cash   □ Cheque   □ Credit Card   □ Not Paid ",
-                    "Driver  Name       : __________________________________",
-                    }),
-                    DetailRow.Make("BANK INFORMATION", paymentInfos)
-                    })
+                    //.Details(new List<DetailRow> {
+                    //DetailRow.Make("PAYMENT INFORMATION", new string[] {
+                    //"Customer Signature : __________________________________",
+                    //"Customer Name      : __________________________________",
+                    //"Amount Paid        : __________________________________",
+                    //"Payment Type       : □ Cash   □ Cheque   □ Credit Card   □ Not Paid ",
+                    //"Driver  Name       : __________________________________",
+                    //}),
+                    //DetailRow.Make("BANK INFORMATION", paymentInfos)
+                    //})
                     .Footer("")
                     .Save();
 
