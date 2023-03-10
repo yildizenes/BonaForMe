@@ -259,7 +259,7 @@ namespace BonaForMe.ServiceCore.ProductService
 
         private void SaveImage(IFormFile formFile, Product product)
         {
-            var path = Path.Combine(Directory.GetCurrentDirectory()) + @"\";
+            var path = Path.Combine(Directory.GetCurrentDirectory()).Replace("API", "UI") + @"\";
             byte[] picture = null;
             using (var ms = new MemoryStream())
             {

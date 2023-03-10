@@ -477,7 +477,7 @@ namespace BonaForMe.ServiceCore.OrderService
         public Result CreateInvoice(Guid orderId)
         {
             Result result = new Result();
-            var path = Path.Combine(Directory.GetCurrentDirectory()) + @"\";
+            var path = Path.Combine(Directory.GetCurrentDirectory()).Replace("API", "UI") + @"\";
             var order = GetOrderById(orderId);
             var itemList = new List<ItemRow>();
             decimal subTotal = 0, totalVAT = 0;

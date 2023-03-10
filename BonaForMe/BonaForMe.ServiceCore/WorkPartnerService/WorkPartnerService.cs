@@ -182,7 +182,7 @@ namespace BonaForMe.ServiceCore.WorkPartnerService
 
         private void SaveImage(IFormFile formFile, WorkPartner workPartner)
         {
-            var path = Path.Combine(Directory.GetCurrentDirectory()) + @"\";
+            var path = Path.Combine(Directory.GetCurrentDirectory()).Replace("API", "UI") + @"\";
             byte[] picture = null;
             using (var ms = new MemoryStream())
             {

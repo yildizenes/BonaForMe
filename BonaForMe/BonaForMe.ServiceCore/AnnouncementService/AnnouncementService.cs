@@ -182,7 +182,7 @@ namespace BonaForMe.ServiceCore.AnnouncementService
 
         private void SaveImage(IFormFile formFile, Announcement announcement)
         {
-            var path = Path.Combine(Directory.GetCurrentDirectory()) + @"\";
+            var path = Path.Combine(Directory.GetCurrentDirectory()).Replace("API", "UI") + @"\";
             byte[] picture = null;
             using (var ms = new MemoryStream())
             {
