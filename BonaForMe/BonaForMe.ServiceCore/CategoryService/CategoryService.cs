@@ -184,7 +184,7 @@ namespace BonaForMe.ServiceCore.CategoryService
 
         private void SaveImage(IFormFile formFile, Category category)
         {
-            var path = Path.Combine(Directory.GetCurrentDirectory()).Replace("API", "UI") + @"\";
+            var path = Path.Combine(Directory.GetCurrentDirectory()).Replace("api.bonameforme.com", "httpdocs") + @"\";
             byte[] picture = null;
             using (var ms = new MemoryStream())
             {

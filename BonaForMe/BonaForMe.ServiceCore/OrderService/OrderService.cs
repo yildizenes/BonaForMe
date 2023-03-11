@@ -350,7 +350,7 @@ namespace BonaForMe.ServiceCore.OrderService
                     if (!createInvoiceResult.Success)
                     {
                         result.Success = false;
-                        result.Message = "Create invoice unsuccessful.";
+                        result.Message = createInvoiceResult.Message;
                         return result;
                     }
                     var order = GetOrderById(updateOrderDto.OrderId).Data;
@@ -477,7 +477,7 @@ namespace BonaForMe.ServiceCore.OrderService
         public Result CreateInvoice(Guid orderId)
         {
             Result result = new Result();
-            var path = Path.Combine(Directory.GetCurrentDirectory()).Replace("API", "UI") + @"\";
+            var path = Path.Combine(Directory.GetCurrentDirectory()).Replace("api.bonameforme.com", "httpdocs") + @"\";
             var order = GetOrderById(orderId);
             var itemList = new List<ItemRow>();
             decimal subTotal = 0, totalVAT = 0;

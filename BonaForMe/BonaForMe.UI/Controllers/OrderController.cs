@@ -174,12 +174,16 @@ namespace BonaForMe.UI.Controllers
                     SortColumnDirection = sortColumnDirection,
                     SortColumn = sortColumn
                 };
-                return _orderService.FillInvoiceDataTable(dataTable, new ReportDateDto { StartDate = dates[0], EndDate = dates[1] });
+                return _orderService.FillInvoiceDataTable(dataTable, new ReportDateDto { StartDate = DateParser(dates[0]), EndDate = DateParser(dates[1]) });
             }
             catch (Exception)
             {
                 return null;
             }
+        }
+        private DateTime DateParser(DateTime dateTime)
+        {
+            return new DateTime(dateTime.Year, dateTime.Day, dateTime.Month, dateTime.Hour, dateTime.Minute, dateTime.Second);
         }
     }
 }
