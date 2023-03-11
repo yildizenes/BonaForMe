@@ -48,17 +48,11 @@ namespace BonaForMe.UI.Controllers
             }
         }
 
-        public FileResult CreateReport(string param)
+        public FileResult CreateReport(ReportDateDto reportDateDto)
         {
-            var dates = Array.ConvertAll(param.Split(" - "), item => DateTime.Parse(item));
-            var result = _reportService.CreateReport(new ReportDateDto { StartDate = DateParser(dates[0]), EndDate = DateParser(dates[1]) });
-
-            return File(result.Data, "application/octet-stream", param + ".xlsx");
-        }
-
-        private DateTime DateParser(DateTime dateTime)
-        {
-            return new DateTime(dateTime.Year, dateTime.Day, dateTime.Month, dateTime.Hour, dateTime.Minute, dateTime.Second);
+            var result = _reportService.CreateReport(reportDateDto);
+            var fileName = reportDateDto.StartDate.ToString() + " - " + reportDateDto.EndDate.ToString();
+            return File(result.Data, "application/octet-stream", fileName + ".xlsx");
         }
     }
 }
