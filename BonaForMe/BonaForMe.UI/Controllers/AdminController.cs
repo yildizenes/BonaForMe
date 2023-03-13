@@ -70,19 +70,26 @@ namespace BonaForMe.UI.Controllers
 
                 Style style = document.Styles["Normal"];
                 style.Font.Name = "Verdana";
-                style.Font.Color = Colors.Gray;
 
                 Style titleStyle = document.Styles.AddStyle("Title", "Normal");
                 titleStyle.Font.Size = 12;
                 titleStyle.Font.Color = Colors.LightGray;
-                titleStyle.ParagraphFormat.SpaceAfter = 15;
+                titleStyle.ParagraphFormat.SpaceBefore = 50;
+                titleStyle.ParagraphFormat.SpaceAfter = 5;
+
+                style = document.Styles.AddStyle("Content", "Normal");
+                style.ParagraphFormat.SpaceAfter = 15;
+                style.Font.Color = Colors.Black;
+
+                style = document.Styles.AddStyle("PageTitle", "Normal");
+                style.ParagraphFormat.SpaceAfter = 20;
+                style.Font.Color = Colors.Black;
+                style.Font.Size = 14;
 
 
-                style = document.Styles.AddStyle("Reference", "Normal");
-                style.ParagraphFormat.SpaceBefore = "5mm";
-                style.ParagraphFormat.SpaceAfter = "5mm";
-                style.ParagraphFormat.TabStops.AddTabStop("16cm", TabAlignment.Right);
-
+                section.Add(CreatePageTitle("SOLMAZ PACKAGING LIMITED"));
+                section.Add(Add2Columns("Merchant-ID MCRP24NZ", 55, "4 Feb 2023 00:00 -> 10 Feb 2023 23:45"));
+                section.Add(Add2Columns("VAT-ID     3933414LH", 50, ""));
 
                 RevenueTaxSummary(section);
                 Taxes(section);
@@ -109,32 +116,47 @@ namespace BonaForMe.UI.Controllers
             paragraph.AddText("Amount");
 
             paragraph.Format.Borders.Bottom = new Border { Width = 1, Color = Colors.LightGray };
-            paragraph.Format.Borders.Distance = 3;
+            paragraph.Format.Borders.DistanceFromTop = 3;
+            section.Add(Add3Columns("Revenue gross", 82, "32", 25, "EUR13,455.10"));
         }
 
         private void Taxes(Section section)
         {
             section.Add(CreateTitle("Taxes"));
-            Paragraph paragraph = section.AddParagraph();
+            section.Add(Add2Columns("Net", 126, "EUR10,939.08"));
+            section.Add(Add2Columns("VAT 23%", 118, "EUR10,939.08"));
+            section.Add(Add2Columns("Revenue gross ", 109, "EUR10,939.08"));
+            section.Add(Add2Columns("Net total", 118, "EUR10,939.08"));
+            section.Add(Add2Columns("Tax total", 118, "EUR10,939.08"));
+            section.Add(Add2Columns("Revenue", 118, "EUR10,939.08"));
         }
 
         private void RevenueByCategory(Section section)
         {
             section.Add(CreateTitle("Revenue by category (gross)"));
-            Paragraph paragraph = section.AddParagraph();
+            section.Add(Add2Columns("My Shelf", 118, "EUR13,455.10"));
         }
 
         private void RevenueByEmployee(Section section)
         {
             section.Add(CreateTitle("Revenue by employee"));
-            Paragraph paragraph = section.AddParagraph();
+            section.Add(Add3Columns("solmazpackaging@gmail.com", 60, "32", 25, "EUR13,455.10"));
+            section.Add(Add3Columns("Total", 95, "32", 25, "EUR13,455.10"));
         }
 
         private void SalesRevenue(Section section)
         {
             section.Add(CreateTitle("Sales revenue per payment method (gross)"));
+            section.Add(Add3Columns("Cash", 95, "32", 25, "EUR13,455.10"));
+            section.Add(Add3Columns("Total", 95, "32", 25, "EUR13,455.10"));
+        }
 
-            Paragraph paragraph = section.AddParagraph();
+        private Paragraph CreatePageTitle(string text)
+        {
+            Paragraph paragraph = new Paragraph();
+            paragraph.Style = "PageTitle";
+            paragraph.AddFormattedText(text, TextFormat.Bold);
+            return paragraph;
         }
 
         private Paragraph CreateTitle(string text)
@@ -144,6 +166,28 @@ namespace BonaForMe.UI.Controllers
             paragraph.AddText(text);
             paragraph.Format.Borders.Bottom = new Border { Width = 1, Color = Colors.LightGray };
             paragraph.Format.Borders.Distance = 3;
+            return paragraph;
+        }
+
+        private Paragraph Add2Columns(string text1, int space, string text2)
+        {
+            Paragraph paragraph = new Paragraph();
+            paragraph.Style = "Content";
+            paragraph.AddText(text1);
+            paragraph.AddSpace(space);
+            paragraph.AddText(text2);
+            return paragraph;
+        }
+
+        private Paragraph Add3Columns(string text1, int space1, string text2, int space2, string text3)
+        {
+            Paragraph paragraph = new Paragraph();
+            paragraph.Style = "Content";
+            paragraph.AddText(text1);
+            paragraph.AddSpace(space1);
+            paragraph.AddText(text2);
+            paragraph.AddSpace(space2);
+            paragraph.AddText(text3);
             return paragraph;
         }
     }
