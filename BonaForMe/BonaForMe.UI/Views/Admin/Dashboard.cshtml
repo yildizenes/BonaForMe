@@ -107,6 +107,36 @@
                                     </div>
                                 </div>
 
+                                @*<div class="card card-danger card-outline col-12">
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+                                            <i class="fas fa-download"></i>
+                                            Download Excel Report
+                                            <i class="fas fa-file-excel"></i>
+                                        </h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="CreatePDFReport" method="post">
+                                            <div class="row">
+                                              <div class="col-9 row">
+                                                    <div class="col-6">
+                                                        <label for="startDate" class="control-label">Start Date : </label>
+                                                        <input type="datetime-local" id="startDate" name="startDate" class="form-control" required>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label for="endDate" class="control-label">End Date : </label>
+                                                        <input type="datetime-local" id="endDate" name="endDate" class="form-control" required>
+                                                    </div>
+                                                </div>
+                                                            <div class="col-3">
+                                                                <br />
+                                                                <button type="submit" class="btn btn-block btn-outline-info" style="margin-top:7px;"> Create PDF Report </button>
+                                                            </div>
+                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                *@
                                 <table id="tblOrderList" class="table table-bordered table-striped table-responsive-lg" style="width: 100% !important;">
                                     <thead>
                                         <tr>
@@ -152,7 +182,7 @@
                     "url": "/Order/LoadOrderData/",
                     "type": 'POST',
                     "dataType": "json",
-                    "data": { type: 2,  orderStatusId: null }
+                    "data": { type: 2, orderStatusId: null }
                 },
                 "columnDefs": [{
                     "targets": [0],

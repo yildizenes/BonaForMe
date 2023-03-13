@@ -32,10 +32,10 @@ namespace BonaForMe.UI.Controllers
                 OpenCloseTime = settings.Data?.OpenCloseTime,
             };
 
-            ViewBag.Products = _productService.GetRandomProduct(8)?.Data;
-            ViewBag.Categories = _categoryService.GetAllCategory()?.Data;
-            ViewBag.WorkPartners = _workPartnerService.GetAllWorkPartner()?.Data;
-            
+            ViewBag.Products = _productService.GetRandomProduct(8)?.Data ?? new List<ProductDto>();
+            ViewBag.Categories = _categoryService.GetAllCategory()?.Data ?? new List<CategoryDto>();
+            ViewBag.WorkPartners = _workPartnerService.GetAllWorkPartner()?.Data ?? new List<WorkPartnerDto>();
+
             return View(model);
         }
 
