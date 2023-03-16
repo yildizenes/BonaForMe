@@ -14,5 +14,6 @@ namespace BonaForMe.ServiceCore.ApplicationSettingService
         Result<ApplicationSettingDto> GetApplicationSetting();
         Result<List<ApplicationSettingDto>> GetAllApplicationSetting();
         JsonResult FillDataTable(DataTableDto dataTable);
+        Result<ApplicationSettingDto> SaveMinimumOrderValue(int minimumOrderValue);
     }
 }

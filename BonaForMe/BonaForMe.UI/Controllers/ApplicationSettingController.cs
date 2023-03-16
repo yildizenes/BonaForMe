@@ -98,6 +98,20 @@ namespace BonaForMe.UI.Controllers
         }
 
         [HttpPost]
+        public JsonResult SaveMinimumOrderValue(int minimumOrderValue)
+        {
+            try
+            {
+                var result = _applicationSettingService.SaveMinimumOrderValue(minimumOrderValue);
+                return new JsonResult(result);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        [HttpPost]
         public IActionResult LoadApplicationSettingData()
         {
             try

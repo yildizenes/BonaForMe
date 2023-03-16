@@ -35,9 +35,9 @@
                         <div class="card-header">
                             <h3 class="card-title">@ViewData["Title"]</h3>
                             @*<button class="btn-success" onclick="jsOpenSaveApplicationSetting();" style="padding: 10px; float:right;">
-                                <i class="fas fa-save"></i>
-                                New @ViewData["SingleName"]
-                            </button>*@
+                                    <i class="fas fa-save"></i>
+                                    New @ViewData["SingleName"]
+                                </button>*@
                         </div>
                         <div class="card-body" style="overflow-x:auto;">
                             <table id="tblApplicationSettingList" class="table table-bordered table-striped table-responsive-lg" style="width: 100% !important;">
@@ -88,6 +88,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="custom-content-below-markets-tab" data-toggle="pill" href="#custom-content-below-markets" role="tab" aria-controls="custom-content-below-markets" aria-selected="false">Markets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="custom-content-below-mailtext-tab" data-toggle="pill" href="#custom-content-below-mailtext" role="tab" aria-controls="custom-content-below-mailtext" aria-selected="false">Mails</a>
                     </li>
                 </ul>
                 <div class="tab-content" id="custom-content-below-tabContent">
@@ -201,6 +204,34 @@
                             </div>
                         </div>
                     </div>
+                    <div class="tab-pane fade" id="custom-content-below-mailtext" role="tabpanel" aria-labelledby="custom-content-below-mailtext-tab">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="WelcomeMailText" class="control-label"><span style="color:red">* </span>Welcome Mail</label>
+                                    <textarea name="WelcomeMailText" id="WelcomeMailText" required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="ForgetPasswordMailText" class="control-label"><span style="color:red">* </span>Forget Password Mail</label>
+                                    <textarea name="ForgetPasswordMailText" id="ForgetPasswordMailText" required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="MobileApproveMailText" class="control-label"><span style="color:red">* </span>Mobile Approve Mail</label>
+                                    <textarea name="MobileApproveMailText" id="MobileApproveMailText" required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="InvoiceDeliveryMailText" class="control-label"><span style="color:red">* </span>Invoice Delivery Mail</label>
+                                    <textarea name="InvoiceDeliveryMailText" id="InvoiceDeliveryMailText" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 @*<div class="tab-custom-content">
                         <p class="lead mb-0">Custom Content goes here</p>
@@ -217,6 +248,7 @@
 
 @await Html.PartialAsync("_Delete")
 <input type="hidden" id="hdnApplicationSettingId" value="" />
+<input type="hidden" id="hdnMinimumOrderValue" value="" />
 <div class="spinnerAnimation" style="display:none;"></div>
 <link href="~/css/spinner.css" rel="stylesheet" />
 <script src="~/adminLTE/plugins/summernote/summernote-bs4.js"></script>
@@ -227,6 +259,10 @@
         $('#AboutUs').summernote();
         $('#Vision').summernote();
         $('#Mission').summernote();
+        $("#WelcomeMailText").summernote();
+        $("#ForgetPasswordMailText").summernote();
+        $("#MobileApproveMailText").summernote();
+        $("#InvoiceDeliveryMailText").summernote();
     });
 
     function createTable() {
@@ -290,10 +326,16 @@
         $("#PlayStoreAddress").val("");
         $("#AppleStoreAddress").val("");
         $("#HuaweiStoreAddress").val("");
+        $("#hdnMinimumOrderValue").val(0);
+        $("#WelcomeMailText").summernote("code", "");
+        $("#ForgetPasswordMailText").summernote("code", "");
+        $("#MobileApproveMailText").summernote("code", "");
+        $("#InvoiceDeliveryMailText").summernote("code", "");
 
         if (id != null && id !== "") {
             var result = ajaxRequest('POST', '@Url.Action("GetApplicationSetting", "ApplicationSetting")')
             $("#hdnApplicationSettingId").val(result.id);
+            $("#hdnMinimumOrderValue").val(result.minimumOrderValue);
             $("#AboutUs").summernote("code", result.aboutUs);
             $("#Vision").summernote("code", result.vision);
             $("#Mission").summernote("code", result.mission);
@@ -309,6 +351,10 @@
             $("#PlayStoreAddress").val(result.playStoreAddress);
             $("#AppleStoreAddress").val(result.appleStoreAddress);
             $("#HuaweiStoreAddress").val(result.huaweiStoreAddress);
+            $("#WelcomeMailText").summernote("code", result.welcomeMailText);
+            $("#ForgetPasswordMailText").summernote("code", result.forgetPasswordMailText);
+            $("#MobileApproveMailText").summernote("code", result.mobileApproveMailText);
+            $("#InvoiceDeliveryMailText").summernote("code", result.invoiceDeliveryMailText);
         }
         $('#modalSave').modal('show');
     }
@@ -331,6 +377,11 @@
             PlayStoreAddress: $("#PlayStoreAddress").val(),
             AppleStoreAddress: $("#AppleStoreAddress").val(),
             HuaweiStoreAddress: $("#HuaweiStoreAddress").val(),
+            MinimumOrderValue: $("#hdnMinimumOrderValue").val(),
+            WelcomeMailText: $("#WelcomeMailText").summernote('code'),
+            ForgetPasswordMailText: $("#ForgetPasswordMailText").summernote('code'),
+            MobileApproveMailText: $("#MobileApproveMailText").summernote('code'),
+            InvoiceDeliveryMailText: $("#InvoiceDeliveryMailText").summernote('code'),
         };
 
         var result = ajaxRequest('POST', '@Url.Action("Save", "ApplicationSetting")', data)

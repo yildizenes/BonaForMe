@@ -40,6 +40,10 @@
                                         <i class="fas fa-save"></i>
                                         New @ViewData["SingleName"]
                                     </button>
+                                    <button class="btn-primary" onclick="jsOpenMinPrice();" style="padding: 10px; margin:0 10px; float:right;">
+                                        <i class="fas fa-save"></i>
+                                        Min Price
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -278,6 +282,38 @@
     </div>
 </div>
 
+<div class="modal fade" id="modalMinPrice" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalCaption" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span id="modalCaption">Minimum Order Value</span>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="MinimumOrderValue" class="control-label"><span style="color:red">* </span>Minimum Order Value</label>
+                            <input name="MinimumOrderValue" id="MinimumOrderValue" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" data-content="remove" class="btn btn-default" data-dismiss="modal"> Cancel </button>
+                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="jsSaveMinPrice()"> Save </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @await Html.PartialAsync("_Delete")
 <input type="hidden" id="hdnOrderId" value="" />
 <div class="spinnerAnimation" style="display:none;"></div>
@@ -433,6 +469,29 @@
             $("#OrderHourId").val(result.orderHourId);
         }
         $('#modalSave').modal('show');
+    }
+
+    function jsOpenMinPrice(id) {
+        $("#MinimumOrderValue").val("");
+        var result = ajaxRequest('POST', '@Url.Action("GetApplicationSetting", "ApplicationSetting")');
+        $("#MinimumOrderValue").val(result.minimumOrderValue);
+        $('#modalMinPrice').modal('show');
+    }
+
+    function jsSaveMinPrice() {
+        var data = { MinimumOrderValue: $("#MinimumOrderValue").val() }
+        var result = ajaxRequest('POST', '@Url.Action("SaveMinimumOrderValue", "ApplicationSetting")', data)
+        if (result != null) {
+            if (result.success) {
+                $('#modalMinPrice').modal('hide');
+                toastr.success('Transaction successful.');
+            } else {
+                toastr.error(result.message);
+            }
+        } else {
+            $('#modalMinPrice').modal('hide');
+            toastr.error('Error in saving!');
+        }
     }
 
     function jsSaveOrder() {

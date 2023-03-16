@@ -27,7 +27,7 @@ namespace BonaForMe.DomainCore.DBModel
 
         [MaxLength()]
         public string OpenCloseTime { get; set; }
-        
+
         [MaxLength()]
         public string LinkedIn { get; set; }
 
@@ -48,5 +48,20 @@ namespace BonaForMe.DomainCore.DBModel
 
         [MaxLength()]
         public string HuaweiStoreAddress { get; set; }
+
+        [MaxLength()]
+        public int MinimumOrderValue { get; set; }
+
+        [MaxLength()]
+        public string WelcomeMailText { get; set; }
+
+        [MaxLength()]
+        public string ForgetPasswordMailText { get; set; }
+
+        [MaxLength()]
+        public string MobileApproveMailText { get; set; }
+
+        [MaxLength()]
+        public string InvoiceDeliveryMailText { get; set; }
     }
 }

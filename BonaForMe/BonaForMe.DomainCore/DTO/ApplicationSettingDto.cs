@@ -17,5 +17,10 @@
         public string PlayStoreAddress { get; set; }
         public string AppleStoreAddress { get; set; }
         public string HuaweiStoreAddress { get; set; }
+        public int MinimumOrderValue { get; set; }
+        public string WelcomeMailText { get; set; }
+        public string ForgetPasswordMailText { get; set; }
+        public string MobileApproveMailText { get; set; }
+        public string InvoiceDeliveryMailText { get; set; }
     }
 }

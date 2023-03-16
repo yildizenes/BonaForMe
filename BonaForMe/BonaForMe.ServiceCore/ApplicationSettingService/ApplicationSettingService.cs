@@ -145,6 +145,27 @@ namespace BonaForMe.ServiceCore.ApplicationSettingService
             return result;
         }
 
+        public Result<ApplicationSettingDto> SaveMinimumOrderValue(int minimumOrderValue)
+        {
+            Result<ApplicationSettingDto> result = new Result<ApplicationSettingDto>();
+            try
+            {
+                var model = GetApplicationSetting().Data;
+                model.MinimumOrderValue = minimumOrderValue;
+                var updateResult = UpdateApplicationSetting(model);
+
+                result.Data = updateResult.Data;
+                result.Success = true;
+                result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
         public JsonResult FillDataTable(DataTableDto dataTable)
         {
             try

@@ -89,5 +89,21 @@ namespace BonaForMe.API.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
+
+
+        [HttpGet]
+        public IActionResult GetMinimumOrderValue()
+        {
+            try
+            {
+                var result = _applicationSettingService.GetApplicationSetting();
+                return Json(new { success = result.Success, data = result.Data.MinimumOrderValue, message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, data = "", message = ex.Message });
+            }
+        }
     }
 }
