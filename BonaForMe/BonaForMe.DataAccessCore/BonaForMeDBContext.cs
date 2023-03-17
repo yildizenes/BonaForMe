@@ -65,26 +65,26 @@ namespace BonaForMe.DataAccessCore
                     if (entity.State == EntityState.Added)
                     {
                         ((BaseEntity)entity.Entity).Id = Guid.NewGuid();
-                        ((BaseEntity)entity.Entity).DateCreated = DateTime.Now;
+                        ((BaseEntity)entity.Entity).DateCreated = DateTime.UtcNow;
                         ((BaseEntity)entity.Entity).UserCreated = userid;
                         ((BaseEntity)entity.Entity).IsActive = true;
                         ((BaseEntity)entity.Entity).IsDeleted = false;
                     }
 
-                    ((BaseEntity)entity.Entity).DateModified = DateTime.Now;
+                    ((BaseEntity)entity.Entity).DateModified = DateTime.UtcNow;
                     ((BaseEntity)entity.Entity).UserModified = userid;
                 }
                 if (entity.Entity is BaseEntityInt)
                 {
                     if (entity.State == EntityState.Added)
                     {
-                        ((BaseEntityInt)entity.Entity).DateCreated = DateTime.Now;
+                        ((BaseEntityInt)entity.Entity).DateCreated = DateTime.UtcNow;
                         ((BaseEntityInt)entity.Entity).UserCreated = userid;
                         ((BaseEntityInt)entity.Entity).IsActive = true;
                         ((BaseEntityInt)entity.Entity).IsDeleted = false;
                     }
 
-                    ((BaseEntityInt)entity.Entity).DateModified = DateTime.Now;
+                    ((BaseEntityInt)entity.Entity).DateModified = DateTime.UtcNow;
                     ((BaseEntityInt)entity.Entity).UserModified = userid;
                 }
             }

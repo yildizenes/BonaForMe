@@ -498,12 +498,13 @@ namespace BonaForMe.ServiceCore.OrderService
                     .TextColor("#CC0000")
                     .Image(path + @"wwwroot\images\bonameformelogo.jpg", 140, 100)
                     .Company(Address.Make("FROM", new string[] {
-                        "Solmaz Packaging",
-                        "Unit 9-10, The New Sunbeam Ind",
-                        "Est. Blackpool. Cork.",
+                        "SOLMAZ LTD.",
+                        "Unit 9-10, The New Sunbeam Industrial Estate",
+                        "Commons Road Cork, Ireland",
+                        "EirCode: T23 K122",
                         "Phone: 087 353 33 35",
-                        "Email: info@bonameforme.com",
-                        "Website: bonameforme.com",
+                        "Email: solmaz@boname.ie",
+                        "Website: www.boname.ie",
                         "VAT No: 3933414LH"
                     }))
                     .Client(Address.Make("BILL TO", new string[]

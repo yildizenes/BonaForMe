@@ -95,32 +95,33 @@ namespace BonaForMe.ServiceCore.ReportService
 
                     #region Items
 
-                    var values = _context.OrderLogs
-                        .Include(x => x.Order)
+                    var orderLogs = _context.OrderLogs
+                        .Include(x => x.Order).ThenInclude(x => x.User)
                         .Include(x => x.Product).ThenInclude(x => x.CurrencyUnit)
                         .Where(x => x.DateCreated >= reportDateDto.StartDate && x.DateCreated <= reportDateDto.EndDate
                                     && x.IsActive && !x.IsDeleted).ToList();
 
                     int index = 2;
-                    foreach (var item in values)
+                    foreach (var orderLog in orderLogs)
                     {
                         Row row = new Row() { RowIndex = Convert.ToUInt32(index) };
                         sheetData.Append(row);
 
-                        var taxPrice = (item.Price * item.Count * item.Product.TaxRate) / 100;
-                        row.Append(new Cell() { CellReference = "A" + index, DataType = CellValues.String, CellValue = new CellValue("solmazpackaging@gmail.com") });
-                        row.Append(new Cell() { CellReference = "B" + index, DataType = CellValues.String, CellValue = new CellValue(item.DateCreated.ToShortDateString()) });
-                        row.Append(new Cell() { CellReference = "C" + index, DataType = CellValues.String, CellValue = new CellValue(item.DateCreated.ToShortTimeString()) });
+                        var taxPrice = (orderLog.Price * orderLog.Count * orderLog.Product.TaxRate) / 100;
+                        var company = orderLog.Order.User.CompanyName == null || orderLog.Order.User.CompanyName == string.Empty ? orderLog.Order.User.FullName : orderLog.Order.User.CompanyName;
+                        row.Append(new Cell() { CellReference = "A" + index, DataType = CellValues.String, CellValue = new CellValue(company) });
+                        row.Append(new Cell() { CellReference = "B" + index, DataType = CellValues.String, CellValue = new CellValue(orderLog.DateCreated.ToShortDateString()) });
+                        row.Append(new Cell() { CellReference = "C" + index, DataType = CellValues.String, CellValue = new CellValue(orderLog.DateCreated.ToShortTimeString()) });
                         row.Append(new Cell() { CellReference = "D" + index, DataType = CellValues.String, CellValue = new CellValue("Sales") });
-                        row.Append(new Cell() { CellReference = "E" + index, DataType = CellValues.String, CellValue = new CellValue(item.Order.OrderCode) });
-                        row.Append(new Cell() { CellReference = "F" + index, DataType = CellValues.String, CellValue = new CellValue(item.Order.PayType) });
-                        row.Append(new Cell() { CellReference = "G" + index, DataType = CellValues.String, CellValue = new CellValue(item.Count) });
-                        row.Append(new Cell() { CellReference = "H" + index, DataType = CellValues.String, CellValue = new CellValue(item.Product.Name) });
-                        row.Append(new Cell() { CellReference = "I" + index, DataType = CellValues.String, CellValue = new CellValue(item.Product.CurrencyUnit.Name) });
-                        row.Append(new Cell() { CellReference = "J" + index, DataType = CellValues.String, CellValue = new CellValue(item.Price + taxPrice) });
-                        row.Append(new Cell() { CellReference = "K" + index, DataType = CellValues.String, CellValue = new CellValue(item.Price) });
+                        row.Append(new Cell() { CellReference = "E" + index, DataType = CellValues.String, CellValue = new CellValue(orderLog.Order.OrderCode) });
+                        row.Append(new Cell() { CellReference = "F" + index, DataType = CellValues.String, CellValue = new CellValue(orderLog.Order.PayType) });
+                        row.Append(new Cell() { CellReference = "G" + index, DataType = CellValues.String, CellValue = new CellValue(orderLog.Count) });
+                        row.Append(new Cell() { CellReference = "H" + index, DataType = CellValues.String, CellValue = new CellValue(orderLog.Product.Name) });
+                        row.Append(new Cell() { CellReference = "I" + index, DataType = CellValues.String, CellValue = new CellValue(orderLog.Product.CurrencyUnit.Name) });
+                        row.Append(new Cell() { CellReference = "J" + index, DataType = CellValues.String, CellValue = new CellValue(orderLog.Price + taxPrice) });
+                        row.Append(new Cell() { CellReference = "K" + index, DataType = CellValues.String, CellValue = new CellValue(orderLog.Price) });
                         row.Append(new Cell() { CellReference = "L" + index, DataType = CellValues.String, CellValue = new CellValue(taxPrice) });
-                        row.Append(new Cell() { CellReference = "M" + index, DataType = CellValues.String, CellValue = new CellValue(item.Product.TaxRate) });
+                        row.Append(new Cell() { CellReference = "M" + index, DataType = CellValues.String, CellValue = new CellValue(orderLog.Product.TaxRate) });
                         index++;
                     }
 

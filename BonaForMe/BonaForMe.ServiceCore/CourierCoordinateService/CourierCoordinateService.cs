@@ -150,7 +150,7 @@ namespace BonaForMe.ServiceCore.CourierCoordinateService
             Result<List<CourierCoordinateDto>> result = new Result<List<CourierCoordinateDto>>();
             try
             {
-                var model = _context.CourierCoordinates.Where(x => x.IsActive && !x.IsDeleted).ToList();
+                var model = _context.CourierCoordinates.Where(x => x.IsActive && !x.IsDeleted).Include(x=> x.User).ToList();
                 result.Data = _mapper.Map<List<CourierCoordinate>, List<CourierCoordinateDto>>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;

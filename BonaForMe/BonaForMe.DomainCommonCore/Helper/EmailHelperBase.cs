@@ -1,44 +1,40 @@
-﻿using static BonaForMe.DomainCommonCore.Enums.AppEnums;
+﻿using BonaForMe.DomainCore.DTO;
+using static BonaForMe.DomainCommonCore.Enums.AppEnums;
 
 namespace BonaForMe.DomainCommonCore.Helper
 {
     public class EmailHelperBase
     {
-        public static string GetEmailTemplates(MailTypes mailTypes, string notification = "")
+        public static string GetEmailTemplates(MailTypes mailTypes, string content, string notification = "")
         {
             switch (mailTypes)
             {
                 case MailTypes.Welcome:
                     return GetMailBody(
-                        "Welcome to Bona Me For Me!",
-                        "Welcome to Bona Me For Me. Thank you for choosing us for your shopping. </br> Good shopping.",
+                        content,
                         notification);
                 case MailTypes.ForgetPassword:
                     return GetMailBody(
-                        "Password Reset",
-                        "Bona Me For Me Your new temporary user password is given below.</br> For your security, please change your password! </br>",
+                        content,
                         notification);
                 case MailTypes.MobileApprove:
                     return GetMailBody(
-                        "Mobile Approve",
-                        "Hello, welcome aboard.</br> You can use the confirmation code given below to activate your account. Good shopping.",
+                        content,
                         notification);
                 case MailTypes.InvoiceDelivery:
                     var address = "https://www.bonameforme.com/Invoice/" + notification + ".pdf";
                     var link = "<a href='" + address + "#'>View Invoice</a>";
                     return GetMailBody(
-                        "Shopping Invoice",
-                        "An invoice for your products supplied by Bona Me For Me has been created.</br> You can access your invoice from the link below.",
+                        content,
                         link);
                 default:
                     return "";
             }
         }
 
-        public static string GetMailBody(string baslik, string icerik, string notification)
+        public static string GetMailBody(string icerik, string notification)
         {
             string content = MailTemplate;
-            content = content.Replace("|Baslik|", baslik);
             content = content.Replace("|Icerik|", icerik);
             content = content.Replace("|Notification|", GetNotification(notification));
             return content;
@@ -68,7 +64,6 @@ namespace BonaForMe.DomainCommonCore.Helper
                                                style='max-width:670px; background:#fff; border-radius:3px; text-align:center;-webkit-box-shadow:0 6px 18px 0 rgba(0,0,0,.06);-moz-box-shadow:0 6px 18px 0 rgba(0,0,0,.06);box-shadow:0 6px 18px 0 rgba(0,0,0,.06);'>
                                             <tr style = 'margin: 100px;' >
                                                 <td style='padding:35px;'>
-                                                    <h1 style = 'color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:'Rubik',sans-serif;' >|Baslik|</ h1 >
                                                     <span style='display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;'></span>
                                                     <p style = 'color:#455056; font-size:15px;line-height:24px; margin:0;' >
                                                         |Icerik|

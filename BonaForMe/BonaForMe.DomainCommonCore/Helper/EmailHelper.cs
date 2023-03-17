@@ -6,14 +6,13 @@ namespace BonaForMe.DomainCommonCore.Helper
 {
     public class EmailHelper
     {
-        public static Result.Result SendMail(string email, MailTypes mailTypes, string notification)
+        public static Result.Result SendMail(string email, string title, string bodyMessage)
         {
             Result.Result result = new Result.Result();
 
-            string bodyMessage = EmailHelperBase.GetEmailTemplates(mailTypes, notification);
             var message = new MailMessage("info@bonameforme.com", email)
             {
-                Subject = "Bona Me For Me User Password Renewal Process",
+                Subject = title,
                 Body = bodyMessage,
                 IsBodyHtml = true,
                 BodyEncoding = Encoding.GetEncoding("utf-8")

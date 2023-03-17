@@ -44,8 +44,8 @@
     $(document).ready(function () {
         ymaps.ready(function () {
             myMap = new ymaps.Map("map", {
-                center: [55.76, 37.64],
-                zoom: 7
+                center: [51.90, -8.47],
+                zoom: 13
             });
             getCourierCoordinate();
         });
@@ -67,10 +67,10 @@
 
     function createPlacemarks(coordinates) {
         coordinates.forEach((item, index) => {
-            var text = "xCoordinate : " + item.xCoordinate + " / " + "yCoordinate : " + item.yCoordinate;
+            var text = item.user.fullName + " / " + item.user.userPhone;
             var placemark = new ymaps.Placemark([item.xCoordinate, item.yCoordinate], { balloonContent: text }, {
                 iconLayout: 'default#image',
-                iconImageHref: '~/../../images/mapIcon.png',
+                iconImageHref: '~/../../images/newMapIcon.png',
                 iconImageSize: [32, 39],
             });
             myMap.geoObjects.add(placemark);
