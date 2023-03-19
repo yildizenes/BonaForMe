@@ -310,12 +310,15 @@
     }
 
     function jsSaveProduct() {
+        console.log($("#Price").val());
+        var price = $("#Price").val().toString().replace('.', ',');
+        console.log(price);
         var formData = new FormData();
         formData.append('Id', $("#hdnProductId").val());
         formData.append('Name', $("#Name").val());
         formData.append('Description', $("#Description").val());
         formData.append('ProductUnitId', $("#ProductUnitId").val());
-        formData.append('Price', $("#Price").val().toString().replace('.', ','));
+        formData.append('Price', price);
         formData.append('TaxRate', $("#TaxRate").val());
         formData.append('CurrencyUnitId', $("#CurrencyUnitId").val());
         formData.append('Stock', $("#Stock").val());
