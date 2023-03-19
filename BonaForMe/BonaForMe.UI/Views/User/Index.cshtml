@@ -138,6 +138,15 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
+                            <label for="AirCode" class="control-label"><span style="color:red">* </span>Eir Code</label>
+                            <input name="AirCode" id="AirCode" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
                             <label for="Address" class="control-label"><span style="color:red">* </span>Address</label>
                             <input name="Address" id="Address" class="form-control" required />
                         </div>
@@ -248,6 +257,7 @@
         $("#Country").val("");
         $("#City").val("");
         $("#District").val("");
+        $("#AirCode").val("");
         $("#Address").val("");
         $("#CompanyName").val("");
         document.getElementById("IsAdmin").checked = false;
@@ -267,6 +277,7 @@
             $("#Country").val(result.country);
             $("#City").val(result.city);
             $("#District").val(result.district);
+            $("#AirCode").val(result.airCode);
             $("#Address").val(result.address);
             $("#CompanyName").val(result.companyName);
             document.getElementById("IsAdmin").checked = result.isAdmin;
@@ -288,6 +299,7 @@
             Country: $("#Country").val(),
             City: $("#City").val(),
             District: $("#District").val(),
+            AirCode: $("#AirCode").val(),
             Address: $("#Address").val(),
             CompanyName: $("#CompanyName").val(),
             IsAdmin: $("#IsAdmin").is(':checked'),

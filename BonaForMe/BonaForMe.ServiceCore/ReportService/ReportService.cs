@@ -166,7 +166,7 @@ namespace BonaForMe.ServiceCore.ReportService
 
                 reportDatasDto.RevenueTaxSummary = new ReportColumnDto { FirstColumn = "Revenue Gross", SecondColumn = data.Count().ToString(), ThirdColumn = "EUR" + string.Format("{0:0.00}", revenue) };
 
-                var taxRates = data.GroupBy(x => x.Product.TaxRate).Select(g => new ReportColumnDto
+                var taxRates = data.GroupBy(x => x.Product.TaxRate).OrderBy(x=> x.Key).Select(g => new ReportColumnDto
                 {
                     FirstColumn = "VAT " + g.Key + "%",
                     SecondColumn = "EUR" + string.Format("{0:0.00}", g.Sum(a => (a.Count * a.Price * a.Product.TaxRate) / 100))

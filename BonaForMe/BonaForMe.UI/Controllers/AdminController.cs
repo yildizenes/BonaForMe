@@ -104,7 +104,7 @@ namespace BonaForMe.UI.Controllers
 
                 var culture = new CultureInfo("en");
 
-                section.Add(CreatePageTitle("SOLMAZ PACKAGING LIMITED"));
+                section.Add(CreatePageTitle("SOLMAZ LTD."));
                 section.Add(Add2Columns("Merchant-ID MCRP24NZ", ((DateTime)reportDateDto.StartDate).ToString("dd MMMM yyyy HH:mm", culture) + "->" + ((DateTime)reportDateDto.EndDate).ToString("dd MMMM yyyy HH:mm", culture)));
                 section.Add(Add2Columns("VAT-ID     3933414LH", ""));
 
