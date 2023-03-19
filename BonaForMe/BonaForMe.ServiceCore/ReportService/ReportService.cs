@@ -7,6 +7,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -51,6 +52,7 @@ namespace BonaForMe.ServiceCore.ReportService
             }
             return result;
         }
+
         public Result<byte[]> CreateReport(ReportDateDto reportDateDto)
         {
             Result<byte[]> result = new Result<byte[]>();
@@ -131,6 +133,86 @@ namespace BonaForMe.ServiceCore.ReportService
                     result.Data = ms.ToArray();
                 }
 
+                result.Success = true;
+                result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
+
+        public Result<ReportDatasDto> ReportValue(ReportDateDto reportDateDto)
+        {
+            Result<ReportDatasDto> result = new Result<ReportDatasDto>();
+            ReportDatasDto reportDatasDto = new ReportDatasDto();
+
+            try
+            {
+                var data = _context.OrderLogs
+                    .Include(x => x.Product).ThenInclude(x => x.Category)
+                    .Include(x => x.Product).ThenInclude(x => x.CurrencyUnit)
+                    .Include(x => x.Order).ThenInclude(x => x.User)
+                    .Include(x => x.Order).ThenInclude(x => x.OrderStatus)
+                    .Where(x => x.DateCreated >= reportDateDto.StartDate && x.DateCreated <= reportDateDto.EndDate && x.Price > 0 && x.IsActive && !x.IsDeleted).ToList();
+
+                var totalPrice = data.Sum(x => x.Count * x.Price);
+                var totalTaxRate = data.Sum(x => x.Count * x.Price * x.Product.TaxRate / 100);
+                var revenue = string.Format("{0:0.00}", totalPrice + totalTaxRate);
+                //var revenue = data.Sum(item => item.Count * item.Price * (1 + (decimal)item.Product.TaxRate / 100));
+
+                reportDatasDto.RevenueTaxSummary = new ReportColumnDto { FirstColumn = "Revenue Gross", SecondColumn = data.Count().ToString(), ThirdColumn = "EUR" + string.Format("{0:0.00}", revenue) };
+
+                var taxRates = data.GroupBy(x => x.Product.TaxRate).Select(g => new ReportColumnDto
+                {
+                    FirstColumn = "VAT " + g.Key + "%",
+                    SecondColumn = "EUR" + string.Format("{0:0.00}", g.Sum(a => (a.Count * a.Price * a.Product.TaxRate) / 100))
+                }); // TaxRate - Count - Price
+
+
+                var taxes = new List<ReportColumnDto>();
+                taxes.Add(new ReportColumnDto { FirstColumn = "Net", SecondColumn = "EUR" + string.Format("{0:0.00}", totalPrice) });
+                foreach (var item in taxRates)
+                    taxes.Add(new ReportColumnDto { FirstColumn = item.FirstColumn, SecondColumn = item.SecondColumn });
+                taxes.Add(new ReportColumnDto { FirstColumn = "Revenue gross", SecondColumn = "EUR" + revenue });
+                taxes.Add(new ReportColumnDto { FirstColumn = "Net total", SecondColumn = "EUR" + string.Format("{0:0.00}", totalPrice) });
+                taxes.Add(new ReportColumnDto { FirstColumn = "Tax total", SecondColumn = "EUR" + string.Format("{0:0.00}", totalTaxRate) });
+                taxes.Add(new ReportColumnDto { FirstColumn = "Revenue", SecondColumn = "EUR" + revenue});
+                reportDatasDto.Taxes = taxes;
+
+
+
+                var revenueByEmployees = new List<ReportColumnDto>();
+                revenueByEmployees.Add(new ReportColumnDto { FirstColumn = "Solmaz LTD.", SecondColumn = data.Count().ToString(), ThirdColumn = "EUR" + revenue });
+                revenueByEmployees.Add(new ReportColumnDto { FirstColumn = "Total", SecondColumn = data.Count().ToString(), ThirdColumn = "EUR" + revenue });
+                reportDatasDto.RevenueByEmployees = revenueByEmployees;
+
+
+
+                reportDatasDto.RevenueByCategories = data.GroupBy(x => x.Product.Category.Name).Select(g => new ReportColumnDto
+                {
+                    FirstColumn = g.Key,
+                    SecondColumn = g.Count().ToString(),
+                    ThirdColumn = "EUR" + string.Format("{0:0.00}", g.Sum(a => a.Count * a.Price * (1 + (decimal)a.Product.TaxRate / 100)))
+                    //ThirdColumn = "EUR" + g.Sum(a => a.Count * a.Price * (1 + Decimal.Parse((a.Product.TaxRate / 100).ToString()))).ToString()
+                }).ToList(); // CategoryName - Count - Price
+
+
+
+
+                reportDatasDto.PaymentMethods = data.GroupBy(x => x.Order.PayType).Select(g => new ReportColumnDto
+                {
+                    FirstColumn = g.Key,
+                    SecondColumn = g.Count().ToString(),
+                    ThirdColumn = "EUR" + string.Format("{0:0.00}", g.Sum(a => a.Count * a.Price * (1 + (decimal)a.Product.TaxRate / 100)))
+                }).ToList(); // CurrencyUnitName - Count - Price
+
+
+
+                result.Data = reportDatasDto;
                 result.Success = true;
                 result.Message = ResultMessages.Success;
             }

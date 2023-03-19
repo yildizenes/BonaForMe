@@ -25,21 +25,21 @@ namespace BonaForMe.ServiceCore.MailSenderService
             {
                 case MailTypes.Welcome:
                     title = "Welcome to Bona Me For Me!";
-                    bodyMessage = EmailHelperBase.GetEmailTemplates(mailTypes, mailText.WelcomeMailText, notification);
+                    bodyMessage = EmailHelperBase.GetMailBody(mailText.WelcomeMailText, notification);
                     break;
                 case MailTypes.ForgetPassword:
                     title = "Password Reset";
-                    bodyMessage = EmailHelperBase.GetEmailTemplates(mailTypes, mailText.ForgetPasswordMailText, notification);
+                    bodyMessage = EmailHelperBase.GetMailBody(mailText.ForgetPasswordMailText, notification);
                     break;
                 case MailTypes.MobileApprove:
                     title = "Mobile Approved";
-                    bodyMessage = EmailHelperBase.GetEmailTemplates(mailTypes, mailText.MobileApproveMailText, notification);
+                    bodyMessage = EmailHelperBase.GetMailBody(mailText.MobileApproveMailText, notification);
                     break;
                 case MailTypes.InvoiceDelivery:
                     title = "Shopping Invoice";
                     var address = "https://www.bonameforme.com/Invoice/" + notification + ".pdf";
-                    var link = "<a href='" + address + "#'>View Invoice</a>";
-                    bodyMessage = EmailHelperBase.GetEmailTemplates(mailTypes, mailText.InvoiceDeliveryMailText, link);
+                    var link = "<a href='" + address + "'>View Invoice</a>";
+                    bodyMessage = EmailHelperBase.GetMailBody(mailText.InvoiceDeliveryMailText, link);
                     break;
                 default:
                     break;

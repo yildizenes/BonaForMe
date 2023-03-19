@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace BonaForMe.UI.Controllers
@@ -36,6 +38,11 @@ namespace BonaForMe.UI.Controllers
             return View(result.Data);
         }
 
+        public IActionResult Reports()
+        {
+            return View();
+        }
+
         [AllowAnonymous]
         [HttpPost]
         public IActionResult GetSalesValue(ReportDateDto reportDateDto)
@@ -58,8 +65,10 @@ namespace BonaForMe.UI.Controllers
             return File(result.Data, "application/octet-stream", fileName + ".xlsx");
         }
 
-        public FileResult CreatePDFReport(/*ReportDateDto reportDateDto*/)
+        public FileResult CreatePDFReport(ReportDateDto reportDateDto)
         {
+            var result = _reportService.ReportValue(reportDateDto).Data;
+
             using (MemoryStream stream = new MemoryStream())
             {
                 Document document = new Document();
@@ -80,32 +89,42 @@ namespace BonaForMe.UI.Controllers
                 style = document.Styles.AddStyle("Content", "Normal");
                 style.ParagraphFormat.SpaceAfter = 15;
                 style.Font.Color = Colors.Black;
+                style.ParagraphFormat.AddTabStop("18cm", TabAlignment.Right);
+
+                style = document.Styles.AddStyle("Content3", "Normal");
+                style.ParagraphFormat.SpaceAfter = 15;
+                style.Font.Color = Colors.Black;
+                style.ParagraphFormat.AddTabStop("10cm", TabAlignment.Right);
+                style.ParagraphFormat.AddTabStop("18cm", TabAlignment.Right);
 
                 style = document.Styles.AddStyle("PageTitle", "Normal");
                 style.ParagraphFormat.SpaceAfter = 20;
                 style.Font.Color = Colors.Black;
                 style.Font.Size = 14;
 
+                var culture = new CultureInfo("en");
 
                 section.Add(CreatePageTitle("SOLMAZ PACKAGING LIMITED"));
-                section.Add(Add2Columns("Merchant-ID MCRP24NZ", 55, "4 Feb 2023 00:00 -> 10 Feb 2023 23:45"));
-                section.Add(Add2Columns("VAT-ID     3933414LH", 50, ""));
+                section.Add(Add2Columns("Merchant-ID MCRP24NZ", ((DateTime)reportDateDto.StartDate).ToString("dd MMMM yyyy HH:mm", culture) + "->" + ((DateTime)reportDateDto.EndDate).ToString("dd MMMM yyyy HH:mm", culture)));
+                section.Add(Add2Columns("VAT-ID     3933414LH", ""));
 
-                RevenueTaxSummary(section);
-                Taxes(section);
-                RevenueByCategory(section);
-                RevenueByEmployee(section);
-                SalesRevenue(section);
+                RevenueTaxSummary(section, result.RevenueTaxSummary);
+                Taxes(section, result.Taxes);
+                RevenueByCategory(section, result.RevenueByCategories);
+                RevenueByEmployee(section, result.RevenueByEmployees);
+                PaymentMethods(section, result.PaymentMethods);
 
                 PdfDocumentRenderer renderer = new PdfDocumentRenderer(true);
                 renderer.Document = document;
                 renderer.RenderDocument();
                 renderer.PdfDocument.Save(stream, true);
-                return File(stream.ToArray(), "application/octet-stream", "asdasd" + ".pdf");
+
+                var fileName = reportDateDto.StartDate.ToString() + " - " + reportDateDto.EndDate.ToString();
+                return File(stream.ToArray(), "application/octet-stream", fileName  + ".pdf");
             }
         }
 
-        private void RevenueTaxSummary(Section section)
+        private void RevenueTaxSummary(Section section, ReportColumnDto revenueTaxSummary)
         {
             Paragraph paragraph = section.AddParagraph();
             paragraph.Style = "Title";
@@ -117,38 +136,43 @@ namespace BonaForMe.UI.Controllers
 
             paragraph.Format.Borders.Bottom = new Border { Width = 1, Color = Colors.LightGray };
             paragraph.Format.Borders.DistanceFromTop = 3;
-            section.Add(Add3Columns("Revenue gross", 82, "32", 25, "EUR13,455.10"));
+            section.Add(Add3Columns(revenueTaxSummary.FirstColumn, revenueTaxSummary.SecondColumn, revenueTaxSummary.ThirdColumn));
         }
 
-        private void Taxes(Section section)
+        private void Taxes(Section section, List<ReportColumnDto> taxes)
         {
             section.Add(CreateTitle("Taxes"));
-            section.Add(Add2Columns("Net", 126, "EUR10,939.08"));
-            section.Add(Add2Columns("VAT 23%", 118, "EUR10,939.08"));
-            section.Add(Add2Columns("Revenue gross ", 109, "EUR10,939.08"));
-            section.Add(Add2Columns("Net total", 118, "EUR10,939.08"));
-            section.Add(Add2Columns("Tax total", 118, "EUR10,939.08"));
-            section.Add(Add2Columns("Revenue", 118, "EUR10,939.08"));
+            foreach (var tax in taxes)
+            {
+                section.Add(Add2Columns(tax.FirstColumn, tax.SecondColumn));
+            }
         }
 
-        private void RevenueByCategory(Section section)
+        private void RevenueByCategory(Section section, List<ReportColumnDto> revenueByCategories)
         {
             section.Add(CreateTitle("Revenue by category (gross)"));
-            section.Add(Add2Columns("My Shelf", 118, "EUR13,455.10"));
+            foreach (var category in revenueByCategories)
+            {
+                section.Add(Add3Columns(category.FirstColumn, category.SecondColumn, category.ThirdColumn));
+            }
         }
 
-        private void RevenueByEmployee(Section section)
+        private void RevenueByEmployee(Section section, List<ReportColumnDto> revenueByEmployees)
         {
             section.Add(CreateTitle("Revenue by employee"));
-            section.Add(Add3Columns("solmazpackaging@gmail.com", 60, "32", 25, "EUR13,455.10"));
-            section.Add(Add3Columns("Total", 95, "32", 25, "EUR13,455.10"));
+            foreach (var employee in revenueByEmployees)
+            {
+                section.Add(Add3Columns(employee.FirstColumn, employee.SecondColumn, employee.ThirdColumn));
+            }
         }
 
-        private void SalesRevenue(Section section)
+        private void PaymentMethods(Section section, List<ReportColumnDto> paymentMethods)
         {
             section.Add(CreateTitle("Sales revenue per payment method (gross)"));
-            section.Add(Add3Columns("Cash", 95, "32", 25, "EUR13,455.10"));
-            section.Add(Add3Columns("Total", 95, "32", 25, "EUR13,455.10"));
+            foreach (var method in paymentMethods)
+            {
+                section.Add(Add3Columns(method.FirstColumn, method.SecondColumn, method.ThirdColumn));
+            }
         }
 
         private Paragraph CreatePageTitle(string text)
@@ -169,24 +193,24 @@ namespace BonaForMe.UI.Controllers
             return paragraph;
         }
 
-        private Paragraph Add2Columns(string text1, int space, string text2)
+        private Paragraph Add2Columns(string text1, string text2)
         {
             Paragraph paragraph = new Paragraph();
             paragraph.Style = "Content";
             paragraph.AddText(text1);
-            paragraph.AddSpace(space);
+            paragraph.AddTab();
             paragraph.AddText(text2);
             return paragraph;
         }
 
-        private Paragraph Add3Columns(string text1, int space1, string text2, int space2, string text3)
+        private Paragraph Add3Columns(string text1, string text2, string text3)
         {
             Paragraph paragraph = new Paragraph();
-            paragraph.Style = "Content";
+            paragraph.Style = "Content3";
             paragraph.AddText(text1);
-            paragraph.AddSpace(space1);
+            paragraph.AddTab();
             paragraph.AddText(text2);
-            paragraph.AddSpace(space2);
+            paragraph.AddTab();
             paragraph.AddText(text3);
             return paragraph;
         }

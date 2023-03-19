@@ -5,33 +5,6 @@ namespace BonaForMe.DomainCommonCore.Helper
 {
     public class EmailHelperBase
     {
-        public static string GetEmailTemplates(MailTypes mailTypes, string content, string notification = "")
-        {
-            switch (mailTypes)
-            {
-                case MailTypes.Welcome:
-                    return GetMailBody(
-                        content,
-                        notification);
-                case MailTypes.ForgetPassword:
-                    return GetMailBody(
-                        content,
-                        notification);
-                case MailTypes.MobileApprove:
-                    return GetMailBody(
-                        content,
-                        notification);
-                case MailTypes.InvoiceDelivery:
-                    var address = "https://www.bonameforme.com/Invoice/" + notification + ".pdf";
-                    var link = "<a href='" + address + "#'>View Invoice</a>";
-                    return GetMailBody(
-                        content,
-                        link);
-                default:
-                    return "";
-            }
-        }
-
         public static string GetMailBody(string icerik, string notification)
         {
             string content = MailTemplate;
