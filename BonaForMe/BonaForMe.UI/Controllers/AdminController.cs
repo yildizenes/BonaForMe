@@ -38,6 +38,7 @@ namespace BonaForMe.UI.Controllers
             return View(result.Data);
         }
 
+        [AllowAnonymous]
         public IActionResult Reports()
         {
             return View();

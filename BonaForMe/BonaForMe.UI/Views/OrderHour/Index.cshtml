@@ -40,6 +40,7 @@
                                         <th>Id</th>
                                         <th>Text</th>
                                         <th>Description</th>
+                                        <th>Active</th>
                                         <th class="noExport">Actions</th>
                                     </tr>
                                 </thead>
@@ -135,6 +136,14 @@
                 {
                     "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
                     "render": function (data, type, full, meta) {
+                        var checkboxId = "isActive_" + full.id;
+                        var isChecked = full.isActive == true ? "checked" : "";
+                        return "<input type='checkbox' id='" + checkboxId + "' style='margin-left:5px; transform: scale(2.0)' onchange=activeOrderHour('" + full.id + "'); " + isChecked + ">"
+                    }
+                },
+                {
+                    "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
+                    "render": function (data, type, full, meta) {
                         var buttonGroup = "<div class='btn-group role='group'>";
                         buttonGroup += "<a href='#' class='btn btn-warning btn-sm' style='color:white; margin:0px 5px;' onclick=jsOpenSaveOrderHour('" + full.id + "');><i class='fas fa-edit'></i> Edit </a>"
                         buttonGroup += "<a href='#' class='btn btn-danger btn-sm' style='color:white; margin:0px 5px;' onclick=DeleteData('" + full.id + "');> <i class='fas fa-trash'></i> Delete </a>";
@@ -145,6 +154,22 @@
             ],
             "bDestroy": true,
         });
+    }
+
+    function activeOrderHour(id) {
+        var checkboxId = "#isActive_" + id;
+        var isActive = $(checkboxId).is(':checked');
+        var data = { orderHourId: id, isActive: isActive }
+        var result = ajaxRequest('POST', '@Url.Action("ChangeActive", "OrderHour")', data);
+
+        if (result != null) {
+            if (result.success)
+                toastr.success('Transaction successful.');
+            else
+                toastr.error(result.message);
+        }
+        else
+            toastr.error('Error in approving!');
     }
 
     function jsOpenSaveOrderHour(id) {

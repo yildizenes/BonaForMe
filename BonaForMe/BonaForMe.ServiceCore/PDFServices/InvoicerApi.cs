@@ -125,6 +125,7 @@ namespace BonaForMe.ServiceCore.PDFServices
         public void Save(string filename, string password = null)
         {
             var path = Path.Combine(Directory.GetCurrentDirectory()).Replace("api.bonameforme.com", "httpdocs") + @"\";
+            //var path = Path.Combine(Directory.GetCurrentDirectory()).Replace("BonaForMe.API", "BonaForMe.UI") + @"\";
             if (filename == null || !System.IO.Path.HasExtension(filename))
             {
                 filename = Path.ChangeExtension(Invoice.Reference, "pdf");

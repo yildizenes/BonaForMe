@@ -145,11 +145,35 @@ namespace BonaForMe.ServiceCore.OrderHourService
             return result;
         }
 
+        public Result ChangeActive(Guid orderHourId, bool isActive)
+        {
+            Result result = new Result();
+            try
+            {
+                var model = _context.OrderHours.FirstOrDefault(x => x.Id == orderHourId);
+                if (model != null)
+                {
+                    model.IsActive = isActive;
+                    _context.Entry(model).State = EntityState.Detached;
+                    _context.Update(model);
+                }
+                _context.SaveChanges();
+                result.Success = true;
+                result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
         public JsonResult FillDataTable(DataTableDto dataTable)
         {
             try
             {
-                var orderHours = GetAllOrderHour().Data.AsQueryable();
+                var orderHours = _context.OrderHours.Where(x => !x.IsDeleted).AsQueryable();
                 //Sorting
                 if (!string.IsNullOrEmpty(dataTable.SortColumn) && !string.IsNullOrEmpty(dataTable.SortColumnDirection))
                 {

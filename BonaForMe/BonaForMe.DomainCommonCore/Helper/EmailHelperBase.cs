@@ -19,11 +19,11 @@ namespace BonaForMe.DomainCommonCore.Helper
         }
 
         private static string Notification = @"
-            <a href='javascript:void(0);' 
+            <span 
                 style='background:#20e277;
                     text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff; 
                     font-size:14px; padding:10px 24px; display:inline-block; border-radius:50px;'>
-                    |Icerik|</a>
+                    |Icerik|</span>
                 ";
 
         private static string MailTemplate = @"

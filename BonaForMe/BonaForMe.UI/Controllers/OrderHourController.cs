@@ -97,6 +97,21 @@ namespace BonaForMe.UI.Controllers
             }
         }
 
+
+        [HttpPost]
+        public JsonResult ChangeActive(Guid orderHourId, bool isActive)
+        {
+            try
+            {
+                var result = _orderHourService.ChangeActive(orderHourId, isActive);
+                return new JsonResult(result);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         [HttpPost]
         public IActionResult LoadOrderHourData()
         {

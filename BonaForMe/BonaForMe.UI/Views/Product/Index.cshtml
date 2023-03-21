@@ -310,9 +310,7 @@
     }
 
     function jsSaveProduct() {
-        console.log($("#Price").val());
-        var price = $("#Price").val().toString().replace('.', ',');
-        console.log(price);
+        var price = $("#Price").val().toString().replace(',', '.');
         var formData = new FormData();
         formData.append('Id', $("#hdnProductId").val());
         formData.append('Name', $("#Name").val());

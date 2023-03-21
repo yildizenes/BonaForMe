@@ -13,7 +13,7 @@ namespace BonaForMe.ServiceCore.OrderHourService
         Result<OrderHourDto> UpdateOrderHour(OrderHourDto orderHourDto);
         Result<OrderHourDto> GetOrderHourById(Guid id);
         Result<List<OrderHourDto>> GetAllOrderHour();
+        Result ChangeActive(Guid orderHourId, bool isActive);
         JsonResult FillDataTable(DataTableDto dataTable);
-
     }
 }
