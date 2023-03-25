@@ -10,7 +10,7 @@ namespace BonaForMe.DomainCommonCore.Helper
         {
             Result.Result result = new Result.Result();
 
-            var message = new MailMessage("info@bonameforme.com", email)
+            var message = new MailMessage("noreply@boname.ie", email)
             {
                 Subject = title,
                 Body = bodyMessage,
@@ -24,7 +24,7 @@ namespace BonaForMe.DomainCommonCore.Helper
                 EnableSsl = true,
                 Host = "mail.bonameforme.com",
                 Port = 587,
-                Credentials = new NetworkCredential("info@bonameforme.com", "Bgw9v457^"),
+                Credentials = new NetworkCredential("noreply@boname.ie", "1#x8a1kA8"),
                 Timeout = 10000,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,

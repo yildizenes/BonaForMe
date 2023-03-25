@@ -24,7 +24,7 @@ namespace BonaForMe.ServiceCore.MailSenderService
             switch (mailTypes)
             {
                 case MailTypes.Welcome:
-                    title = "Welcome to Bona Me For Me!";
+                    title = "Welcome to Boname Marketing!";
                     bodyMessage = EmailHelperBase.GetMailBody(mailText.WelcomeMailText, notification);
                     break;
                 case MailTypes.ForgetPassword:
