@@ -7,5 +7,6 @@ namespace BonaForMe.ServiceCore.AccountService
     {
         Result<UserDto> Login(AccountDto accountDto);
         Result<ResetPasswordDto> ResetPassword(ResetPasswordDto resetPasswordDto);
+        Result<ResetPasswordDto> ResetPasswordByEmail(ResetPasswordDto resetPasswordDto);
     }
 }

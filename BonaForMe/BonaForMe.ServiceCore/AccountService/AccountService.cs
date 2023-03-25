@@ -85,5 +85,36 @@ namespace BonaForMe.ServiceCore.AccountService
             }
             return result;
         }
+
+        public Result<ResetPasswordDto> ResetPasswordByEmail(ResetPasswordDto resetPasswordDto)
+        {
+            Result<ResetPasswordDto> result = new Result<ResetPasswordDto>();
+            try
+            {
+                var model = _context.Users.FirstOrDefault(x => x.UserMail == resetPasswordDto.UserMail && x.IsActive && !x.IsDeleted);
+
+                if (model != null)
+                {
+                    model.UserPassword = resetPasswordDto.NewPassword;
+                    _context.Entry(model).State = EntityState.Detached;
+                    _context.Update(model);
+                    _context.SaveChanges();
+
+                    result.Data = resetPasswordDto;
+                    result.Success = true;
+                    result.Message = ResultMessages.Success;
+                }
+                else
+                {
+                    result.Success = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
     }
 }

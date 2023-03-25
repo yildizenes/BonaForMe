@@ -75,8 +75,8 @@ namespace Invoicer.Services.Impl
         {
             Section section = Pdf.LastSection;
 
-            Address leftAddress = Invoice.Company;
-            Address rightAddress = Invoice.Client;
+            Address leftAddress = Invoice.Client;
+            Address rightAddress = Invoice.Company;
 
             if (Invoice.CompanyOrientation == PositionOption.Right)
                 Utils.Swap<Address>(ref leftAddress, ref rightAddress);
@@ -107,7 +107,7 @@ namespace Invoicer.Services.Impl
             foreach (string line in address)
             {
                 Paragraph name = cell.AddParagraph();
-                if (line == address[0])
+                if (line == address[0] || line.Contains("Company"))
                     name.AddFormattedText(line, "H2-10B");
                 else
                     name.AddFormattedText(line, "H2-9-Grey");

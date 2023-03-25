@@ -477,7 +477,7 @@ namespace BonaForMe.ServiceCore.OrderService
         public Result CreateInvoice(Guid orderId)
         {
             Result result = new Result();
-            var path = Path.Combine(Directory.GetCurrentDirectory()).Replace("api.bonameforme.com", "httpdocs") + @"\";
+            var path = Path.Combine(Directory.GetCurrentDirectory()).Replace("api.boname.ie", "httpdocs") + @"\";
             //var path = Path.Combine(Directory.GetCurrentDirectory()).Replace("BonaForMe.API", "BonaForMe.UI") + @"\";
 
             var order = GetOrderById(orderId);
@@ -498,7 +498,7 @@ namespace BonaForMe.ServiceCore.OrderService
             {
                 new InvoicerApi(SizeOption.A4, OrientationOption.Portrait, "€", order.Data.OrderCode)
                     .TextColor("#CC0000")
-                    .Image(path + @"wwwroot\images\faturaLogo.png", 225, 110)
+                    .Image(path + @"wwwroot\images\faturaLogo.png", 180, 75)
                     .Company(Address.Make("FROM", new string[] {
                         "SOLMAZ LTD.",
                         "Unit 9-10, The New Sunbeam Industrial Estate",

@@ -7,9 +7,17 @@ namespace BonaForMe.DomainCommonCore.Helper
     {
         public static string GetMailBody(string icerik, string notification)
         {
-            string content = MailTemplate;
-            content = content.Replace("|Icerik|", icerik);
-            content = content.Replace("|Notification|", GetNotification(notification));
+            string content = "";
+            if (icerik.Contains("base64"))
+            {
+                content = icerik;
+            }
+            else
+            {
+                content = MailTemplate;
+                content = content.Replace("|Icerik|", icerik);
+                content = content.Replace("|Notification|", GetNotification(notification));
+            }
             return content;
         }
 

@@ -9,6 +9,9 @@ namespace BonaForMe.DomainCore.DTO
     public class ResetPasswordDto
     {
         public Guid UserId { get; set; }
+
+        public string UserMail { get; set; }
+
         public string OldPassword { get; set; }
 
         public string NewPassword { get; set; }

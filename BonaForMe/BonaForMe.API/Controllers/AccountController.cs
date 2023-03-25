@@ -148,5 +148,20 @@ namespace BonaForMe.API.Controllers
                 return Json(new { success = false, message = ex.Message, data = "" });
             }
         }
+
+        [HttpPost]
+        public JsonResult ResetPasswordByEmail(ResetPasswordDto resetPasswordDto)
+        {
+            try
+            {
+                resetPasswordDto.NewPassword = PasswordHelper.PasswordEncoder(resetPasswordDto.NewPassword);
+                var result = _accountService.ResetPasswordByEmail(resetPasswordDto);
+                return Json(new { success = result.Success, data = result.Data, message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message, data = "" });
+            }
+        }
     }
 }
