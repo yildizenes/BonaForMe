@@ -93,7 +93,8 @@ namespace BonaForMe.DataAccessCore
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
+            modelBuilder.Entity<CourierCoordinate>().Property(o => o.XCoordinate).HasColumnType("decimal(18, 10)");
+            modelBuilder.Entity<CourierCoordinate>().Property(o => o.YCoordinate).HasColumnType("decimal(18, 10)");
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;

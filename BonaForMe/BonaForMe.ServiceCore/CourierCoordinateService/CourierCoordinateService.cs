@@ -25,6 +25,7 @@ namespace BonaForMe.ServiceCore.CourierCoordinateService
         public Result<CourierCoordinateDto> AddCourierCoordinate(CourierCoordinateDto courierCoordinateDto)
         {
             Result<CourierCoordinateDto> result = new Result<CourierCoordinateDto>();
+            bool activeStatus = courierCoordinateDto.IsActive;
             try
             {
                 CourierCoordinate courierCoordinate = _mapper.Map<CourierCoordinate>(courierCoordinateDto);
@@ -34,7 +35,7 @@ namespace BonaForMe.ServiceCore.CourierCoordinateService
                     if (oldModel != null)
                     {
                         DBHelper.SetBaseValues(oldModel, courierCoordinate);
-                        oldModel.IsActive = courierCoordinate.IsActive;
+                        oldModel.IsActive = activeStatus;
                         oldModel.XCoordinate = courierCoordinate.XCoordinate;
                         oldModel.YCoordinate = courierCoordinate.YCoordinate;
                         _context.Entry(oldModel).State = EntityState.Detached;
@@ -46,6 +47,7 @@ namespace BonaForMe.ServiceCore.CourierCoordinateService
                 else
                     _context.Add(courierCoordinate);
                 _context.SaveChanges();
+                courierCoordinate.IsActive = activeStatus;
                 result.Data = _mapper.Map<CourierCoordinateDto>(courierCoordinate);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
