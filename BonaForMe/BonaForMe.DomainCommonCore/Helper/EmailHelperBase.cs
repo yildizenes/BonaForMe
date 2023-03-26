@@ -11,6 +11,7 @@ namespace BonaForMe.DomainCommonCore.Helper
             if (icerik.Contains("base64"))
             {
                 content = icerik;
+                content += notification;
             }
             else
             {

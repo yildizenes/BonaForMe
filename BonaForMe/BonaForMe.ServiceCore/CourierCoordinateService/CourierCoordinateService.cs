@@ -35,6 +35,8 @@ namespace BonaForMe.ServiceCore.CourierCoordinateService
                     {
                         DBHelper.SetBaseValues(oldModel, courierCoordinate);
                         oldModel.IsActive = courierCoordinate.IsActive;
+                        oldModel.XCoordinate = courierCoordinate.XCoordinate;
+                        oldModel.YCoordinate = courierCoordinate.YCoordinate;
                         _context.Entry(oldModel).State = EntityState.Detached;
                         _context.Update(oldModel);
                     }
