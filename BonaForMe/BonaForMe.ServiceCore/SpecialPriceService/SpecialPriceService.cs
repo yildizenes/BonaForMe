@@ -175,7 +175,9 @@ namespace BonaForMe.ServiceCore.SpecialPriceService
                 //Search
                 if (!string.IsNullOrEmpty(dataTable.SearchValue))
                 {
-                    //specialPrices = specialPrices.Where(m => m.Name.ToLower().Contains(dataTable.SearchValue.ToLower()));
+                    specialPrices = specialPrices.Where(m => m.UserName.ToLower().Contains(dataTable.SearchValue.ToLower()) 
+                    || m.ProductName.ToLower().Contains(dataTable.SearchValue.ToLower()) 
+                    || m.Price.ToString().Contains(dataTable.SearchValue.ToLower()));
                 }
                 var data = specialPrices.Skip(dataTable.Skip).Take(dataTable.PageSize);
                 return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = specialPrices.Count(), recordsTotal = specialPrices.Count(), data = data });

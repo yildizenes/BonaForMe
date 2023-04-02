@@ -40,6 +40,8 @@ namespace BonaForMe.DomainCore.DBModel
 
         public string AirCode { get; set; }
 
+        public string VATNo { get; set; }
+
         public bool IsApproved { get; set; }
 
         public bool IsAdmin { get; set; }

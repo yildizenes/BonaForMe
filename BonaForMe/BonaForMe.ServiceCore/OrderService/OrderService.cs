@@ -434,7 +434,11 @@ namespace BonaForMe.ServiceCore.OrderService
                 //Search
                 if (!string.IsNullOrEmpty(dataTable.SearchValue))
                 {
-                    orders = orders.Where(m => m.OrderCode.ToLower().Contains(dataTable.SearchValue.ToLower()));
+                    orders = orders.Where(m => m.OrderCode.ToLower().Contains(dataTable.SearchValue.ToLower())
+                    || m.UserName.ToLower().Contains(dataTable.SearchValue.ToLower())
+                    || m.OrderStatusName.ToLower().Contains(dataTable.SearchValue.ToLower())
+                    || m.PayType.ToLower().Contains(dataTable.SearchValue.ToLower())
+                    );
                 }
                 var data = orders.Skip(dataTable.Skip).Take(dataTable.PageSize);
                 return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = orders.Count(), recordsTotal = orders.Count(), data = data });
@@ -463,7 +467,9 @@ namespace BonaForMe.ServiceCore.OrderService
                 //Search
                 if (!string.IsNullOrEmpty(dataTable.SearchValue))
                 {
-                    orders = orders.Where(m => m.OrderCode.ToLower().Contains(dataTable.SearchValue.ToLower()));
+                    orders = orders.Where(m => m.OrderCode.ToLower().Contains(dataTable.SearchValue.ToLower())
+                    || m.UserName.ToLower().Contains(dataTable.SearchValue.ToLower())
+                    || m.PayType.ToLower().Contains(dataTable.SearchValue.ToLower()));
                 }
                 var data = orders.Skip(dataTable.Skip).Take(dataTable.PageSize);
                 return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = orders.Count(), recordsTotal = orders.Count(), data = data });

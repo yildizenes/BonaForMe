@@ -132,7 +132,7 @@ namespace BonaForMe.ServiceCore.OrderHourService
             Result<List<OrderHourDto>> result = new Result<List<OrderHourDto>>();
             try
             {
-                var model = _context.OrderHours.Where(x => x.IsActive && !x.IsDeleted).ToList();
+                var model = _context.OrderHours.Where(x => x.IsActive && !x.IsDeleted).OrderByDescending(x=> x.DateCreated).ToList();
                 result.Data = _mapper.Map<List<OrderHour>, List<OrderHourDto>>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;
@@ -182,7 +182,8 @@ namespace BonaForMe.ServiceCore.OrderHourService
                 //Search
                 if (!string.IsNullOrEmpty(dataTable.SearchValue))
                 {
-                    orderHours = orderHours.Where(m => m.Description.ToLower().Contains(dataTable.SearchValue.ToLower()));
+                    orderHours = orderHours.Where(m => m.Description.ToLower().Contains(dataTable.SearchValue.ToLower()) 
+                    || m.Text.ToLower().Contains(dataTable.SearchValue.ToLower()));
                 }
                 var data = orderHours.Skip(dataTable.Skip).Take(dataTable.PageSize);
                 return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = orderHours.Count(), recordsTotal = orderHours.Count(), data = data });

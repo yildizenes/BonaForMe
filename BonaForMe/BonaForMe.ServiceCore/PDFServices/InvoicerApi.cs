@@ -11,7 +11,7 @@ namespace BonaForMe.ServiceCore.PDFServices
     public class InvoicerApi : IInvoicerApi
     {
         public Invoice Invoice { get; protected set; }
-        
+
         public static string DefaultReference
         {
             get
@@ -131,7 +131,7 @@ namespace BonaForMe.ServiceCore.PDFServices
                 filename = Path.ChangeExtension(Invoice.Reference, "pdf");
                 filename = path + @"wwwroot\Invoice\" + filename;
             }
-           new PdfInvoice(Invoice).Save(filename, password);
+            new PdfInvoice(Invoice).Save(filename, password);
         }
     }
 }

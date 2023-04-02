@@ -162,19 +162,20 @@ namespace BonaForMe.ServiceCore.CategoryService
         {
             try
             {
-                var categorys = GetAllCategory().Data.AsQueryable();
+                var categories = GetAllCategory().Data.AsQueryable();
                 //Sorting
                 if (!string.IsNullOrEmpty(dataTable.SortColumn) && !string.IsNullOrEmpty(dataTable.SortColumnDirection))
                 {
-                    categorys = categorys.OrderBy(dataTable.SortColumn + " " + dataTable.SortColumnDirection);
+                    categories = categories.OrderBy(dataTable.SortColumn + " " + dataTable.SortColumnDirection);
                 }
                 //Search
                 if (!string.IsNullOrEmpty(dataTable.SearchValue))
                 {
-                    categorys = categorys.Where(m => m.Description.ToLower().Contains(dataTable.SearchValue.ToLower()));
+                    categories = categories.Where(m => m.Name.ToLower().Contains(dataTable.SearchValue.ToLower()) 
+                    || m.Description.ToLower().Contains(dataTable.SearchValue.ToLower()));
                 }
-                var data = categorys.Skip(dataTable.Skip).Take(dataTable.PageSize);
-                return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = categorys.Count(), recordsTotal = categorys.Count(), data = data });
+                var data = categories.Skip(dataTable.Skip).Take(dataTable.PageSize);
+                return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = categories.Count(), recordsTotal = categories.Count(), data = data });
             }
             catch (Exception ex)
             {
@@ -185,6 +186,7 @@ namespace BonaForMe.ServiceCore.CategoryService
         private void SaveImage(IFormFile formFile, Category category)
         {
             var path = Path.Combine(Directory.GetCurrentDirectory()).Replace("api.boname.ie", "httpdocs") + @"\";
+            //var path = Path.Combine(Directory.GetCurrentDirectory()).Replace("BonaForMe.API", "BonaForMe.UI") + @"\";
             byte[] picture = null;
             using (var ms = new MemoryStream())
             {

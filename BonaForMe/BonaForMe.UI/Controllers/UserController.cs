@@ -28,6 +28,19 @@ namespace BonaForMe.UI.Controllers
         {
             try
             {
+                if (userDto == null)
+                    return Json(new { success = false });
+
+                if (!userDto.UserMail.Contains("@") && !userDto.UserMail.Contains(".com"))
+                    return Json(new { success = false, message = "Please enter a valid email address" });
+
+                if (userDto.Id == Guid.Empty)
+                {
+                    var mailCheck = _userService.GetUserByEmail(userDto.UserMail);
+                    if (mailCheck.Data != null)
+                        return Json(new { success = false, message = "The entered e-mail address is registered in the system with another user." });
+                }
+
                 if (userDto.Id == Guid.Empty)
                     userDto.UserPassword = PasswordHelper.PasswordEncoder(userDto.UserPassword);
                 var result = _userService.AddUser(userDto);

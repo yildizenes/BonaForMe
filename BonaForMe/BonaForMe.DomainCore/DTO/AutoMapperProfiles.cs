@@ -11,7 +11,8 @@ namespace BonaForMe.DomainCore.DTO
                 .ForMember(x => x.CategoryName, opt => opt.MapFrom(x => x.Category != null ? x.Category.Name : ""));
             CreateMap<AnnouncementDto, Announcement>();
 
-            CreateMap<Category, CategoryDto>();
+            CreateMap<Category, CategoryDto>()
+                .ForMember(x => x.Description, opt => opt.MapFrom(x => x.Description != null ? x.Description : ""));
             CreateMap<CategoryDto, Category>();
 
             CreateMap<ContactInformation, ContactInformationDto>();
@@ -70,7 +71,8 @@ namespace BonaForMe.DomainCore.DTO
             CreateMap<OrderDetail, OrderDetailDto>();
             CreateMap<OrderDetailDto, OrderDetail>();
 
-            CreateMap<WorkPartner, WorkPartnerDto>();
+            CreateMap<WorkPartner, WorkPartnerDto>()
+                .ForMember(x => x.Description, opt => opt.MapFrom(x => x.Description != null ? x.Description : ""));
             CreateMap<WorkPartnerDto, WorkPartner>();
 
             CreateMap<OrderHour, OrderHourDto>();

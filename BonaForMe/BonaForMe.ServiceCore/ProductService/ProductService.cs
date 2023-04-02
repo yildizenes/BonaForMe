@@ -196,7 +196,10 @@ namespace BonaForMe.ServiceCore.ProductService
                 //Search
                 if (!string.IsNullOrEmpty(dataTable.SearchValue))
                 {
-                    products = products.Where(m => m.Description.ToLower().Contains(dataTable.SearchValue.ToLower()));
+                    products = products.Where(m => m.Name.ToLower().Contains(dataTable.SearchValue.ToLower()) 
+                    || m.CategoryName.ToLower().Contains(dataTable.SearchValue.ToLower()) 
+                    || m.Stock.ToString().Contains(dataTable.SearchValue.ToLower()) 
+                    || m.ProductUnitName.ToLower().Contains(dataTable.SearchValue.ToLower()));
                 }
                 var data = products.Skip(dataTable.Skip).Take(dataTable.PageSize);
                 return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = products.Count(), recordsTotal = products.Count(), data = data });

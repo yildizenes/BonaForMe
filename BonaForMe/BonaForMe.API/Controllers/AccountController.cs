@@ -109,6 +109,21 @@ namespace BonaForMe.API.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet]
+        public JsonResult GetUserByEmail(string userMail)
+        {
+            try
+            {
+                var result = _userService.GetUserByEmail(userMail);
+                return Json(new { success = result.Success, data = result.Data, message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message, data = "" });
+            }
+        }
+
+        [AllowAnonymous]
         [HttpPost]
         public JsonResult ForgetPassword(AccountDto accountDto)
         {

@@ -145,6 +145,15 @@
                 </div>
 
                 <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="VATNo" class="control-label"><span style="color:red">* </span>VAT No</label>
+                            <input name="VATNo" id="VATNo" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="Address" class="control-label"><span style="color:red">* </span>Address</label>
@@ -258,6 +267,7 @@
         $("#City").val("");
         $("#District").val("");
         $("#AirCode").val("");
+        $("#VATNo").val("");
         $("#Address").val("");
         $("#CompanyName").val("");
         document.getElementById("IsAdmin").checked = false;
@@ -278,6 +288,7 @@
             $("#City").val(result.city);
             $("#District").val(result.district);
             $("#AirCode").val(result.airCode);
+            $("#VATNo").val(result.vatNo);
             $("#Address").val(result.address);
             $("#CompanyName").val(result.companyName);
             document.getElementById("IsAdmin").checked = result.isAdmin;
@@ -300,6 +311,7 @@
             City: $("#City").val(),
             District: $("#District").val(),
             AirCode: $("#AirCode").val(),
+            VATNo: $("#VATNo").val(),
             Address: $("#Address").val(),
             CompanyName: $("#CompanyName").val(),
             IsAdmin: $("#IsAdmin").is(':checked'),

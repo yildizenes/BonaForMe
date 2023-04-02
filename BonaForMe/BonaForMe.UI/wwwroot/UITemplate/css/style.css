@@ -778,7 +778,7 @@ ol {
             text-transform: uppercase;
             letter-spacing: 2px;
             padding: 12px 0 10px;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.5);
             display: block;
         }
 
@@ -2961,7 +2961,7 @@ ol {
         border: 1px solid #1c1c1c;
         cursor: pointer;
         position: absolute;
-        right: 15px;
+        /*right: 15px;*/
         top: 22px;
     }
 
@@ -3274,7 +3274,7 @@ ol {
         border: 1px solid #1c1c1c;
         cursor: pointer;
         position: absolute;
-        right: 15px;
+        /*right: 15px;*/
         top: 22px;
     }
 

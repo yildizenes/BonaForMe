@@ -205,7 +205,9 @@ namespace BonaForMe.ServiceCore.CampaignProductService
                 //Search
                 if (!string.IsNullOrEmpty(dataTable.SearchValue))
                 {
-                    //campaignProducts = campaignProducts.Where(m => m.Name.ToLower().Contains(dataTable.SearchValue.ToLower()));
+                    campaignProducts = campaignProducts.Where(m => m.ProductName.ToLower().Contains(dataTable.SearchValue.ToLower()) 
+                    || m.Amount.ToString().Contains(dataTable.SearchValue.ToLower()) 
+                    || m.TopPriceLimit.ToString().Contains(dataTable.SearchValue.ToLower()));
                 }
                 var data = campaignProducts.Skip(dataTable.Skip).Take(dataTable.PageSize);
                 return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = campaignProducts.Count(), recordsTotal = campaignProducts.Count(), data = data });

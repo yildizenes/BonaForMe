@@ -77,6 +77,10 @@
         var buttons = getTableButtons("Orders");
 
         var data = { startDate: $('#startDate').val(), endDate: $('#endDate').val() }
+        if (data.startDate == "" || data.endDate == "") {
+            toastr.error('Choose a start and end date.');
+            return;
+        }
         if (data.startDate > data.endDate) {
             toastr.error('The start date cannot be greater than the end date!');
             return;

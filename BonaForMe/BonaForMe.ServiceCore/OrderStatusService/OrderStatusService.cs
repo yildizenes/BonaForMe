@@ -158,7 +158,8 @@ namespace BonaForMe.ServiceCore.OrderStatusService
                 //Search
                 if (!string.IsNullOrEmpty(dataTable.SearchValue))
                 {
-                    orderStatuss = orderStatuss.Where(m => m.Name.ToLower().Contains(dataTable.SearchValue.ToLower()));
+                    orderStatuss = orderStatuss.Where(m => m.Name.ToLower().Contains(dataTable.SearchValue.ToLower()) 
+                    || m.ColorCode.ToLower().Contains(dataTable.SearchValue.ToLower()));
                 }
                 var data = orderStatuss.Skip(dataTable.Skip).Take(dataTable.PageSize);
                 return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = orderStatuss.Count(), recordsTotal = orderStatuss.Count(), data = data });

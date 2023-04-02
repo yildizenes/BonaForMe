@@ -169,7 +169,8 @@ namespace BonaForMe.ServiceCore.WorkPartnerService
                 //Search
                 if (!string.IsNullOrEmpty(dataTable.SearchValue))
                 {
-                    workPartners = workPartners.Where(m => m.Description.ToLower().Contains(dataTable.SearchValue.ToLower()));
+                    workPartners = workPartners.Where(m => m.Name.ToLower().Contains(dataTable.SearchValue.ToLower()) 
+                    || m.Description.ToLower().Contains(dataTable.SearchValue.ToLower()));
                 }
                 var data = workPartners.Skip(dataTable.Skip).Take(dataTable.PageSize);
                 return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = workPartners.Count(), recordsTotal = workPartners.Count(), data = data });

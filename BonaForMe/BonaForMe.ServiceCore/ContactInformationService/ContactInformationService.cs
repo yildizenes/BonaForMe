@@ -159,7 +159,9 @@ namespace BonaForMe.ServiceCore.ContactInformationService
                 //Search
                 if (!string.IsNullOrEmpty(dataTable.SearchValue))
                 {
-                    contactInformations = contactInformations.Where(m => m.EmailInfo.ToLower().Contains(dataTable.SearchValue.ToLower()));
+                    contactInformations = contactInformations.Where(m => m.EmailInfo.ToLower().Contains(dataTable.SearchValue.ToLower()) 
+                    || m.WhattsappPhone.ToLower().Contains(dataTable.SearchValue.ToLower())
+                    || m.CustomerSupportPhone.ToLower().Contains(dataTable.SearchValue.ToLower()));
                 }
                 var data = contactInformations.Skip(dataTable.Skip).Take(dataTable.PageSize);
                 return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = contactInformations.Count(), recordsTotal = contactInformations.Count(), data = data });

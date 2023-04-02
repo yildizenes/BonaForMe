@@ -170,7 +170,9 @@ namespace BonaForMe.ServiceCore.UserService
                 //Search
                 if (!string.IsNullOrEmpty(dataTable.SearchValue))
                 {
-                    users = users.Where(m => m.UserPhone.ToLower().Contains(dataTable.SearchValue.ToLower()));
+                    users = users.Where(m => m.FullName.ToLower().Contains(dataTable.SearchValue.ToLower()) 
+                    || m.UserMail.ToLower().Contains(dataTable.SearchValue.ToLower())
+                    || m.UserPhone.ToLower().Contains(dataTable.SearchValue.ToLower()));
                 }
                 var data = users.Skip(dataTable.Skip).Take(dataTable.PageSize);
                 return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = users.Count(), recordsTotal = users.Count(), data = data });

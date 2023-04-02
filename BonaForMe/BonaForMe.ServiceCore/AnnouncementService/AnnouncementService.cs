@@ -169,7 +169,9 @@ namespace BonaForMe.ServiceCore.AnnouncementService
                 //Search
                 if (!string.IsNullOrEmpty(dataTable.SearchValue))
                 {
-                    announcements = announcements.Where(m => m.Description.ToLower().Contains(dataTable.SearchValue.ToLower()));
+                    announcements = announcements.Where(m => m.Title.ToLower().Contains(dataTable.SearchValue.ToLower()) 
+                    || m.Description.ToLower().Contains(dataTable.SearchValue.ToLower()) 
+                    || m.CategoryName.ToLower().Contains(dataTable.SearchValue.ToLower()));
                 }
                 var data = announcements.Skip(dataTable.Skip).Take(dataTable.PageSize);
                 return new JsonResult(new { success = true, message = ResultMessages.Success, draw = dataTable.Draw, recordsFiltered = announcements.Count(), recordsTotal = announcements.Count(), data = data });
