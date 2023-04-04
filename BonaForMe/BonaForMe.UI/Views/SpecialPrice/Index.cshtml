@@ -185,6 +185,10 @@
     }
 
     function jsSaveSpecialPrice() {
+        if ($("#UserId").val() == null || $("#ProductId").val() == null) {
+            toastr.error("User and product information cannot be left blank.");
+            return;
+        }
         var data = {
             Id: $("#hdnSpecialPriceId").val(),
             UserId: $("#UserId").val(),

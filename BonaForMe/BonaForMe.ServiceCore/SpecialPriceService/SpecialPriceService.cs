@@ -38,10 +38,23 @@ namespace BonaForMe.ServiceCore.SpecialPriceService
                         _context.Update(specialPrice);
                     }
                     else
-                        _context.Add(specialPrice);
+                    {
+                        result.Message = "A special price has been assigned to the customer for the selected product. Delete the old record to continue.";
+                        result.Success = false;
+                        return result;
+                    }
                 }
                 else
-                    _context.Add(specialPrice);
+                {
+                    if (!IsThereSpecialPrice(specialPriceDto))
+                        _context.Add(specialPrice);
+                    else
+                    {
+                        result.Message = "A special price has been assigned to the customer for the selected product. Delete the old record to continue.";
+                        result.Success = false;
+                        return result;
+                    }
+                }
                 _context.SaveChanges();
                 result.Data = _mapper.Map<SpecialPriceDto>(specialPrice);
                 result.Success = true;
@@ -160,6 +173,21 @@ namespace BonaForMe.ServiceCore.SpecialPriceService
                 result.Success = false;
             }
             return result;
+        }
+        public bool IsThereSpecialPrice(SpecialPriceDto specialPriceDto)
+        {
+            try
+            {
+                var model = _context.SpecialPrices
+                    .Any(x => x.UserId == specialPriceDto.UserId 
+                    && x.ProductId == specialPriceDto.ProductId 
+                    && x.IsActive && !x.IsDeleted);
+                return model;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public JsonResult FillDataTable(DataTableDto dataTable)
