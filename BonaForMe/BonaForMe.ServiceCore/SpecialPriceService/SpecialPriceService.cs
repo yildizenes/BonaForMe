@@ -139,12 +139,32 @@ namespace BonaForMe.ServiceCore.SpecialPriceService
             }
             return result;
         }
+
         public Result<List<SpecialPriceDto>> GetSpecialPriceByUserId(Guid id)
         {
             Result<List<SpecialPriceDto>> result = new Result<List<SpecialPriceDto>>();
             try
             {
                 var model = _context.SpecialPrices.Include(x => x.Product).Where(x => x.UserId == id && x.IsActive && !x.IsDeleted).ToList();
+                result.Data = _mapper.Map<List<SpecialPrice>, List<SpecialPriceDto>>(model);
+                result.Success = true;
+                result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
+        public Result<List<SpecialPriceDto>> GetSpecialPriceByFilters(Guid userId, Guid categoryId)
+        {
+            Result<List<SpecialPriceDto>> result = new Result<List<SpecialPriceDto>>();
+            try
+            {
+                var model = _context.SpecialPrices.Include(x => x.Product)
+                    .Where(x => x.UserId == userId && x.Product.CategoryId == categoryId && x.IsActive && !x.IsDeleted).ToList();
                 result.Data = _mapper.Map<List<SpecialPrice>, List<SpecialPriceDto>>(model);
                 result.Success = true;
                 result.Message = ResultMessages.Success;

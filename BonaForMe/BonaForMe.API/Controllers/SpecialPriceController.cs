@@ -65,6 +65,23 @@ namespace BonaForMe.API.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult GetSpecialPriceByFilters(Guid userId, Guid categoryId)
+        {
+            try
+            {
+                if (userId == Guid.Empty || categoryId == Guid.Empty)
+                    return Json(new { Success = false, Data = "", Message = "Request parameter is not found." });
+
+                var result = _specialPriceService.GetSpecialPriceByFilters(userId, categoryId);
+                return Json(new { success = result.Success, data = result.Data, message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, data = "", message = ex.Message });
+            }
+        }
+
         [HttpPost]
         public IActionResult AddSpecialPrice(SpecialPriceDto specialPriceDto)
         {
