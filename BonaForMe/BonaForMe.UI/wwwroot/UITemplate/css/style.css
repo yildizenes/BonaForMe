@@ -618,6 +618,7 @@ ol {
 .hero__categories ul {
     border: 1px solid #ebebeb;
     padding-left: 40px;
+    padding-right: 40px;
     padding-top: 10px;
     padding-bottom: 12px;
 }
@@ -3544,5 +3545,11 @@ ol {
 
     .blog__details__hero__text h2 {
         font-size: 24px;
+    }
+
+
+    .store_logos {
+        display: flex;
+        justify-content: center;
     }
 }
