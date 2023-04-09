@@ -37,7 +37,7 @@ namespace BonaForMe.ServiceCore.MailSenderService
                     break;
                 case MailTypes.InvoiceDelivery:
                     title = "Shopping Invoice";
-                    var address = "https://www.bonameforme.com/Invoice/" + notification + ".pdf";
+                    var address = "https://www.boname.ie/Invoice/" + notification + ".pdf";
                     var link = "<a href='" + address + "'>View Invoice</a>";
                     bodyMessage = EmailHelperBase.GetMailBody(mailText.InvoiceDeliveryMailText, link);
                     break;

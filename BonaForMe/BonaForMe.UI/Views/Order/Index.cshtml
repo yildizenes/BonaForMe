@@ -98,6 +98,12 @@
                                     <label id="detailOrderer" class="control-label"></label>
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="CategoryId" class="control-label">Pay Type : </label>
+                                    <label id="orderPayType" class="control-label"></label>
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-4">
@@ -332,70 +338,71 @@
         var domString = getTableDom();
         var buttons = getTableButtons("Orders");
         $('#tblOrderList').DataTable
-        ({
-            "paging": true,
-            "ordering": true,
-            "pageLength": 25,
-            "processing": true,
-            "serverSide": true,
-            "filter": true,
-            "orderMulti": false,
-            "order": [],
-            dom: domString,
-            buttons: buttons,
-            "ajax": {
-                "url": "/Order/LoadOrderData/",
-                "type": 'POST',
-                "dataType": "json",
-                "data": { type: 1, orderStatusId: $('#OrderStatues').val()}
-            },
-            "columnDefs": [{
-                "targets": [0],
-                "visible": false,
-                "searchable": false
-            }],
-            "columns": [
-                getCell("Id"),
-                getCell("OrderCode"),
-                getCell("UserName"),
-                getCell("PayType"),
-                getCell("OrderStatusName"),
-                {
-                    "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
-                    "render": function (data, type, full, meta) {
-                        var dt = full.dateCreated;
-                        var dateString = "";
-                        var timestamp = Date.parse(dt);
+            ({
+                "paging": true,
+                "ordering": true,
+                "pageLength": 25,
+                "processing": true,
+                "serverSide": true,
+                "filter": true,
+                "orderMulti": false,
+                "order": [],
+                dom: domString,
+                buttons: buttons,
+                "ajax": {
+                    "url": "/Order/LoadOrderData/",
+                    "type": 'POST',
+                    "dataType": "json",
+                    "data": { type: 1, orderStatusId: $('#OrderStatues').val() }
+                },
+                "columnDefs": [{
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false
+                }],
+                "columns": [
+                    getCell("Id"),
+                    getCell("OrderCode"),
+                    getCell("UserName"),
+                    getCell("PayType"),
+                    getCell("OrderStatusName"),
+                    {
+                        "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
+                        "render": function (data, type, full, meta) {
+                            var dt = full.dateCreated;
+                            var dateString = "";
+                            var timestamp = Date.parse(dt);
 
-                        if (isNaN(timestamp) == true) {
-                            dateString = "";
+                            if (isNaN(timestamp) == true) {
+                                dateString = "";
+                            }
+
+                            dt = new Date(timestamp);
+                            dateString = dt.toLocaleString('tr-TR');
+                            return dateString;
                         }
-
-                        dt = new Date(timestamp);
-                        dateString = dt.toLocaleString('tr-TR');
-                        return dateString;
-                    }
-                },
-                {
-                    "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
-                    "render": function (data, type, full, meta) {
-                        var buttonGroup = "<div class='btn-group role='group'>";
-                        buttonGroup += "<a href='#' class='btn btn-warning btn-sm' style='color:white; margin:0px 5px;' onclick=jsOpenSaveOrder('" + full.id + "');><i class='fas fa-edit'></i> Edit </a>"
-                        buttonGroup += "<a href='#' class='btn btn-danger btn-sm' style='color:white; margin:0px 5px;' onclick=DeleteData('" + full.id + "');> <i class='fas fa-trash'></i> Delete </a>";
-                        buttonGroup += "<a href='#' class='btn btn-primary btn-sm' style='color:white; margin:0px 5px;' onclick=DetailPage('" + full.id + "');> <i class='fas fa-info'></i> Detail </a>";
-                        buttonGroup += "</div>"
-                        return buttonGroup;
-                    }
-                },
-            ],
-            "bDestroy": true,
-        });
+                    },
+                    {
+                        "data": "", "name": "", "autoWidth": true, "sorting": false, "style": "text-align:center",
+                        "render": function (data, type, full, meta) {
+                            var buttonGroup = "<div class='btn-group role='group'>";
+                            buttonGroup += "<a href='#' class='btn btn-warning btn-sm' style='color:white; margin:0px 5px;' onclick=jsOpenSaveOrder('" + full.id + "');><i class='fas fa-edit'></i> Edit </a>"
+                            buttonGroup += "<a href='#' class='btn btn-danger btn-sm' style='color:white; margin:0px 5px;' onclick=DeleteData('" + full.id + "');> <i class='fas fa-trash'></i> Delete </a>";
+                            buttonGroup += "<a href='#' class='btn btn-primary btn-sm' style='color:white; margin:0px 5px;' onclick=DetailPage('" + full.id + "');> <i class='fas fa-info'></i> Detail </a>";
+                            buttonGroup += "</div>"
+                            return buttonGroup;
+                        }
+                    },
+                ],
+                "bDestroy": true,
+            });
     }
 
     function DetailPage(id) {
         $("#hdnOrderId").val("");
         $("#detailOrderCode").text("");
         $("#detailOrderer").text("");
+        $("#orderPayType").text("");
         $("#detailPhone").text("");
         $("#detailAddress").text("");
         $("#detailHour").text("");
@@ -406,6 +413,7 @@
             $("#hdnOrderId").val(result.id);
             $("#detailOrderCode").text(result.orderCode);
             $("#detailOrderer").text(result.userName);
+            $("#orderPayType").text(result.payType);
             $("#detailCustomerPhone").text(result.user.userPhone);
             $("#detailAddress").text(result.user.address);
             $("#detailHour").text(result.orderHour.text);
@@ -435,8 +443,13 @@
                 tb.deleteRow(1);
             }
 
+            var orderTotalPrice = parseFloat(0);
+
             result.productList.forEach((item, index) => {
+                debugger;
                 var totalPrice = item.count * item.price;
+                var totalPriceWithTax = item.count * item.price * (1 + parseFloat(item.product.taxRate) / 100);
+                orderTotalPrice += totalPriceWithTax;
                 var newRow = tableRef.insertRow(tableRef.rows.length);
                 var cell1 = newRow.insertCell(0).appendChild(document.createTextNode(index + 1));
                 var cell2 = newRow.insertCell(1).appendChild(document.createTextNode(item.product.name));
@@ -444,8 +457,18 @@
                 var cell4 = newRow.insertCell(3).appendChild(document.createTextNode(item.count));
                 var cell5 = newRow.insertCell(4).appendChild(document.createTextNode(item.price));
                 var cell5 = newRow.insertCell(5).appendChild(document.createTextNode(item.product.taxRate));
-                var cell6 = newRow.insertCell(6).appendChild(document.createTextNode(parseFloat(totalPrice).toFixed(2)));
+                var cell6 = newRow.insertCell(6).appendChild(document.createTextNode(parseFloat(totalPriceWithTax).toFixed(2)));
             })
+
+            var totalRow = tableRef.insertRow(tableRef.rows.length);
+            var cell1 = totalRow.insertCell(0).appendChild(document.createTextNode(" "));
+            var cell2 = totalRow.insertCell(1).appendChild(document.createTextNode(" "));
+            var cell3 = totalRow.insertCell(2).appendChild(document.createTextNode(" "));
+            var cell4 = totalRow.insertCell(3).appendChild(document.createTextNode(" "));
+            var cell5 = totalRow.insertCell(4).appendChild(document.createTextNode(" "));
+            var cell5 = totalRow.insertCell(5).appendChild(document.createTextNode("Total Price : "));
+            var cell6 = totalRow.insertCell(6).appendChild(document.createTextNode(parseFloat(orderTotalPrice).toFixed(2)));
+
         }
         $('#modalDetail').modal('show');
     }
@@ -564,7 +587,7 @@
 
     function jsShowInvoice() {
         var orderCode = $("#detailOrderCode").text();
-        var address = "https://www.bonameforme.com/Invoice/" + orderCode + ".pdf";
+        var address = "https://www.boname.ie/Invoice/" + orderCode + ".pdf";
         window.open(address, '_blank');
     }
 </script>
