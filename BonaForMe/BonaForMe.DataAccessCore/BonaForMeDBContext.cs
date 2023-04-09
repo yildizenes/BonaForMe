@@ -65,26 +65,26 @@ namespace BonaForMe.DataAccessCore
                     if (entity.State == EntityState.Added)
                     {
                         ((BaseEntity)entity.Entity).Id = Guid.NewGuid();
-                        ((BaseEntity)entity.Entity).DateCreated = DateTime.UtcNow;
+                        ((BaseEntity)entity.Entity).DateCreated = DateTime.UtcNow.AddHours(1);
                         ((BaseEntity)entity.Entity).UserCreated = userid;
                         ((BaseEntity)entity.Entity).IsActive = true;
                         ((BaseEntity)entity.Entity).IsDeleted = false;
                     }
 
-                    ((BaseEntity)entity.Entity).DateModified = DateTime.UtcNow;
+                    ((BaseEntity)entity.Entity).DateModified = DateTime.UtcNow.AddHours(1);
                     ((BaseEntity)entity.Entity).UserModified = userid;
                 }
                 if (entity.Entity is BaseEntityInt)
                 {
                     if (entity.State == EntityState.Added)
                     {
-                        ((BaseEntityInt)entity.Entity).DateCreated = DateTime.UtcNow;
+                        ((BaseEntityInt)entity.Entity).DateCreated = DateTime.UtcNow.AddHours(1);
                         ((BaseEntityInt)entity.Entity).UserCreated = userid;
                         ((BaseEntityInt)entity.Entity).IsActive = true;
                         ((BaseEntityInt)entity.Entity).IsDeleted = false;
                     }
 
-                    ((BaseEntityInt)entity.Entity).DateModified = DateTime.UtcNow;
+                    ((BaseEntityInt)entity.Entity).DateModified = DateTime.UtcNow.AddHours(1);
                     ((BaseEntityInt)entity.Entity).UserModified = userid;
                 }
             }

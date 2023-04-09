@@ -19,7 +19,7 @@ namespace BonaForMe.ServiceCore.AdminService
         {
             Result<DashboardDto> result = new Result<DashboardDto>();
             var model = new DashboardDto();
-            var thisMonth = DateTime.Now.Month;
+            var thisMonth = DateTime.UtcNow.AddHours(1).Month;
             try
             {
                 model.PendingApprovalUserCount = _context.Users.Count(x => !x.IsApproved && x.IsActive && !x.IsDeleted);

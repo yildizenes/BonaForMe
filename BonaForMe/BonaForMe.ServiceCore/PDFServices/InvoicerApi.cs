@@ -16,7 +16,7 @@ namespace BonaForMe.ServiceCore.PDFServices
         {
             get
             {
-                DateTime now = DateTime.Now;
+                DateTime now = DateTime.UtcNow.AddHours(1);
                 return string.Format("{0}{1}{2}", now.GetShortYear(), now.GetWeekNumber(), (int)now.DayOfWeek);
             }
         }
@@ -31,7 +31,7 @@ namespace BonaForMe.ServiceCore.PDFServices
             Invoice.PageSize = size;
             Invoice.PageOrientation = orientation;
             Invoice.Currency = currency;
-            Invoice.BillingDate = DateTime.Now;
+            Invoice.BillingDate = DateTime.UtcNow.AddHours(1);
             Invoice.DueDate = Invoice.BillingDate.AddDays(14);
             Invoice.Reference = orderCode;
         }
