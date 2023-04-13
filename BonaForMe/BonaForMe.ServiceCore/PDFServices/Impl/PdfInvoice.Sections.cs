@@ -121,11 +121,11 @@ namespace Invoicer.Services.Impl
             Table table = section.AddTable();
 
             double width = section.PageWidth();
-            double numericWidth = (width - 340) / 4;
+            double numericWidth = (width - 300) / 4;
             table.AddColumn(90);
             table.AddColumn(ParagraphAlignment.Center, 150);
             table.AddColumn(ParagraphAlignment.Center, numericWidth);
-            table.AddColumn(ParagraphAlignment.Center, numericWidth);
+            //table.AddColumn(ParagraphAlignment.Center, numericWidth);
             table.AddColumn(ParagraphAlignment.Center, numericWidth);
             table.AddColumn(ParagraphAlignment.Center, 100);
             table.AddColumn(ParagraphAlignment.Center, numericWidth);
@@ -134,7 +134,10 @@ namespace Invoicer.Services.Impl
 
             foreach (ItemRow item in Invoice.Items)
             {
-                BillingRow(table, item);
+                if (item.IsCampaignProduct)
+                    BillingRowForCampaignProduct(table, item);
+                else
+                    BillingRow(table, item);
             }
 
             if (Invoice.Totals != null)
@@ -161,9 +164,9 @@ namespace Invoicer.Services.Impl
             row.Cells[1].AddParagraph("Description", ParagraphAlignment.Center);
             row.Cells[2].AddParagraph("Per Unit", ParagraphAlignment.Center);
             row.Cells[3].AddParagraph("Qty", ParagraphAlignment.Center);
-            row.Cells[4].AddParagraph("Price", ParagraphAlignment.Center);
-            row.Cells[5].AddParagraph("Ext Price", ParagraphAlignment.Center);
-            row.Cells[6].AddParagraph("VAT %", ParagraphAlignment.Center);
+            //row.Cells[4].AddParagraph("Price", ParagraphAlignment.Center);
+            row.Cells[4].AddParagraph("Value", ParagraphAlignment.Center);
+            row.Cells[5].AddParagraph("VAT %", ParagraphAlignment.Center);
         }
 
         private void BillingRow(Table table, ItemRow item)
@@ -187,17 +190,51 @@ namespace Invoicer.Services.Impl
             cell.VerticalAlignment = VerticalAlignment.Center;
             cell.AddParagraph(item.Qty.ToString(), ParagraphAlignment.Center, "H2-9");
 
-            cell = row.Cells[4];
-            cell.VerticalAlignment = VerticalAlignment.Center;
-            cell.AddParagraph("€" + item.Price.ToCurrency(), ParagraphAlignment.Center, "H2-9");
+            //cell = row.Cells[4];
+            //cell.VerticalAlignment = VerticalAlignment.Center;
+            //cell.AddParagraph("€" + item.Price.ToCurrency(), ParagraphAlignment.Center, "H2-9");
 
-            cell = row.Cells[5];
+            cell = row.Cells[4];
             cell.VerticalAlignment = VerticalAlignment.Center;
             cell.AddParagraph("€" + item.ExtPrice.ToCurrency(), ParagraphAlignment.Center, "H2-9");
 
-            cell = row.Cells[6];
+            cell = row.Cells[5];
             cell.VerticalAlignment = VerticalAlignment.Center;
             cell.AddParagraph("%" + item.Vat.ToCurrency(), ParagraphAlignment.Center, "H2-9");
+        }
+
+        private void BillingRowForCampaignProduct(Table table, ItemRow item)
+        {
+            Row row = table.AddRow();
+            row.Style = "TableRow";
+            row.Shading.Color = MigraDocHelpers.BackColorFromHtml(Invoice.BackColor);
+
+            Cell cell = row.Cells[0];
+            cell.AddParagraph(item.Item, ParagraphAlignment.Left, "H2-9B");
+
+            cell = row.Cells[1];
+            cell.VerticalAlignment = VerticalAlignment.Center;
+            cell.AddParagraph(item.Description, ParagraphAlignment.Center, "H2-9");
+
+            cell = row.Cells[2];
+            cell.VerticalAlignment = VerticalAlignment.Center;
+            cell.AddParagraph("FREE", ParagraphAlignment.Center, "H2-9");
+
+            cell = row.Cells[3];
+            cell.VerticalAlignment = VerticalAlignment.Center;
+            cell.AddParagraph(item.Qty.ToString(), ParagraphAlignment.Center, "H2-9");
+
+            //cell = row.Cells[4];
+            //cell.VerticalAlignment = VerticalAlignment.Center;
+            //cell.AddParagraph("€" + item.Price.ToCurrency(), ParagraphAlignment.Center, "H2-9");
+
+            cell = row.Cells[4];
+            cell.VerticalAlignment = VerticalAlignment.Center;
+            cell.AddParagraph("FREE", ParagraphAlignment.Center, "H2-9");
+
+            cell = row.Cells[5];
+            cell.VerticalAlignment = VerticalAlignment.Center;
+            cell.AddParagraph("%0.00", ParagraphAlignment.Center, "H2-9");
         }
 
         private void BillingTotal(Table table, TotalRow total)
@@ -220,11 +257,11 @@ namespace Invoicer.Services.Impl
                 shading = MigraDocHelpers.BackColorFromHtml(Invoice.BackColor);
             }
 
-            Cell cell = row.Cells[5];
+            Cell cell = row.Cells[4];
             cell.Shading.Color = shading;
             cell.AddParagraph(total.Name, ParagraphAlignment.Left, font);
 
-            cell = row.Cells[6];
+            cell = row.Cells[5];
             cell.Shading.Color = shading;
             cell.AddParagraph(total.Value.ToCurrency(Invoice.Currency), ParagraphAlignment.Center, font);
         }

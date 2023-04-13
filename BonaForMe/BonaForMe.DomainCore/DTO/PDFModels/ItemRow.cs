@@ -9,8 +9,9 @@
         public decimal Price { get; set; }
         public decimal ExtPrice { get; set; }
         public decimal Vat { get; set; }
+        public bool IsCampaignProduct { get; set; }
 
-        public static ItemRow Make(string item, string description, decimal perUnit, int qty, decimal price, decimal extPrice, decimal vat)
+        public static ItemRow Make(string item, string description, decimal perUnit, int qty, decimal price, decimal extPrice, decimal vat, bool isCampaignProduct)
         {
             return new ItemRow()
             {
@@ -21,6 +22,7 @@
                 Price = price,
                 ExtPrice = extPrice,
                 Vat = vat,
+                IsCampaignProduct = isCampaignProduct,
             };
         }
     }

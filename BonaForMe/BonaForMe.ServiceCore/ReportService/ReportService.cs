@@ -33,7 +33,7 @@ namespace BonaForMe.ServiceCore.ReportService
                     .Include(x => x.Product)
                     .Include(x => x.Order).ThenInclude(x => x.User)
                     .Include(x => x.Order).ThenInclude(x => x.OrderStatus)
-                    .Where(x => x.IsActive && !x.IsDeleted).ToList();
+                    .Where(x => x.IsActive && !x.IsDeleted && x.Order.IsActive && !x.Order.IsDeleted).ToList();
 
                 if (reportDateDto.StartDate != null)
                     data = data.Where(x => x.DateCreated >= reportDateDto.StartDate && x.DateCreated <= reportDateDto.EndDate).ToList();
@@ -101,7 +101,7 @@ namespace BonaForMe.ServiceCore.ReportService
                         .Include(x => x.Order).ThenInclude(x => x.User)
                         .Include(x => x.Product).ThenInclude(x => x.CurrencyUnit)
                         .Where(x => x.DateCreated >= reportDateDto.StartDate && x.DateCreated <= reportDateDto.EndDate
-                                    && x.IsActive && !x.IsDeleted).ToList();
+                                    && x.IsActive && !x.IsDeleted && x.Order.IsActive && !x.Order.IsDeleted).ToList();
 
                     int index = 2;
                     foreach (var orderLog in orderLogs)
@@ -157,7 +157,8 @@ namespace BonaForMe.ServiceCore.ReportService
                     .Include(x => x.Product).ThenInclude(x => x.CurrencyUnit)
                     .Include(x => x.Order).ThenInclude(x => x.User)
                     .Include(x => x.Order).ThenInclude(x => x.OrderStatus)
-                    .Where(x => x.DateCreated >= reportDateDto.StartDate && x.DateCreated <= reportDateDto.EndDate && x.Price > 0 && x.IsActive && !x.IsDeleted).ToList();
+                    .Where(x => x.DateCreated >= reportDateDto.StartDate && x.DateCreated <= reportDateDto.EndDate && x.Price > 0
+                        && x.IsActive && !x.IsDeleted && x.Order.IsActive && !x.Order.IsDeleted).ToList();
 
                 var totalPrice = data.Sum(x => x.Count * x.Price);
                 var totalTaxRate = data.Sum(x => x.Count * x.Price * x.Product.TaxRate / 100);
@@ -166,7 +167,7 @@ namespace BonaForMe.ServiceCore.ReportService
 
                 reportDatasDto.RevenueTaxSummary = new ReportColumnDto { FirstColumn = "Revenue Gross", SecondColumn = data.Count().ToString(), ThirdColumn = "EUR" + string.Format("{0:0.00}", revenue) };
 
-                var taxRates = data.GroupBy(x => x.Product.TaxRate).OrderBy(x=> x.Key).Select(g => new ReportColumnDto
+                var taxRates = data.GroupBy(x => x.Product.TaxRate).OrderBy(x => x.Key).Select(g => new ReportColumnDto
                 {
                     FirstColumn = "VAT " + g.Key + "%",
                     SecondColumn = "EUR" + string.Format("{0:0.00}", g.Sum(a => (a.Count * a.Price * a.Product.TaxRate) / 100))
@@ -180,7 +181,7 @@ namespace BonaForMe.ServiceCore.ReportService
                 taxes.Add(new ReportColumnDto { FirstColumn = "Revenue gross", SecondColumn = "EUR" + revenue });
                 taxes.Add(new ReportColumnDto { FirstColumn = "Net total", SecondColumn = "EUR" + string.Format("{0:0.00}", totalPrice) });
                 taxes.Add(new ReportColumnDto { FirstColumn = "Tax total", SecondColumn = "EUR" + string.Format("{0:0.00}", totalTaxRate) });
-                taxes.Add(new ReportColumnDto { FirstColumn = "Revenue", SecondColumn = "EUR" + revenue});
+                taxes.Add(new ReportColumnDto { FirstColumn = "Revenue", SecondColumn = "EUR" + revenue });
                 reportDatasDto.Taxes = taxes;
 
 

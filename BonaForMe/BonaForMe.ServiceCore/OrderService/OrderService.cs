@@ -495,13 +495,17 @@ namespace BonaForMe.ServiceCore.OrderService
             foreach (var item in order.Data.ProductList)
             {
                 var product = item.Product;
-                itemList.Add(ItemRow.Make(item.ProductId.ToString().Split('-').Last().ToUpper(), product.Name, item.Price, item.Count, item.Price, item.Price * item.Count, product.TaxRate)); ;
-                subTotal += item.Price * item.Count;
-                if (product.TaxRate != 0)
-                    totalVAT += (item.Price * item.Count * product.TaxRate) / 100;
+                itemList.Add(ItemRow.Make(item.ProductId.ToString().Split('-').Last().ToUpper(), product.Name, item.Price, item.Count, item.Price, item.Price * item.Count, product.TaxRate, item.IsCampaignProduct)); ;
+                if (!item.IsCampaignProduct)
+                {
+                    subTotal += item.Price * item.Count;
+                    if (product.TaxRate != 0)
+                        totalVAT += (item.Price * item.Count * product.TaxRate) / 100;
+                }
             }
             try
             {
+                var vatNo = billUser.VATNo != null ? billUser.VATNo : string.Empty;
                 new InvoicerApi(SizeOption.A4, OrientationOption.Portrait, "€", order.Data.OrderCode)
                     .TextColor("#CC0000")
                     .Image(path + @"wwwroot\images\faturaLogo.png", 180, 75)
@@ -520,8 +524,9 @@ namespace BonaForMe.ServiceCore.OrderService
                         billUser.FullName.ToUpper(),
                         "Company : " + billUser.CompanyName,
                         "Address : " + billUser.Address.ToUpper(),
-                        "Phone   : " + billUser.UserPhone,
-                        "Email   : " + billUser.UserMail
+                        "VAT No  : " + vatNo
+                        //"Phone   : " + billUser.UserPhone,
+                        //"Email   : " + billUser.UserMail
                     }))
                     .Items(itemList)
                     .Totals(new List<TotalRow> {
