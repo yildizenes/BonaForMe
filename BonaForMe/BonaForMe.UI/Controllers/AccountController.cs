@@ -168,7 +168,7 @@ namespace BonaForMe.UI.Controllers
             try
             {
                 var userData = _userService.GetUserByEmail(userMail);
-                if (userData == null)
+                if (userData.Data == null)
                 {
                     TempData["Error"] = "This email address is not found on the system! Please check your email address.";
                     return RedirectToAction("ForgetPassword", "Account");
