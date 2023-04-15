@@ -120,9 +120,9 @@ namespace BonaForMe.ServiceCore.ReportService
                         row.Append(new Cell() { CellReference = "G" + index, DataType = CellValues.String, CellValue = new CellValue(orderLog.Count) });
                         row.Append(new Cell() { CellReference = "H" + index, DataType = CellValues.String, CellValue = new CellValue(orderLog.Product.Name) });
                         row.Append(new Cell() { CellReference = "I" + index, DataType = CellValues.String, CellValue = new CellValue(orderLog.Product.CurrencyUnit.Name) });
-                        row.Append(new Cell() { CellReference = "J" + index, DataType = CellValues.String, CellValue = new CellValue(orderLog.Price + taxPrice) });
-                        row.Append(new Cell() { CellReference = "K" + index, DataType = CellValues.String, CellValue = new CellValue(orderLog.Price) });
-                        row.Append(new Cell() { CellReference = "L" + index, DataType = CellValues.String, CellValue = new CellValue(taxPrice) });
+                        row.Append(new Cell() { CellReference = "J" + index, DataType = CellValues.String, CellValue = new CellValue(Math.Round(orderLog.Price + taxPrice, 2)) });
+                        row.Append(new Cell() { CellReference = "K" + index, DataType = CellValues.String, CellValue = new CellValue(Math.Round(orderLog.Price * orderLog.Count, 2)) });
+                        row.Append(new Cell() { CellReference = "L" + index, DataType = CellValues.String, CellValue = new CellValue(Math.Round(taxPrice, 2)) });
                         row.Append(new Cell() { CellReference = "M" + index, DataType = CellValues.String, CellValue = new CellValue(orderLog.Product.TaxRate) });
                         index++;
                     }

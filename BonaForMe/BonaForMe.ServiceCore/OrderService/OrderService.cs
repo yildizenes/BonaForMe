@@ -521,7 +521,7 @@ namespace BonaForMe.ServiceCore.OrderService
                     }))
                     .Client(Address.Make("BILL TO", new string[]
                     {
-                        billUser.FullName.ToUpper(),
+                        //billUser.FullName.ToUpper(),
                         "Company : " + billUser.CompanyName,
                         "Address : " + billUser.Address.ToUpper(),
                         "VAT No  : " + vatNo

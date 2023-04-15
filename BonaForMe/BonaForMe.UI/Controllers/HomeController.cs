@@ -52,7 +52,7 @@ namespace BonaForMe.UI.Controllers
                 products = _productService.GetAllProductByCategoryId((Guid)categoryId)?.Data;
 
             if (searchValue != null)
-                products = products.Where(m => m.Name.ToLower().Contains(searchValue.ToLower()) || m.Description.ToLower().Contains(searchValue.ToLower())).ToList();
+                products = products.Where(m => m.Name.ToLower().Contains(searchValue.ToLower())).ToList();
 
             ViewBag.Products = products;
 

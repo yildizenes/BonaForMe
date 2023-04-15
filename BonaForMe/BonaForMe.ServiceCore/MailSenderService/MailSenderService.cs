@@ -19,6 +19,12 @@ namespace BonaForMe.ServiceCore.MailSenderService
         {
             var mailText = _applicationSettingService.GetApplicationSetting().Data;
             string title = "";
+            string htmlTemplate = @"<html>
+                                       <body>
+   		                                    |MailBody|
+                                      </body>
+                                    </html>";
+
             string bodyMessage = "";
 
             switch (mailTypes)
@@ -45,7 +51,7 @@ namespace BonaForMe.ServiceCore.MailSenderService
                     break;
             }
 
-            var result = EmailHelper.SendMail(email, title, bodyMessage);
+            var result = EmailHelper.SendMail(email, title, htmlTemplate.Replace("|MailBody|", bodyMessage));
             return result;
         }
     }
