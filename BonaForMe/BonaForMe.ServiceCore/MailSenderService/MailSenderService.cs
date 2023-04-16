@@ -31,7 +31,8 @@ namespace BonaForMe.ServiceCore.MailSenderService
             {
                 case MailTypes.Welcome:
                     title = "Welcome to Boname Marketing!";
-                    bodyMessage = EmailHelperBase.GetMailBody(mailText.WelcomeMailText, notification);
+                    //bodyMessage = EmailHelperBase.GetMailBody(mailText.WelcomeMailText, notification);
+                    bodyMessage = @"<img src='https://www.boname.ie/images/welcome_boname.jpg' />";
                     break;
                 case MailTypes.ForgetPassword:
                     title = "Password Reset";
