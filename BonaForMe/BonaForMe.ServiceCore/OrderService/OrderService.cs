@@ -369,6 +369,47 @@ namespace BonaForMe.ServiceCore.OrderService
             return result;
         }
 
+        public Result<List<CheckStockDTO>> CheckStock(List<CheckStockDTO> checkStockList)
+        {
+            Result<List<CheckStockDTO>> result = new Result<List<CheckStockDTO>>();
+            try
+            {
+                var missingProducts = new List<CheckStockDTO>();
+
+                foreach (var item in checkStockList)
+                {
+                    var thisProduct = _productService.GetProductById(item.ProductId).Data;
+                    if (thisProduct == null)
+                    {
+                        result.Success = false;
+                        result.Message = "Product not found.";
+                        return result;
+                    }
+
+                    if (item.OrderCount > thisProduct.Stock)
+                    {
+                        missingProducts.Add(new CheckStockDTO
+                        {
+                            ProductId = item.ProductId,
+                            ProductName = thisProduct.Name,
+                            CurrentStock = thisProduct.Stock,
+                            OrderCount = item.OrderCount
+                        });
+                    }
+                }
+
+                result.Data = missingProducts;
+                result.Success = true;
+                result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
         public Result CompleteTheOrder(Guid orderId)
         {
             Result result = new Result();
@@ -544,7 +585,7 @@ namespace BonaForMe.ServiceCore.OrderService
                     //}),
                     //DetailRow.Make("BANK INFORMATION", paymentInfos)
                     //})
-                    .Footer("")
+                    .Footer("Our Bank Account Details: AIB ; BIC Code : AIBKIE2D   IBAN No:IE41AIBK93405447161059")
                     .Save();
 
                 result.Success = true;

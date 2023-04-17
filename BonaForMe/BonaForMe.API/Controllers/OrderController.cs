@@ -19,6 +19,20 @@ namespace BonaForMe.API.Controllers
         }
 
         [HttpPost]
+        public IActionResult CheckStock(List<CheckStockDTO> checkStocks)
+        {
+            try
+            {
+                var result = _orderService.CheckStock(checkStocks);
+                return Json(new { success = result.Success, data = result.Data, message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, data = "", message = ex.Message });
+            }
+        }
+
+        [HttpPost]
         public IActionResult UpdateOrderStatus(UpdateOrderDto updateOrderDto)
         {
             try
@@ -97,7 +111,7 @@ namespace BonaForMe.API.Controllers
         {
             try
             {
-                var result = _orderService.GetAllOrderByStatusId(new List<int> { 4, 5, 6, 7}, userId);
+                var result = _orderService.GetAllOrderByStatusId(new List<int> { 4, 5, 6, 7 }, userId);
                 return Json(new { success = result.Success, data = result.Data, message = result.Message });
             }
             catch (Exception ex)
