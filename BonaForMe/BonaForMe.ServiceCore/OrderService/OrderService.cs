@@ -410,6 +410,43 @@ namespace BonaForMe.ServiceCore.OrderService
             return result;
         }
 
+        public Result<List<CheckStockDTO>> CheckStockForFav(List<Guid> productIdList)
+        {
+            Result<List<CheckStockDTO>> result = new Result<List<CheckStockDTO>>();
+            try
+            {
+                var products = new List<CheckStockDTO>();
+
+                foreach (var item in productIdList)
+                {
+                    var thisProduct = _productService.GetProductById(item).Data;
+                    if (thisProduct == null)
+                    {
+                        result.Success = false;
+                        result.Message = "Product not found.";
+                        return result;
+                    }
+                    products.Add(new CheckStockDTO
+                    {
+                        ProductId = thisProduct.Id,
+                        ProductName = thisProduct.Name,
+                        CurrentStock = thisProduct.Stock,
+                        OrderCount = 0
+                    });
+                }
+
+                result.Data = products;
+                result.Success = true;
+                result.Message = ResultMessages.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Success = false;
+            }
+            return result;
+        }
+
         public Result CompleteTheOrder(Guid orderId)
         {
             Result result = new Result();

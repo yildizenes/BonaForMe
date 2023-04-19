@@ -33,6 +33,20 @@ namespace BonaForMe.API.Controllers
         }
 
         [HttpPost]
+        public IActionResult CheckStockForFav(List<Guid> productIdList)
+        {
+            try
+            {
+                var result = _orderService.CheckStockForFav(productIdList);
+                return Json(new { success = result.Success, data = result.Data, message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, data = "", message = ex.Message });
+            }
+        }
+
+        [HttpPost]
         public IActionResult UpdateOrderStatus(UpdateOrderDto updateOrderDto)
         {
             try
