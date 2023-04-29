@@ -168,7 +168,7 @@ namespace BonaForMe.ServiceCore.ProductService
                 Random rand = new Random();
                 int toSkip = rand.Next(0, _context.Products.Where(x => x.IsActive && !x.IsDeleted).Count() - count);
 
-                var model = _context.Products.Where(x => x.IsActive && !x.IsDeleted)
+                var model = _context.Products.Where(x => x.IsActive && !x.IsDeleted && x.Stock > 0)
                     .Include(x => x.ProductUnit).Include(x => x.CurrencyUnit).Include(x => x.Category).Skip(toSkip).Take(count)
                     .ToList();
                 result.Data = _mapper.Map<List<Product>, List<ProductDto>>(model);
