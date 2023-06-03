@@ -73,5 +73,22 @@ namespace BonaForMe.API.Controllers
                 return Json(new { data = "", success = false, message = ex.Message });
             }
         }
+
+        [HttpGet]
+        public IActionResult GetMinimumOrderValueByUserId(Guid id)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                    return Json(new { Success = false, Data = "", Message = "Request parameter is not found." });
+
+                var result = _userService.GetUserById(id);
+                return Json(new { success = result.Success, data = result.Data?.MinimumOrderValue, message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, data = "", message = ex.Message });
+            }
+        }
     }
 }

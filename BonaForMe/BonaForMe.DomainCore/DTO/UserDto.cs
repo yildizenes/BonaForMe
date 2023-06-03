@@ -33,5 +33,7 @@
         public bool IsAdmin { get; set; }
 
         public bool IsCourier { get; set; }
+
+        public int MinimumOrderValue { get; set; }
     }
 }
